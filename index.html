@@ -627,7 +627,7 @@
 <body>
 
 <div class="header">
-    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.22</span></h1>
+    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.23</span></h1>
     <p>Dữ liệu: 10/10/2026 | 7.594 nhân sự | 1.803 cửa hàng</p>
 </div>
 
@@ -1173,6 +1173,29 @@
         return card;
     }
 
+    function pushToGAS(maCost, empResult) {
+        var gasUrl = localStorage.getItem("ns_gas_url");
+        if (!gasUrl) return;
+        var storeInfo = buildStoreMapByCode()[maCost] || {};
+        var emps = empData[maCost] || [];
+        var empMeta = {};
+        for (var i = 0; i < emps.length; i++) {
+            var e = emps[i];
+            empMeta[e.m] = { n: e.n || "", c: e.c || "", t: e.t || "" };
+        }
+        var payload = {
+            maCost: maCost, tenCH: storeInfo.tenCH || maCost,
+            gdv: storeInfo.gdv || "", qlkv: storeInfo.qlkv || "", tinh: storeInfo.tinh || "",
+            ts: new Date().toISOString(), employees: empResult, empMeta: empMeta
+        };
+        try {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", gasUrl, true);
+            xhr.setRequestHeader("Content-Type", "text/plain;charset=utf-8");
+            xhr.send(JSON.stringify(payload));
+        } catch(e) {}
+    }
+
     function countMismatch(maCost) {
         var emps = empData[maCost];
         if (!emps) {
@@ -1594,6 +1617,8 @@
         }
         surveyData[maCost] = { ts: new Date().toISOString(), e: empResult };
         saveSurveyData();
+        // Push to Google Sheets
+        pushToGAS(maCost, empResult);
         var msgEl = document.getElementById("saveMsg-" + maCost);
         if (msgEl) {
             msgEl.textContent = "Đã lưu thành công!";
