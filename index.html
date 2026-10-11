@@ -1286,7 +1286,7 @@
             var tdTime = document.createElement("td");
             tdTime.setAttribute("data-label", "Thời gian");
             tdTime.style.fontSize = "11px"; tdTime.style.color = "#607085"; tdTime.style.whiteSpace = "nowrap";
-            if (emp.t === "Đã nghỉ việc" && emp.ed) {
+            if ((emp.t === "Đã nghỉ việc" || emp.t === "Dự kiến nghỉ việc") && emp.ed) {
                 tdTime.textContent = emp.ed;
             } else if ((emp.t.indexOf("thai") >= 0 || emp.t.indexOf("ốm") >= 0 || emp.t.indexOf("không") >= 0 || emp.t.indexOf("om") >= 0) && emp.sd) {
                 tdTime.textContent = (emp.sd||"") + " - " + (emp.ed||"");
