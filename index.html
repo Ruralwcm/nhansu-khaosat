@@ -667,6 +667,16 @@
 
     <!-- TAB: DASHBOARD -->
     <div class="tab-content" id="tab-dashboard">
+        <div class="filter-box" style="margin-bottom:16px">
+            <div class="filter-item">
+                <label>GĐV</label>
+                <select id="dashGdv" onchange="onDashGdvChange()"><option value="">-- Tất cả GĐV --</option></select>
+            </div>
+            <div class="filter-item">
+                <label>QLKV</label>
+                <select id="dashQlkv" onchange="renderDashboard()"><option value="">-- Tất cả QLKV --</option></select>
+            </div>
+        </div>
         <div class="kpi-grid">
             <div class="kpi-card">
                 <div class="kpi-value" id="kpiTotalStores">0</div>
@@ -797,6 +807,7 @@
         buildGdvFilter();
         buildCHFilter();
         applyFilters();
+        populateDashFilters();
         renderDashboard();
         renderHistory();
     }
@@ -934,6 +945,34 @@
         applyFilters();
     }
 
+    function populateDashFilters() {
+        var gdvSel = document.getElementById("dashGdv");
+        var qlkvSel = document.getElementById("dashQlkv");
+        if (!gdvSel || !qlkvSel) return;
+        var gdvSet = new Set(), qlkvSet = new Set();
+        for (var i = 0; i < chList.length; i++) {
+            if (chList[i].gdv) gdvSet.add(chList[i].gdv);
+            if (chList[i].qlkv) qlkvSet.add(chList[i].qlkv);
+        }
+        var ga = Array.from(gdvSet).sort();
+        for (i = 0; i < ga.length; i++) { var o = document.createElement("option"); o.value = ga[i]; o.textContent = ga[i]; gdvSel.appendChild(o); }
+        var qa = Array.from(qlkvSet).sort();
+        for (i = 0; i < qa.length; i++) { var o = document.createElement("option"); o.value = qa[i]; o.textContent = qa[i]; qlkvSel.appendChild(o); }
+    }
+
+    function onDashGdvChange() {
+        var gdvVal = document.getElementById("dashGdv").value;
+        var qlkvSel = document.getElementById("dashQlkv");
+        qlkvSel.innerHTML = "<option value=''>-- Tất cả QLKV --</option>";
+        var qs = new Set();
+        for (var i = 0; i < chList.length; i++) {
+            if (!gdvVal || chList[i].gdv === gdvVal) qs.add(chList[i].qlkv);
+        }
+        var qa = Array.from(qs).sort();
+        for (i = 0; i < qa.length; i++) { var o = document.createElement("option"); o.value = qa[i]; o.textContent = qa[i]; qlkvSel.appendChild(o); }
+        renderDashboard();
+    }
+
     function applyFilters() {
         var gdvVal = document.getElementById("filterGdv").value;
         var qlkvVal = document.getElementById("filterQlkv").value;
@@ -988,9 +1027,15 @@
     function renderStoreList() {
         var listEl = document.getElementById("storeList");
         listEl.innerHTML = "";
+        var chVal = document.getElementById("filterCH").value;
+        if (!chVal) {
+            listEl.innerHTML = "<div class='empty-msg' style='padding:60px'><div style='font-size:48px;margin-bottom:16px'>&#x1F3EA;</div>Vui lòng chọn Cửa hàng để bắt đầu khảo sát</div>";
+            document.getElementById("pagination").innerHTML = "";
+            return;
+        }
 
         if (filteredList.length === 0) {
-            listEl.innerHTML = "<div class='empty-msg'>Khong tim thay cua hang nao phu hop.</div>";
+            listEl.innerHTML = "<div class='empty-msg'>Vui lòng chọn Cửa hàng để bắt đầu khảo sát.</div>";
             document.getElementById("pagination").innerHTML = "";
             return;
         }
@@ -1526,29 +1571,36 @@
 
     // ===================== DASHBOARD =====================
     function renderDashboard() {
-        if (chList.length === 0) {
-            return;
+        if (chList.length === 0) { return; }
+        // Apply dashboard filters
+        var dGdv = document.getElementById("dashGdv") ? document.getElementById("dashGdv").value : "";
+        var dQlkv = document.getElementById("dashQlkv") ? document.getElementById("dashQlkv").value : "";
+        var filteredCH = chList;
+        if (dGdv || dQlkv) {
+            filteredCH = chList.filter(function(c) {
+                if (dGdv && c.gdv !== dGdv) return false;
+                if (dQlkv && c.qlkv !== dQlkv) return false;
+                return true;
+            });
         }
 
-        var totalStores = chList.length;
+        var totalStores = filteredCH.length;
         var totalEmp = 0;
         var i;
-        for (i = 0; i < chList.length; i++) {
-            totalEmp += chList[i].count || 0;
+        for (i = 0; i < filteredCH.length; i++) {
+            totalEmp += filteredCH[i].count || 0;
         }
 
         var surveyedCount = 0;
-        for (var key in surveyData) {
-            if (surveyData.hasOwnProperty(key)) {
-                surveyedCount++;
-            }
+        for (i = 0; i < filteredCH.length; i++) {
+            if (surveyData[filteredCH[i].maCost]) surveyedCount++;
         }
 
         var notSurveyed = totalStores - surveyedCount;
 
         var totalMismatch = 0;
-        for (i = 0; i < chList.length; i++) {
-            totalMismatch += countMismatch(chList[i].maCost);
+        for (i = 0; i < filteredCH.length; i++) {
+            totalMismatch += countMismatch(filteredCH[i].maCost);
         }
 
         var progressPct = totalStores > 0 ? Math.round((surveyedCount / totalStores) * 100) : 0;
