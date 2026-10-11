@@ -589,6 +589,16 @@
     .toast.success { background: #0d8a5f; }
     .toast.warn { background: #e67e22; }
     @keyframes toastIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    /* Confirm modal */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; display: flex; align-items: center; justify-content: center; }
+    .modal-box { background: #fff; border-radius: 12px; padding: 24px; max-width: 400px; width: 90%; box-shadow: 0 8px 30px rgba(0,0,0,0.3); text-align: center; }
+    .modal-box h3 { font-size: 18px; margin-bottom: 16px; color: #1a5276; }
+    .modal-stats { text-align: left; margin: 12px 0; font-size: 14px; line-height: 1.8; }
+    .modal-stats span { font-weight: 700; color: #2980b9; }
+    .modal-btns { display: flex; gap: 10px; justify-content: center; margin-top: 16px; }
+    .modal-btns button { padding: 10px 24px; border-radius: 8px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; }
+    .modal-btn-confirm { background: #0d8a5f; color: #fff; }
+    .modal-btn-cancel { background: #ddd; color: #333; }
     .cf-btn.cf-ok { background: #0d8a5f; color: #fff; border-color: #0d8a5f; }
     .cf-btn.cf-err { background: #c0392b; color: #fff; border-color: #c0392b; }
     .cf-extra { background: #fef9e7; border: 1px solid #f0d060; border-radius: 6px; padding: 6px; margin-top: 4px; }
@@ -617,7 +627,7 @@
 <body>
 
 <div class="header">
-    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.20</span></h1>
+    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.21</span></h1>
     <p>Dữ liệu: 10/10/2026 | 7.594 nhân sự | 1.803 cửa hàng</p>
 </div>
 
@@ -656,7 +666,7 @@
                     </select>
                 </div>
                 <div class="filter-item">
-                    <label>Trạng thái Khảo sát</label>
+                    <label style="display:none">Trạng thái Khảo sát</label>
                     <select id="filterStatus" onchange="applyFilters()" style="display:none">
                         <option value="">-- Tất cả --</option>
                         <option value="done">Da khao sat</option>
@@ -1488,7 +1498,6 @@
         saveBtn.id = "saveBtn-" + maCost;
         saveBtn.onclick = (function (code) {
             return function () {
-                // Check all employees confirmed
                 var body = document.getElementById("body-" + code);
                 if (!body) return;
                 var hiddenInputs = body.querySelectorAll("input[type='hidden'][data-mnv]");
@@ -1502,8 +1511,27 @@
                     showToast("Vui lòng xác nhận tất cả nhân viên trước khi lưu!", "warn");
                     return;
                 }
-                saveStoreSurvey(code);
-                showToast("✅ Đã lưu khảo sát thành công!", "success");
+                // Count stats
+                var total = hiddenInputs.length, correct = 0, incorrect = 0;
+                for (var i = 0; i < hiddenInputs.length; i++) {
+                    if (hiddenInputs[i].value === "correct") correct++;
+                    else incorrect++;
+                }
+                // Find store name
+                var chName = code;
+                var chOpt = document.getElementById("filterCH");
+                if (chOpt) chName = chOpt.options[chOpt.selectedIndex].textContent;
+                // Show modal
+                var overlay = document.createElement("div");
+                overlay.className = "modal-overlay";
+                overlay.innerHTML = '<div class="modal-box"><h3>📋 Xác nhận Khảo sát</h3><p style="font-size:13px;color:#666;margin-bottom:8px">' + chName + '</p><div class="modal-stats">👥 Tổng NV rà soát: <span>' + total + '</span><br>✅ Xác nhận đúng: <span>' + correct + '</span><br>⚠️ Điều chỉnh: <span>' + incorrect + '</span></div><div class="modal-btns"><button class="modal-btn-cancel" id="modalCancel">Hủy</button><button class="modal-btn-confirm" id="modalConfirm">✅ Xác nhận Lưu</button></div></div>';
+                document.body.appendChild(overlay);
+                document.getElementById("modalCancel").onclick = function() { overlay.remove(); };
+                document.getElementById("modalConfirm").onclick = function() {
+                    overlay.remove();
+                    saveStoreSurvey(code);
+                    showToast("✅ Đã lưu khảo sát thành công!", "success");
+                };
             };
         })(maCost);
 
