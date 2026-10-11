@@ -588,25 +588,24 @@
     .cf-date { padding: 3px 5px; border: 1px solid #d0dae4; border-radius: 4px; font-size: 11px; width: 110px; }
 
     @media (max-width: 700px) {
-        .kpi-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        .filter-item {
-            min-width: 100%;
-        }
-        table.emp-table {
-            font-size: 11px;
-        }
-        .store-name {
-            font-size: 13px;
-        }
+        .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        .filter-item { min-width: 100%; }
+        .filter-box { flex-direction: column; }
+        table.emp-table { font-size: 11px; display: block; overflow-x: auto; white-space: nowrap; }
+        table.emp-table th, table.emp-table td { padding: 4px 5px; }
+        .store-name { font-size: 13px; }
+        .store-head { flex-direction: column; align-items: flex-start; }
+        .store-body { padding: 6px 8px 10px; }
+        .cf-btn { padding: 3px 8px; font-size: 11px; }
+        .cf-extra select, .cf-extra input { font-size: 11px; }
+        .store-card { padding: 10px; }
     }
 </style>
 </head>
 <body>
 
 <div class="header">
-    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.15</span></h1>
+    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.16</span></h1>
     <p>Dữ liệu: 10/10/2026 | 7.594 nhân sự | 1.803 cửa hàng</p>
 </div>
 
@@ -646,7 +645,7 @@
                 </div>
                 <div class="filter-item">
                     <label>Trạng thái Khảo sát</label>
-                    <select id="filterStatus" onchange="applyFilters()">
+                    <select id="filterStatus" onchange="applyFilters()" style="display:none">
                         <option value="">-- Tất cả --</option>
                         <option value="done">Da khao sat</option>
                         <option value="pending">Chua khao sat</option>
