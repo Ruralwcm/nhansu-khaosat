@@ -937,7 +937,7 @@
     function applyFilters() {
         var gdvVal = document.getElementById("filterGdv").value;
         var qlkvVal = document.getElementById("filterQlkv").value;
-        var tinhVal = document.getElementById("filterCH").value;
+        var chVal = document.getElementById("filterCH").value;
         var statusVal = document.getElementById("filterStatus").value;
 
         filteredList = [];
@@ -950,7 +950,7 @@
             if (qlkvVal && store.qlkv !== qlkvVal) {
                 continue;
             }
-            if (tinhVal && store.tinh !== tinhVal) {
+            if (chVal && store.maCost !== chVal) {
                 continue;
             }
 
