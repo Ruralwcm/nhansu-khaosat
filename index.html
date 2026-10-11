@@ -581,6 +581,8 @@
 
     /* Confirm buttons (Dung/Sai) */
     .cf-btn { padding: 4px 10px; border-radius: 4px; border: 1px solid #d0dae4; background: #fff; font-size: 12px; cursor: pointer; font-weight: 600; margin: 1px; }
+    .cf-btn-green { background: #0d8a5f; color: #fff; border-color: #0d8a5f; }
+    .cf-btn-red { background: #c0392b; color: #fff; border-color: #c0392b; }
     .cf-btn.cf-ok { background: #0d8a5f; color: #fff; border-color: #0d8a5f; }
     .cf-btn.cf-err { background: #c0392b; color: #fff; border-color: #c0392b; }
     .cf-extra { background: #fef9e7; border: 1px solid #f0d060; border-radius: 6px; padding: 6px; margin-top: 4px; }
@@ -609,7 +611,7 @@
 <body>
 
 <div class="header">
-    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.17</span></h1>
+    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.18</span></h1>
     <p>Dữ liệu: 10/10/2026 | 7.594 nhân sự | 1.803 cửa hàng</p>
 </div>
 
@@ -1258,7 +1260,7 @@
             var showSaiForm = hasSurvey && !isCorrect;
             // Dung button - checkmark icon
             var btnDung = document.createElement("button");
-            btnDung.className = "cf-btn" + (isCorrect && !showDone ? "" : " cf-ok");
+            btnDung.className = "cf-btn cf-btn-green";
             btnDung.textContent = "Đúng";
             btnDung.title = "Xác nhận đúng";
             btnDung.setAttribute("data-mnv-dung", emp.m);
@@ -1272,7 +1274,7 @@
             })(emp.m, hiddenInput);
             // Sai button
             var btnSai = document.createElement("button");
-            btnSai.className = "cf-btn" + (!isCorrect ? " cf-err" : "");
+            btnSai.className = "cf-btn cf-btn-red";
             btnSai.textContent = "Sai";
             btnSai.title = "Xác nhận sai";
             btnSai.setAttribute("data-mnv-sai", emp.m);
@@ -1396,7 +1398,8 @@
                     if (ex) ex.style.display = "none";
                     var doneSpan = document.createElement("span");
                     doneSpan.style.color = "#0d8a5f"; doneSpan.style.fontWeight = "600"; doneSpan.style.fontSize = "12px";
-                    doneSpan.textContent = "✅ Đúng thông tin";
+                    doneSpan.textContent = "✅ Đúng";
+                    doneSpan.style.fontSize = "11px";
                     doneSpan.setAttribute("data-done", mnv);
                     parentTd.appendChild(doneSpan);
                     var edA = document.createElement("a");
@@ -1417,7 +1420,8 @@
                 btnSai.style.display = "none";
                 var doneSpan2 = document.createElement("span");
                 doneSpan2.style.color = "#0d8a5f"; doneSpan2.style.fontWeight = "600"; doneSpan2.style.fontSize = "12px";
-                doneSpan2.textContent = "✅ Đúng thông tin";
+                doneSpan2.textContent = "✅ Đúng";
+                doneSpan2.style.fontSize = "11px";
                 doneSpan2.setAttribute("data-done", emp.m);
                 tdSel.appendChild(doneSpan2);
                 var editLink = document.createElement("a");
