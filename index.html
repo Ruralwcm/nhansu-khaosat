@@ -1200,7 +1200,7 @@
             // Dung button - checkmark icon
             var btnDung = document.createElement("button");
             btnDung.className = "cf-btn" + (isCorrect ? " cf-ok" : "");
-            btnDung.textContent = "✓";
+            btnDung.textContent = "Đúng";
             btnDung.title = "Xác nhận đúng";
             btnDung.setAttribute("data-mnv-dung", emp.m);
             btnDung.onclick = (function(mnv, hinp, bd, bs, extraDiv) {
@@ -1214,7 +1214,7 @@
             // Sai button
             var btnSai = document.createElement("button");
             btnSai.className = "cf-btn" + (!isCorrect ? " cf-err" : "");
-            btnSai.textContent = "✗";
+            btnSai.textContent = "Sai";
             btnSai.title = "Xác nhận sai";
             btnSai.setAttribute("data-mnv-sai", emp.m);
             // Extra form (hidden by default)
@@ -1280,25 +1280,40 @@
             btnSai.onclick = (function(mnv, hinp, bd, bs, ex) {
                 return function() {
                     hinp.value = "incorrect";
-                    bd.className = "cf-btn";
-                    bs.className = "cf-btn cf-err";
+                    bd.style.display = "none";
+                    bs.style.display = "none";
                     if (ex) ex.style.display = "block";
                 };
             })(emp.m, hiddenInput, btnDung, btnSai, extraDiv);
-            btnDung.onclick = (function(mnv, hinp, bd, bs, ex) {
+            btnDung.onclick = (function(mnv, hinp, bd, bs, ex, parentTd) {
                 return function() {
                     hinp.value = "correct";
-                    bd.className = "cf-btn cf-ok";
-                    bs.className = "cf-btn";
+                    bd.style.display = "none";
+                    bs.style.display = "none";
                     if (ex) ex.style.display = "none";
+                    var doneSpan = document.createElement("span");
+                    doneSpan.style.color = "#0d8a5f"; doneSpan.style.fontWeight = "600"; doneSpan.style.fontSize = "12px";
+                    doneSpan.textContent = "✅ Đã xong";
+                    doneSpan.setAttribute("data-done", mnv);
+                    parentTd.appendChild(doneSpan);
                 };
-            })(emp.m, hiddenInput, btnDung, btnSai, extraDiv);
+            })(emp.m, hiddenInput, btnDung, btnSai, extraDiv, tdSel);
             
             tdSel.appendChild(hiddenInput);
             tdSel.appendChild(btnDung);
             tdSel.appendChild(document.createTextNode(" "));
             tdSel.appendChild(btnSai);
             tdSel.appendChild(extraDiv);
+            // Restore done state
+            if (isCorrect) {
+                btnDung.style.display = "none";
+                btnSai.style.display = "none";
+                var doneSpan2 = document.createElement("span");
+                doneSpan2.style.color = "#0d8a5f"; doneSpan2.style.fontWeight = "600"; doneSpan2.style.fontSize = "12px";
+                doneSpan2.textContent = "✅ Đã xong";
+                doneSpan2.setAttribute("data-done", emp.m);
+                tdSel.appendChild(doneSpan2);
+            }
             row.appendChild(tdSel);
 
             var tdNote = document.createElement("td");
