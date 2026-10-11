@@ -583,6 +583,12 @@
     .cf-btn { padding: 4px 10px; border-radius: 4px; border: 1px solid #d0dae4; background: #fff; font-size: 12px; cursor: pointer; font-weight: 600; margin: 1px; }
     .cf-btn-green { background: #0d8a5f; color: #fff; border-color: #0d8a5f; }
     .cf-btn-red { background: #c0392b; color: #fff; border-color: #c0392b; }
+    /* Toast notification */
+    .toast-container { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+    .toast { padding: 12px 20px; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.2); animation: toastIn 0.3s ease-out; max-width: 90vw; text-align: center; }
+    .toast.success { background: #0d8a5f; }
+    .toast.warn { background: #e67e22; }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
     .cf-btn.cf-ok { background: #0d8a5f; color: #fff; border-color: #0d8a5f; }
     .cf-btn.cf-err { background: #c0392b; color: #fff; border-color: #c0392b; }
     .cf-extra { background: #fef9e7; border: 1px solid #f0d060; border-radius: 6px; padding: 6px; margin-top: 4px; }
@@ -611,7 +617,7 @@
 <body>
 
 <div class="header">
-    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.19</span></h1>
+    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.20</span></h1>
     <p>Dữ liệu: 10/10/2026 | 7.594 nhân sự | 1.803 cửa hàng</p>
 </div>
 
@@ -755,6 +761,20 @@
     ];
 
     // ===================== INIT =====================
+    function showToast(msg, type) {
+        var container = document.querySelector(".toast-container");
+        if (!container) {
+            container = document.createElement("div");
+            container.className = "toast-container";
+            document.body.appendChild(container);
+        }
+        var toast = document.createElement("div");
+        toast.className = "toast " + (type || "success");
+        toast.textContent = msg;
+        container.appendChild(toast);
+        setTimeout(function() { toast.style.opacity = "0"; toast.style.transition = "opacity 0.3s"; setTimeout(function() { toast.remove(); }, 300); }, 2500);
+    }
+
     function init() {
         loadSurveyData();
         loadDataFiles();
@@ -1366,8 +1386,8 @@
                     var sd = startI.value, ed = endI.value;
                     var isLeave = (s.indexOf("thai") >= 0 || s.indexOf("ốm") >= 0 || s.indexOf("không") >= 0);
                     var isResign = (s.indexOf("Đã nghỉ") >= 0 || s.indexOf("Dự kiến") >= 0);
-                    if (isLeave && (!sd || !ed)) { alert("Vui lòng nhập đủ ngày bắt đầu và kết thúc!"); return; }
-                    if (isResign && !sd) { alert("Vui lòng nhập ngày nghỉ!"); return; }
+                    if (isLeave && (!sd || !ed)) { showToast("Vui lòng nhập đủ ngày bắt đầu và kết thúc!", "warn"); return; }
+                    if (isResign && !sd) { showToast("Vui lòng nhập ngày nghỉ!", "warn"); return; }
                     ex.style.display = "none";
                     var updSpan = document.createElement("span");
                     updSpan.style.color = "#e67e22"; updSpan.style.fontWeight = "600"; updSpan.style.fontSize = "11px";
@@ -1479,11 +1499,11 @@
                     }
                 }
                 if (!allConfirmed) {
-                    alert("Vui lòng xác nhận tất cả nhân viên trước khi lưu!");
+                    showToast("Vui lòng xác nhận tất cả nhân viên trước khi lưu!", "warn");
                     return;
                 }
                 saveStoreSurvey(code);
-                alert("✅ Đã lưu khảo sát thành công!");
+                showToast("✅ Đã lưu khảo sát thành công!", "success");
             };
         })(maCost);
 
@@ -1965,7 +1985,7 @@
         for (var key in surveyData) {
             if (surveyData.hasOwnProperty(key)) { codes.push(key); }
         }
-        if (codes.length === 0) { alert("Không có dữ liệu để xuất."); return; }
+        if (codes.length === 0) { showToast("Không có dữ liệu để xuất.", "warn"); return; }
         var storeMap = buildStoreMapByCode();
         var rows = [["Mã CH","Tên CH","GĐV","QLKV","Tỉnh","MNV","Họ tên","Chức danh","Trạng thái Hệ thống","Xác nhận","Tình trạng KS","Ngày bắt đầu","Ngày kết thúc","Ngày NKV","Ghi chú","Thời gian Khảo sát"]];
         for (var i = 0; i < codes.length; i++) {
