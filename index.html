@@ -1138,7 +1138,7 @@
 
         var thead = document.createElement("thead");
         var headRow = document.createElement("tr");
-        var headers = ["MNV", "Họ tên", "Chức danh", "Trạng thái Hệ thống", "Xác nhận", "Ghi chú"];
+        var headers = ["MNV", "Họ tên", "Chức danh", "Trạng thái Hệ thống", "Thời gian", "Xác nhận", "Ghi chú"];
         var h;
         for (h = 0; h < headers.length; h++) {
             var th = document.createElement("th");
@@ -1174,6 +1174,16 @@
             tdSys.appendChild(sysSpan);
             row.appendChild(tdSys);
 
+            // Time column
+            var tdTime = document.createElement("td");
+            tdTime.style.fontSize = "11px"; tdTime.style.color = "#607085"; tdTime.style.whiteSpace = "nowrap";
+            if (emp.t === "Đã nghỉ việc" && emp.ed) {
+                tdTime.textContent = emp.ed;
+            } else if ((emp.t.indexOf("thai") >= 0 || emp.t.indexOf("ốm") >= 0 || emp.t.indexOf("không") >= 0 || emp.t.indexOf("om") >= 0) && emp.sd) {
+                tdTime.textContent = (emp.sd||"") + " - " + (emp.ed||"");
+            }
+            row.appendChild(tdTime);
+
             var tdSel = document.createElement("td");
             tdSel.style.whiteSpace = "nowrap";
             // Hidden input stores correct/sai state
@@ -1187,10 +1197,11 @@
                 isCorrect = false;
                 hiddenInput.value = "incorrect";
             }
-            // Dung button
+            // Dung button - checkmark icon
             var btnDung = document.createElement("button");
             btnDung.className = "cf-btn" + (isCorrect ? " cf-ok" : "");
-            btnDung.textContent = "Đúng";
+            btnDung.textContent = "✓";
+            btnDung.title = "Xác nhận đúng";
             btnDung.setAttribute("data-mnv-dung", emp.m);
             btnDung.onclick = (function(mnv, hinp, bd, bs, extraDiv) {
                 return function() {
@@ -1200,10 +1211,11 @@
                     if (extraDiv) extraDiv.style.display = "none";
                 };
             })(emp.m, hiddenInput);
-            // Sai button  
+            // Sai button
             var btnSai = document.createElement("button");
             btnSai.className = "cf-btn" + (!isCorrect ? " cf-err" : "");
-            btnSai.textContent = "Sai";
+            btnSai.textContent = "✗";
+            btnSai.title = "Xác nhận sai";
             btnSai.setAttribute("data-mnv-sai", emp.m);
             // Extra form (hidden by default)
             var extraDiv = document.createElement("div");
@@ -1214,12 +1226,15 @@
             var extraSel = document.createElement("select");
             extraSel.setAttribute("data-mnv-s", emp.m);
             extraSel.style.marginBottom = "4px";
-            var defaultSt = (savedEmp[emp.m] && savedEmp[emp.m].s) ? savedEmp[emp.m].s : mapSystemToOption(emp.t);
+            var defaultSt = (savedEmp[emp.m] && savedEmp[emp.m].s) ? savedEmp[emp.m].s : "";
             for (var s2 = 0; s2 < STATUS_OPTIONS.length; s2++) {
+                // Skip the current SAP status when showing "Sai" options
+                if (STATUS_OPTIONS[s2] === emp.t) continue;
                 var optEl2 = document.createElement("option");
                 optEl2.value = STATUS_OPTIONS[s2];
                 optEl2.textContent = STATUS_OPTIONS[s2];
                 if (STATUS_OPTIONS[s2] === defaultSt) optEl2.selected = true;
+                if (!defaultSt && s2 === 0) optEl2.selected = true;
                 extraSel.appendChild(optEl2);
             }
             extraDiv.appendChild(extraSel);
