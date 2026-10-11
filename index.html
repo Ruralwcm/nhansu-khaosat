@@ -611,7 +611,7 @@
 <body>
 
 <div class="header">
-    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.18</span></h1>
+    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.19</span></h1>
     <p>Dữ liệu: 10/10/2026 | 7.594 nhân sự | 1.803 cửa hàng</p>
 </div>
 
@@ -1444,7 +1444,7 @@
                 tdSel.appendChild(updSpan);
                 var editLink2 = document.createElement("a");
                 editLink2.href = "#"; editLink2.textContent = "Sửa"; editLink2.style.fontSize = "10px"; editLink2.style.marginLeft = "4px"; editLink2.style.color = "#2980b9";
-                editLink2.onclick = (function(bd, bs, us, ex) { return function(e) { e.preventDefault(); bd.style.display = ""; bs.style.display = ""; us.remove(); editLink2.remove(); ex.style.display = "block"; }; })(btnDung, btnSai, updSpan, extraDiv);
+                editLink2.onclick = (function(bd, bs, us, ex) { return function(e) { e.preventDefault(); bd.style.display = "none"; bs.style.display = "none"; us.remove(); editLink2.remove(); ex.style.display = "block"; }; })(btnDung, btnSai, updSpan, extraDiv);
                 tdSel.appendChild(editLink2);
             }
             row.appendChild(tdSel);
