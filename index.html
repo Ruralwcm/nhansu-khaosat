@@ -606,7 +606,7 @@
 <body>
 
 <div class="header">
-    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.14</span></h1>
+    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.15</span></h1>
     <p>Dữ liệu: 10/10/2026 | 7.594 nhân sự | 1.803 cửa hàng</p>
 </div>
 
@@ -1392,12 +1392,8 @@
                     parentTd.appendChild(doneSpan);
                     var edA = document.createElement("a");
                     edA.href = "#"; edA.textContent = "Sửa"; edA.style.fontSize = "10px"; edA.style.marginLeft = "4px"; edA.style.color = "#2980b9";
-                    edA.onclick = function(e) { e.preventDefault(); bd.style.display = ""; bs.style.display = ""; doneSpan.remove(); edA.remove(); huyA.remove(); };
+                    edA.onclick = function(e) { e.preventDefault(); bd.style.display = ""; bs.style.display = ""; doneSpan.remove(); edA.remove(); };
                     parentTd.appendChild(edA);
-                    var huyA = document.createElement("a");
-                    huyA.href = "#"; huyA.textContent = "Hủy"; huyA.style.fontSize = "10px"; huyA.style.marginLeft = "4px"; huyA.style.color = "#e74c3c";
-                    huyA.onclick = function(e) { e.preventDefault(); bd.style.display = ""; bs.style.display = ""; doneSpan.remove(); edA.remove(); huyA.remove(); };
-                    parentTd.appendChild(huyA);
                 };
             })(emp.m, hiddenInput, btnDung, btnSai, extraDiv, tdSel);
             
@@ -1417,12 +1413,8 @@
                 tdSel.appendChild(doneSpan2);
                 var editLink = document.createElement("a");
                 editLink.href = "#"; editLink.textContent = "Sửa"; editLink.style.fontSize = "10px"; editLink.style.marginLeft = "4px"; editLink.style.color = "#2980b9";
-                editLink.onclick = (function(bd, bs, ds) { return function(e) { e.preventDefault(); bd.style.display = ""; bs.style.display = ""; ds.remove(); editLink.remove(); cancelLink.remove(); }; })(btnDung, btnSai, doneSpan2);
+                editLink.onclick = (function(bd, bs, ds) { return function(e) { e.preventDefault(); bd.style.display = ""; bs.style.display = ""; ds.remove(); editLink.remove(); }; })(btnDung, btnSai, doneSpan2);
                 tdSel.appendChild(editLink);
-                var cancelLink = document.createElement("a");
-                cancelLink.href = "#"; cancelLink.textContent = "Hủy"; cancelLink.style.fontSize = "10px"; cancelLink.style.marginLeft = "4px"; cancelLink.style.color = "#e74c3c";
-                cancelLink.onclick = (function(bd, bs, ds) { return function(e) { e.preventDefault(); bd.style.display = ""; bs.style.display = ""; ds.remove(); editLink.remove(); cancelLink.remove(); }; })(btnDung, btnSai, doneSpan2);
-                tdSel.appendChild(cancelLink);
             }
             if (showSaiForm) {
                 btnDung.style.display = "none";
@@ -1439,12 +1431,8 @@
                 tdSel.appendChild(updSpan);
                 var editLink2 = document.createElement("a");
                 editLink2.href = "#"; editLink2.textContent = "Sửa"; editLink2.style.fontSize = "10px"; editLink2.style.marginLeft = "4px"; editLink2.style.color = "#2980b9";
-                editLink2.onclick = (function(bd, bs, us, ex) { return function(e) { e.preventDefault(); bd.style.display = ""; bs.style.display = ""; us.remove(); editLink2.remove(); cancelLink2.remove(); ex.style.display = "block"; }; })(btnDung, btnSai, updSpan, extraDiv);
+                editLink2.onclick = (function(bd, bs, us, ex) { return function(e) { e.preventDefault(); bd.style.display = ""; bs.style.display = ""; us.remove(); editLink2.remove(); ex.style.display = "block"; }; })(btnDung, btnSai, updSpan, extraDiv);
                 tdSel.appendChild(editLink2);
-                var cancelLink2 = document.createElement("a");
-                cancelLink2.href = "#"; cancelLink2.textContent = "Hủy"; cancelLink2.style.fontSize = "10px"; cancelLink2.style.marginLeft = "4px"; cancelLink2.style.color = "#e74c3c";
-                cancelLink2.onclick = (function(bd, bs, us) { return function(e) { e.preventDefault(); bd.style.display = ""; bs.style.display = ""; us.remove(); editLink2.remove(); cancelLink2.remove(); }; })(btnDung, btnSai, updSpan);
-                tdSel.appendChild(cancelLink2);
             }
             row.appendChild(tdSel);
 
