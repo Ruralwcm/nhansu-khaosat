@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Khao Sat Nhan Su</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Arial,sans-serif;background:#f0f2f5;color:#333}
-.hdr{background:linear-gradient(135deg,#1a5276,#2980b9);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.hdr h1{font-size:18px}.hdr i{font-size:12px;opacity:.9}
+.hdr{background:linear-gradient(135deg,#1a5276,#2980b9);color:#fff;padding:16px 20px}
+.hdr h1{font-size:18px}.hdr .info{font-size:12px;opacity:.9}
 .tb{display:flex;background:#fff;border-bottom:2px solid #e0e0e0;position:sticky;top:0;z-index:10}
 .tbb{flex:1;padding:14px;text-align:center;cursor:pointer;font-weight:600;font-size:14px;border:none;background:none;color:#777}
 .tbb.ac{color:#2980b9;border-bottom:3px solid #2980b9;margin-bottom:-2px}
@@ -23,7 +25,7 @@ body{font-family:Arial,sans-serif;background:#f0f2f5;color:#333}
 .et td{padding:8px 10px;border-bottom:1px solid #f0f0f0}
 .ss{padding:6px 8px;border-radius:6px;border:1px solid #ddd;font-size:13px}
 .ss.ok{border-color:#27ae60;background:#eafaf1}.ss.err{border-color:#e74c3c;background:#fdedec}
-.ni{padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:12px;width:120px}
+.ni{padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:12px;width:100px}
 .kr{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
 .kc{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.1);text-align:center}
 .kv{font-size:28px;font-weight:800}.kl{font-size:12px;color:#888}
@@ -32,7 +34,7 @@ body{font-family:Arial,sans-serif;background:#f0f2f5;color:#333}
 .gc{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
 .gc h3{font-size:14px;margin-bottom:12px;color:#1a5276}
 .gb{height:28px;background:#e9ecef;border-radius:14px;overflow:hidden;margin-bottom:8px}
-.gbf{height:100%;background:linear-gradient(90deg,#27ae60,#2ecc71);border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;transition:width .5s}
+.gbf{height:100%;background:linear-gradient(90deg,#27ae60,#2ecc71);border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px}
 .gs{display:flex;justify-content:space-between;font-size:12px;color:#666}
 .sec{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.1);margin-bottom:16px}
 .sec h3{font-size:15px;margin-bottom:12px}
@@ -50,11 +52,25 @@ body{font-family:Arial,sans-serif;background:#f0f2f5;color:#333}
 .toast.show{display:block;animation:su .3s}.toast.ok{background:#27ae60}
 @keyframes su{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
 @media(max-width:768px){.fb{flex-direction:column}.gg{grid-template-columns:1fr}.kr{grid-template-columns:repeat(2,1fr)}}
-</style></head><body>
-<div class="hdr"><div><h1>Khao Sat Tinh Trang Nhan Su Cua Hang</h1><div class="i">So lieu: 10/10/2026 | 7.594 NS | 1.803 CH | 10 GDV</div></div><div style="font-size:12px">v1.0</div></div>
+</style>
+</head>
+<body>
+<div class="hdr"><h1>Khao Sat Tinh Trang Nhan Su Cua Hang</h1><div class="info">Du lieu: 10/10/2026 | 7.594 NS | 1.803 CH | 10 GDV | v1.1</div></div>
 <div class="tb"><div class="tbb ac" onclick="switchTab(0)">Khao Sat</div><div class="tbb" onclick="switchTab(1)">Dashboard</div><div class="tbb" onclick="switchTab(2)">Lich Su</div></div>
 <div class="ct">
-<div id="t0"><div class="fb"><select id="fg" onchange="onGdvChange()"><option value="">Tat ca GDV</option></select><select id="fq" onchange="renderSurvey()"><option value="">Tat ca QLKV</option></select><select id="ft" onchange="renderSurvey()"><option value="">Tat ca Tinh</option></select><select id="fs" onchange="renderSurvey()"><option value="">Tat ca</option><option value="d">Da KS</option><option value="p">Chua KS</option><option value="m">Co sai khac</option></select><button class="btn btn-o" onclick="resetFilters()">Reset</button><span id="rc" style="font-size:13px;color:#888"></span></div><div id="sl"></div><div class="pg" id="pg"></div><div id="lo">Dang tai du lieu...</div></div>
+<div id="t0">
+<div class="fb">
+<select id="fg" onchange="onGdvChange()"><option value="">Tat ca GDV</option></select>
+<select id="fq" onchange="renderSurvey()"><option value="">Tat ca QLKV</option></select>
+<select id="ft" onchange="renderSurvey()"><option value="">Tat ca Tinh</option></select>
+<select id="fs" onchange="renderSurvey()"><option value="">Tat ca</option><option value="d">Da KS</option><option value="p">Chua KS</option><option value="m">Co sai khac</option></select>
+<button class="btn btn-o" onclick="resetFilters()">Reset</button>
+<span id="rc" style="font-size:13px;color:#888"></span>
+</div>
+<div id="sl"></div>
+<div class="pg" id="pg"></div>
+<div id="lo">Dang tai du lieu...</div>
+</div>
 <div id="t1" class="h"><div class="kr" id="kr"></div><div class="cx"><h3>Tien Do Khao Sat Theo GDV</h3><canvas id="gc"></canvas></div><div class="gg" id="gg"></div><div class="sec"><h3>Sai Khac Tinh Trang: SAP vs Khao Sat</h3><div id="sb"></div></div></div>
 <div id="t2" class="h"><div class="fb"><span id="hc" style="font-size:13px;color:#888"></span><button class="btn btn-d" onclick="clearHistory()" style="margin-left:auto">Xoa LS</button><button class="btn btn-o" onclick="exportCSV()">Xuat CSV</button></div><div id="hl"></div></div>
 </div>
@@ -63,89 +79,142 @@ var STO=["Dang lam viec","Nghi thai san","Nghi khong luong","Nghi om","Da nghi v
 var PS=20,CM={},CL=[],SD={},CP=0;
 
 async function init(){
-var v=localStorage.getItem("ns2");if(v)SD=JSON.parse(v);
-try{var r=await fetch("emp-compact.json");var d=await r.json();
+var v=localStorage.getItem("ns_v1");if(v){SD=JSON.parse(v);}
+try{
+var r=await fetch("emp-compact.json");var d=await r.json();
 CM={};CL=[];
-Object.entries(d).forEach(function(e){var code=e[0],emps=e[1];
-var el=emps.map(function(x){return{m:x.m,n:x.n,c:x.c,g:x.g,t:x.t,q:x.q,d:x.d,p:x.p,code:code}});
-CM[code]=el;CL.push({code:code,name:code,gdv:el[0].d||"",qlkv:el[0].q||"",tinh:el[0].p||"",cnt:el.length});
-});
-}catch(e){document.getElementById("lo").innerHTML="Loi tai du lieu";return}
+var codes=Object.keys(d);
+for(var ci=0;ci<codes.length;ci++){
+var code=codes[ci];var emps=d[code];
+var el=[];
+for(var ei=0;ei<emps.length;ei++){
+var x=emps[ei];
+el.push({m:x.m,n:x.n,c:x.c,g:x.g,t:x.t,q:x.q,d:x.d,p:x.p,code:code});
+}
+CM[code]=el;
+CL.push({code:code,name:code,gdv:el[0].d||"",qlkv:el[0].q||"",tinh:el[0].p||"",cnt:el.length});
+}
+}catch(e){document.getElementById("lo").innerHTML="Loi tai du lieu: "+e.message;return}
 populateFilters();renderSurvey();renderDashboard();renderHistory();
 document.getElementById("lo").classList.add("h");
 }
 
 function populateFilters(){
-var gs=new Set,qs=new Set,ts=new Set;
-CL.forEach(function(c){if(c.gdv)gs.add(c.gdv);if(c.qlkv)qs.add(c.qlkv);if(c.tinh)ts.add(c.tinh)});
-var g=document.getElementById("fg");Array.from(gs).sort().forEach(function(v){var o=document.createElement("option");o.value=v;o.textContent=v;g.appendChild(o)});
-var q=document.getElementById("fq");Array.from(qs).sort().forEach(function(v){var o=document.createElement("option");o.value=v;o.textContent=v;q.appendChild(o)});
-var t=document.getElementById("ft");Array.from(ts).sort().forEach(function(v){var o=document.createElement("option");o.value=v;o.textContent=v;t.appendChild(o)});
+var gs=new Set(),qs=new Set(),ts=new Set();
+for(var i=0;i<CL.length;i++){var c=CL[i];if(c.gdv)gs.add(c.gdv);if(c.qlkv)qs.add(c.qlkv);if(c.tinh)ts.add(c.tinh);}
+var g=document.getElementById("fg");var ga=Array.from(gs).sort();
+for(var i=0;i<ga.length;i++){var o=document.createElement("option");o.value=ga[i];o.textContent=ga[i];g.appendChild(o);}
+var q=document.getElementById("fq");var qa=Array.from(qs).sort();
+for(var i=0;i<qa.length;i++){var o=document.createElement("option");o.value=qa[i];o.textContent=qa[i];q.appendChild(o);}
+var t=document.getElementById("ft");var ta=Array.from(ts).sort();
+for(var i=0;i<ta.length;i++){var o=document.createElement("option");o.value=ta[i];o.textContent=ta[i];t.appendChild(o);}
 }
 
-function onGdvChange(){var g=document.getElementById("fg").value;var q=document.getElementById("fq");q.innerHTML="<option value=''>Tat ca QLKV</option>";var qs=new Set;CL.forEach(function(c){if(!g||c.gdv===g)qs.add(c.qlkv)});Array.from(qs).sort().forEach(function(v){var o=document.createElement("option");o.value=v;o.textContent=v;q.appendChild(o)});CP=0;renderSurvey();}
-function resetFilters(){document.getElementById("fg").value="";document.getElementById("fq").value="";document.getElementById("ft").value="";document.getElementById("fs").value="";onGdvChange();}
+function onGdvChange(){
+var g=document.getElementById("fg").value;var q=document.getElementById("fq");
+q.innerHTML="<option value=''>Tat ca QLKV</option>";var qs=new Set();
+for(var i=0;i<CL.length;i++){if(!g||CL[i].gdv===g)qs.add(CL[i].qlkv);}
+var qa=Array.from(qs).sort();
+for(var i=0;i<qa.length;i++){var o=document.createElement("option");o.value=qa[i];o.textContent=qa[i];q.appendChild(o);}
+CP=0;renderSurvey();
+}
+
+function resetFilters(){
+document.getElementById("fg").value="";document.getElementById("fq").value="";
+document.getElementById("ft").value="";document.getElementById("fs").value="";
+onGdvChange();
+}
 
 function getFiltered(){
-var g=document.getElementById("fg").value,q=document.getElementById("fq").value,t=document.getElementById("ft").value,s=document.getElementById("fs").value;
+var g=document.getElementById("fg").value;
+var q=document.getElementById("fq").value;
+var t=document.getElementById("ft").value;
+var s=document.getElementById("fs").value;
 return CL.filter(function(c){
-if(g&&c.gdv!==g)return false;if(q&&c.qlkv!==q)return false;if(t&&c.tinh!==t)return false;
-if(s==="d"&&!SD[c.code])return false;if(s==="p"&&SD[c.code])return false;
-if(s==="m"){var sd=SD[c.code];if(!sd||!sd.e)return false;var emps=CM[c.code]||[];var keys=Object.keys(sd.e);for(var i=0;i<keys.length;i++){var mnv=keys[i],info=sd.e[mnv];var emp=emps.find(function(x){return x.m===mnv});if(emp&&info.s!==emp.t)return true;}return false;}
+if(g&&c.gdv!==g)return false;
+if(q&&c.qlkv!==q)return false;
+if(t&&c.tinh!==t)return false;
+if(s==="d"&&!SD[c.code])return false;
+if(s==="p"&&SD[c.code])return false;
+if(s==="m"){
+var sd=SD[c.code];if(!sd||!sd.e)return false;
+var emps=CM[c.code]||[];
+var keys=Object.keys(sd.e);
+for(var i=0;i<keys.length;i++){
+var mnv=keys[i];var info=sd.e[mnv];
+var emp=emps.find(function(x){return x.m===mnv});
+if(emp&&info.s!==emp.t)return true;
+}
+return false;
+}
 return true;
 });
 }
 
+function escHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
+
 function renderSurvey(){
-var filtered=getFiltered();document.getElementById("rc").textContent=filtered.length+" CH";
-var tp=Math.ceil(filtered.length/PS),p=Math.max(0,Math.min(CP,tp-1));CP=p;
-var items=filtered.slice(p*PS,(p+1)*PS);var ct=document.getElementById("sl");
+var filtered=getFiltered();
+document.getElementById("rc").textContent=filtered.length+" CH";
+var tp=Math.ceil(filtered.length/PS);
+var p=Math.max(0,Math.min(CP,tp-1));CP=p;
+var items=filtered.slice(p*PS,(p+1)*PS);
+var ct=document.getElementById("sl");
 if(!items.length){ct.innerHTML="<div class='em'><div class='ic'>&#x1F4CB;</div>Khong co CH nao</div>";document.getElementById("pg").innerHTML="";return;}
 var h="";
-items.forEach(function(ch){var code=ch.code,emps=CM[code]||[],done=!!SD[code];
+for(var ii=0;ii<items.length;ii++){
+var ch=items[ii];var code=ch.code;var emps=CM[code]||[];var done=!!SD[code];
 h+="<div class='card' style='border-left:4px solid "+(done?"#27ae60":"#e0e0e0")+"' id='ch-"+code+"'>";
 h+="<div class='chd'><div><div class='cht'>&#x1F3EA "+code+"</div>";
 h+="<div class='chm'>GDV: "+ch.gdv+" | QLKV: "+ch.qlkv+" | "+ch.tinh+" | "+emps.length+" NV</div></div>";
-h+="<div>"+(done?"<span style='color:#27ae60;font-weight:600'>Da KS - "+(SD[code].ts||"")+"</span>":"<span style='color:#e67e22'>Chua KS</span>")+"</div></div>";
-if(emps.length){
+h+="<div>"+(done?"<span style='color:#27ae60;font-weight:600'>Da KS - "+SD[code].ts+"</span>":"<span style='color:#e67e22'>Chua KS</span>")+"</div></div>";
+if(emps.length>0){
 h+="<div style='overflow-x:auto'><table class='et'><tr><th>MNV</th><th>Ho Ten</th><th>Chuc Danh</th><th>Gioi Tinh</th><th>TT SAP</th><th>Khao Sat</th><th>Ghi Chu</th></tr>";
-emps.forEach(function(e){var sv=SD[code]&&SD[code].e&&SD[code].e[e.m];var st=sv?sv.s:e.t;var match=!sv||st===e.t;var cls=match?"ok":"er";
-h+="<tr><td>"+e.m+"</td><td><strong>"+e.n+"</strong></td><td>"+e.c+"</td><td>"+e.g+"</td><td>"+e.t+"</td>";
+for(var ei=0;ei<emps.length;ei++){
+var e=emps[ei];var sv=SD[code]&&SD[code].e&&SD[code].e[e.m];
+var st=sv?sv.s:e.t;var match=!sv||st===e.t;var cls=match?"ok":"err";
+h+="<tr><td>"+e.m+"</td><td><strong>"+escHtml(e.n)+"</strong></td><td>"+escHtml(e.c)+"</td><td>"+e.g+"</td><td>"+escHtml(e.t)+"</td>";
 h+="<td><select class='ss "+cls+"' data-ch='"+code+"' data-mnv='"+e.m+"' onchange='onStatusChange(this)'>";
-STO.forEach(function(s){h+="<option value='"+s+"'"+(st===s?" selected":"")+">"+s+"</option>";});
+for(var si=0;si<STO.length;si++){var s=STO[si];h+="<option value='"+s+"'"+(st===s?" selected":"")+">"+s+"</option>";}
 h+="</select>"+(match?"":"<br><small style='color:#e74c3c'>Khac SAP</small>")+"</td>";
 h+="<td><input class='ni' placeholder='Ghi chu...' data-ch='"+code+"' data-mnv='"+e.m+"' value='"+(sv?(sv.note||""):"")+"' onchange='onNoteChange(this)'></td></tr>";
-});
-h+="</table></div><div style='margin-top:12p;text-align:right'>";
+}
+h+="</table></div><div style='margin-top:12px;text-align:right'>";
 h+="<button class='btn btn-p' onclick='saveSurvey(\""+code+"\")'>Luu</button>";
-if(done) h+="<button class='btn btn-o' onclick='clearSurvey(\""+code+"\")' style='margin-left:8px'>Lam Lai</button>";
+if(done)h+="<button class='btn btn-o' onclick='clearSurvey(\""+code+"\")' style='margin-left:8px'>Lam Lai</button>";
 h+="</div>";
 }
 h+="</div>";
-});
+}
 ct.innerHTML=h;
-var pg="";if(tp>1){
-pg+="<button "+(p===0?"diabled":"onclick='CP=0;renderSurvey()'")+">|<<</button>";
-pg+="<button "+(p===0?"diabled":"onclick='CP--;renderSurvey()'")+"><</button>";
-for(var i=Math.max(0,p-2);i<=Math.min(tp-1,p+2);i++)pg+="<btton class='"+(i===p?"cur":"")+"' onclick='CP="+i+";renderSurvey()'>"+(i+1)+"</button>";
-pg+="<button "+(p>=tp-1?"diabled":"onclick='CP++;renderSurvey()'")+">></button>";
-pg+="<button "+(p>=tp-1?"diabled":"onclick='CP="+(tp-1)+";renderSurvey()'")+">>|</button>";
+var pg="";
+if(tp>1){
+pg+="<button "+(p===0?"disabled":"onclick='CP=0;renderSurvey()'")+">|&lt;</button>";
+pg+="<button "+(p===0?"disabled":"onclick='CP--;renderSurvey()'")+">&lt;</button>";
+for(var i=Math.max(0,p-2);i<=Math.min(tp-1,p+2);i++){
+pg+="<button class='"+(i===p?"cur":"")+"' onclick='CP="+i+";renderSurvey()'>"+(i+1)+"</button>";
+}
+pg+="<button "+(p>=tp-1?"disabled":"onclick='CP++;renderSurvey()'")+">&gt;</button>";
+pg+="<button "+(p>=tp-1?"disabled":"onclick='CP="+(tp-1)+";renderSurvey()'")+">&gt;|</button>";
 pg+="<span style='font-size:12px;color:#888'>Trang "+(p+1)+"/"+tp+"</span>";
 }
-docment.getElementById("pg").innerHTML=pg;
+document.getElementById("pg").innerHTML=pg;
 }
 
 function onStatusChange(sel){
-var code=sel.dataset.ch,mnv=sel.dataset.mnv;
-if(!SD[code])SD[code]={e:{},ts:""};if(!SD[code].e[mnv])SD[code].e[mnv]={s:"",note:""};
+var code=sel.dataset.ch;var mnv=sel.dataset.mnv;
+if(!SD[code])SD[code]={e:{},ts:""};
+if(!SD[code].e[mnv])SD[code].e[mnv]={s:"",note:""};
 SD[code].e[mnv].s=sel.value;
-var emps=CM[code]||[],emp=emps.find(function(e){return e.m===mnv});
+var emps=CM[code]||[];
+var emp=emps.find(function(e){return e.m===mnv});
 sel.className="ss "+(emp&&sel.value===emp.t?"ok":"err");
 }
 
 function onNoteChange(inp){
-var code=inp.dataset.ch,mnv=inp.dataset.mnv;
-if(!SD[code])SD[code]={e:{},ts:""};if(!SD[code].e[mnv])SD[code].e[mnv]={s:"",note:""};
+var code=inp.dataset.ch;var mnv=inp.dataset.mnv;
+if(!SD[code])SD[code]={e:{},ts:""};
+if(!SD[code].e[mnv])SD[code].e[mnv]={s:"",note:""};
 SD[code].e[mnv].note=inp.value;
 }
 
@@ -155,51 +224,71 @@ var sels=document.querySelectorAll("#ch-"+code+" .ss");
 for(var i=0;i<sels.length;i++){var s=sels[i];SD[code].e[s.dataset.mnv]=SD[code].e[s.dataset.mnv]||{};SD[code].e[s.dataset.mnv].s=s.value;}
 var inps=document.querySelectorAll("#ch-"+code+" .ni");
 for(var i=0;i<inps.length;i++){var n=inps[i];SD[code].e[n.dataset.mnv]=SD[code].e[n.dataset.mnv]||{};SD[code].e[n.dataset.mnv].note=n.value;}
-var now=new Date();SD[code].ts=now.toLocaleDateString("vi-VN",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
-localStorage.setItem("ns2",JSON.stringify(SD));
-toast("Da luu KS cho "+code,"ok");renderSurvey();renderDashboard();renderHistory();
+var now=new Date();
+SD[code].ts=now.toLocaleDateString("vi-VN",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+localStorage.setItem("ns_v1",JSON.stringify(SD));
+toast("Da luu KS cho "+code,"ok");
+renderSurvey();renderDashboard();renderHistory();
 }
 
-function clearSurvey(code){if(confirm("Xoa KS cho "+code+"?")){delete SD[code];localStorage.setItem("ns2",JSON.stringify(SD));toast("Da xoa","ok");renderSurvey();renderDashboard();renderHistory();}}
+function clearSurvey(code){
+if(confirm("Xoa KS cho "+code+"?")){
+delete SD[code];localStorage.setItem("ns_v1",JSON.stringify(SD));
+toast("Da xoa","ok");renderSurvey();renderDashboard();renderHistory();
+}
+}
 
 function renderDashboard(){
 var total=CL.length,sCh=0,tChecked=0,tMis=0,gs={};
-CL.forEach(function(c){
-if(!gs[c.gdv])gs[c.gdv]={chT:0,chS:0,empT:0,empC:0,mis:0};
+for(var i=0;i<CL.length;i++){
+var c=CL[i];if(!gs[c.gdv])gs[c.gdv]={chT:0,chS:0,empT:0,empC:0,mis:0};
 gs[c.gdv].chT++;var emps=CM[c.code]||[];gs[c.gdv].empT+=emps.length;
-var sd=SD[c.cde];if(sd&&sd.e){sCh++;gs[c.gdv].chS++;
+var sd=SD[c.code];
+if(sd&&sd.e){
+sCh++;gs[c.gdv].chS++;
 var keys=Object.keys(sd.e);
-for(var i=0;i<keys.length;i++){var mnv=keys[i],info=sd.e[mnv];tChecked++;gs[c.gdv].empC++;
-var emp=emps.find(function(x){return x.m===mnv});if(emp&&info.s!==emp.t){tMis++;gs[c.gdv].mis++;}}
+for(var j=0;j<keys.length;j++){
+var mnv=keys[j];var info=sd.e[mnv];
+tChecked++;gs[c.gdv].empC++;
+var emp=emps.find(function(x){return x.m===mnv});
+if(emp&&info.s!==emp.t){tMis++;gs[c.gdv].mis++;}
 }
-});
+}
+}
 var pct=total?Math.round(sCh/total*100):0;
 document.getElementById("kr").innerHTML=
 "<div class='kc cb'><div class='kv'>"+total+"</div><div class='kl'>Tong CH</div></div>"+
-"<div class='kc cg'><div class='kv'>"+sCh+"</div><div class='kl'>a KS</div></div>"+
+"<div class='kc cg'><div class='kv'>"+sCh+"</div><div class='kl'>Da KS</div></div>"+
 "<div class='kc co'><div class='kv'>"+(total-sCh)+"</div><div class='kl'>Chua KS</div></div>"+
 "<div class='kc cb'><div class='kv'>"+pct+"%</div><div class='kl'>Ty Le</div></div>"+
 "<div class='kc cg'><div class='kv'>"+(tChecked-tMis)+"</div><div class='kl'>Dung TT</div></div>"+
 "<div class='kc cr'><div class='kv'>"+tMis+"</div><div class='kl'>Sai Khac</div></div>";
 var gh="";
 var gsEntries=Object.entries(gs).sort(function(a,b){return b[1].chT-a[1].chT});
-gsEntries.forEach(function(e){var g=e[0],s=e[1];var pp=s.chT?Math.round(s.chS/s.chT*100):0;
-gh+="<div class='gc'><h3>"+g+" <span style='font-size:11px;color:#888'>("+s.chS+"/"+s.chT+" CH | "+s.empC+"/"+s.empT+" NV)</span></h3>";
+for(var i=0;i<gsEntries.length;i++){
+var g=gsEntries[i][0];var s=gsEntries[i][1];
+var pp=s.chT?Math.round(s.chS/s.chT*100):0;
+gh+="<div class='gc'><h3>"+g+" ("+s.chS+"/"+s.chT+" CH | "+s.empC+"/"+s.empT+" NV)</h3>";
 gh+="<div class='gb'><div class='gbf' style='width:"+pp+"%'>"+(pp>5?pp+"%":"")+"</div></div>";
 gh+="<div class='gs'><span>Da KS: "+s.chS+" CH</span><span>Sai: "+s.mis+"</span></div></div>";
-});
+}
 document.getElementById("gg").innerHTML=gh;
 var chg={};
-var sdEntries=Object.entries(SD);
-sdEntries.forEach(function(e){var code=e[0],d=e[1];if(!d.e)return;var emps=CM[code]||[];
-var keys=Object.keys(d.e);
-for(var i=0;i<keys.length;i++){var mnv=keys[i],info=d.e[mnv];
-var emp=emps.find(function(x){return x.m===mnv});if(emp&&info.s!==emp.t){var k=emp.t+" -> "+info.s;chg[k]=(chg[k]||0)+1;}
-});
+var sdKeys=Object.keys(SD);
+for(var i=0;i<sdKeys.length;i++){
+var code=sdKeys[i];var d=SD[code];if(!d.e)continue;
+var emps=CM[code]||[];
+var dKeys=Object.keys(d.e);
+for(var j=0;j<dKeys.length;j++){
+var mnv=dKeys[j];var info=d.e[mnv];
+var emp=emps.find(function(x){return x.m===mnv});
+if(emp&&info.s!==emp.t){var k=emp.t+" -> "+info.s;chg[k]=(chg[k]||0)+1;}
+}
+}
 var bh="<table class='stt'><tr><th>Thay Doi Tinh Trang</th><th>So Luong</th></tr>";
 var sorted=Object.entries(chg).sort(function(a,b){return b[1]-a[1]});
-if(!sorted.length)bh+="<tr><td colspan='2' style='text-align:center;color:#999'>Chua co KS</td></tr>";
-else sorted.forEach(function(e){bh+="<tr><td>"+e[0]+"</td><td><strong>"+e[1]+"</strong></td></tr>";});
+if(!sorted.length){bh+="<tr><td colspan='2' style='text-align:center;color:#999'>Chua co KS</td></tr>";}
+else{for(var i=0;i<sorted.length;i++){bh+="<tr><td>"+sorted[i][0]+"</td><td><strong>"+sorted[i][1]+"</strong></td></tr>";}}
 bh+="</table>";document.getElementById("sb").innerHTML=bh;
 drawChart(gs);
 }
@@ -213,15 +302,20 @@ var entries=Object.entries(gs).sort(function(a,b){return b[1].chT-a[1].chT});
 if(!entries.length){ctx.fillStyle="#999";ctx.font="14px sans-serif";ctx.textAlign="center";ctx.fillText("Chua co du lieu",w/2,h/2);return;}
 var barW=Math.min(55,(w-100)/entries.length-12),chartH=200,startX=70;
 ctx.clearRect(0,0,w,h);ctx.strokeStyle="#e9e9e9";ctx.lineWidth=0.5;
-for(var i=0;i<=4;i++){var y=20+(chartH/4)*i;ctx.beginPath();ctx.moveTo(startX,y);ctx.lineTo(w-30,y);ctx.stroke();ctx.fillStyle="#999";ctx.font="10px sans-serif";ctx.textAlign="right";ctx.fillText((100-i*25)+"%",startX-8,y+3);}
-entries.forEach(function(e,i){var g=e[0],s=e[1];var pp=s.chT?s.chS/s.chT*100:0;
+for(var i=0;i<=4;i++){
+var y=20+(chartH/4)*i;ctx.beginPath();ctx.moveTo(startX,y);ctx.lineTo(w-30,y);ctx.stroke();
+ctx.fillStyle="#999";ctx.font="10px sans-serif";ctx.textAlign="right";ctx.fillText((100-i*25)+"%",startX-8,y+3);
+}
+for(var i=0;i<entries.length;i++){
+var g=entries[i][0];var s=entries[i][1];
+var pp=s.chT?s.chS/s.chT*100:0;
 var x=startX+i*(barW+12)+5,barH=(pp/100)*chartH,y=20+chartH-barH;
 var grad=ctx.createLinearGradient(x,y,x,20+chartH);grad.addColorStop(0,"#27ae60");grad.addColorStop(1,"#52be80");
 ctx.fillStyle=grad;ctx.fillRect(x,y,barW,barH);
 if(pp>0){ctx.fillStyle="#333";ctx.font="bold 11px sans-serif";ctx.textAlign="center";ctx.fillText(Math.round(pp)+"%",x+barW/2,y-5);}
 ctx.fillStyle="#555";ctx.font="9px sans-serif";var label=g.length>14?g.substring(0,13)+"...":g;
 ctx.save();ctx.translate(x+barW/2,20+chartH+14);ctx.rotate(-0.5);ctx.textAlign="right";ctx.fillText(label,0,0);ctx.restore();
-});
+}
 }
 
 function renderHistory(){
@@ -229,50 +323,65 @@ var entries=Object.entries(SD);
 document.getElementById("hc").textContent=entries.length?entries.length+" CH da KS":"";
 if(!entries.length){document.getElementById("hl").innerHTML="<div class='em'><div class='ic'>&#x1F4DD;</div>Chua co KS nao</div>";return;}
 var hh="";
-entries.sort(function(a,b){return (b[1].ts||"").localeCompare(a[1].ts||"")}).forEach(function(e){
-var code=e[0],d=e[1];var ch=CL.find(function(c){return c.code===code});if(!ch)return;
-var mc=0;if(d.e){var emps=CM[code]||[];var keys=Object.keys(d.e);
-for(var i=0;i<keys.length;i++){var mnv=keys[i],info=d.e[mnv];
+entries.sort(function(a,b){return (b[1].ts||"").localeCompare(a[1].ts||"")});
+for(var i=0;i<entries.length;i++){
+var code=entries[i][0];var d=entries[i][1];
+var ch=CL.find(function(c){return c.code===code});if(!ch)continue;
+var mc=0;
+if(d.e){var emps=CM[code]||[];var dKeys=Object.keys(d.e);
+for(var j=0;j<dKeys.length;j++){var mnv=dKeys[j];var info=d.e[mnv];
 var emp=emps.find(function(x){return x.m===mnv});if(emp&&info.s!==emp.t)mc++;}
+}
 hh+="<div class='card'><div class='chd'><div><div class='cht'>&#x1F3EA "+code+"</div>";
 hh+="<div class='chm'>GDV: "+ch.gdv+" | QLKV: "+ch.qlkv+" | "+(d.ts||"N/A")+"</div></div><div>";
 hh+="<span style='color:#27ae60'>"+(d.e?Object.keys(d.e).length:0)+" NV</span>";
 if(mc>0)hh+="<span style='color:#e74c3c;margin-left:8px'> "+mc+" sai</span>";
 hh+="</div></div></div>";
-});
+}
 document.getElementById("hl").innerHTML=hh;
 }
 
-function clearHistory(){if(confirm("Xoa TOAN BO LS?")){SD={};localStorage.removeItem("ns2");toast("Da xoa","ok");renderSurvey();renderDashboard();renderHistory();}}
+function clearHistory(){if(confirm("Xoa TOAN BO LS?")){SD={};localStorage.removeItem("ns_v1");toast("Da xoa","ok");renderSurvey();renderDashboard();renderHistory();}}
 
 function exportCSV(){
-var csv="CH Code,GDV,QLKV,Tinh,MNV,Ho Ten,Chuc Danh,TT SAP,TT KS,Ket Qua,Ghi Chu,Thoi Gian\\n";
-Object.entries(SD).forEach(function(e){var code=e[0],d=e[1];if(!d.e)return;
+var csv="CH Code,GDV,QLKV,Tinh,MNV,Ho Ten,Chuc Danh,TT SAP,TT KS,Ket Qua,Ghi Chu,Thoi Gian\n";
+var sdKeys=Object.keys(SD);
+for(var i=0;i<sdKeys.length;i++){
+var code=sdKeys[i];var d=SD[code];if(!d.e)continue;
 var ch=CL.find(function(c){return c.code===code})||{},emps=CM[code]||[];
-var keys=Object.keys(d.e);
-for(var i=0;i<keys.length;i++){var mnv=keys[i],inf=d.e[mnv];
+var dKeys=Object.keys(d.e);
+for(var j=0;j<dKeys.length;j++){
+var mnv=dKeys[j];var inf=d.e[mnv];
 var emp=emps.find(function(x){return x.m===mnv})||{};
-csv+=[code,ch.gdv||"",ch.qlkv||"",ch.tinh||"",mnv,emp.n||"",emp.c||"",emp.t||"",inf.s||"",inf.s===emp.t?"Dung":"Sai",inf.note||"",d.ts||""].map(function(v){return '"'+String(v).replace(/"/g,'""')+'"'}).join(",")+"\\n";
-});
+var row=[code,ch.gdv||"",ch.qlkv||"",ch.tinh||"",mnv,emp.n||"",emp.c||"",emp.t||"",inf.s||"",inf.s===emp.t?"Dung":"Sai",inf.note||"",d.ts||""];
+csv+=row.map(function(v){return '"'+String(v).replace(/"/g,'""')+'"'}).join(",")+"\n";
+}
+}
 var b=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});
-var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="KS_NS_"+new Date().toISOString().slice(0,10)+".csv";a.click();
+var a=document.createElement("a");a.href=URL.createObjectURL(b);
+a.download="KS_NS_"+new Date().toISOString().slice(0,10)+".csv";a.click();
 }
 
 function switchTab(idx){
-var tabs=document.querySelectorAll(".tbb");for(var i=0;i<tabs.length;i++)tabs[i].classList.remove("ac");
+var tabs=document.querySelectorAll(".tbb");
+for(var i=0;i<tabs.length;i++)tabs[i].classList.remove("ac");
 tabs[idx].classList.add("ac");
-var panels=document.querySelectorAll("[id^='t']");
+var panels=[document.getElementById("t0"),document.getElementById("t1"),document.getElementById("t2")];
 for(var i=0;i<panels.length;i++)panels[i].classList.add("h");
-document.getElementById("t"+idx).classList.remove("h");
-if(idx===1)renderDashboard();if(idx===2)renderHistory();
+panels[idx].classList.remove("h");
+if(idx===1)renderDashboard();
+if(idx===2)renderHistory();
 }
 
 function toast(m,tp){
-var el=document.getElementById("toast");if(!el){el=document.createElement("div");el.id="toast";el.className="toast";document.body.appendChild(el);}
-el.textContent=m;el.className="toast "+tp+" show";setTimeout(function(){el.classList.remove("show")},2500);
+var el=document.getElementById("toast");
+if(!el){el=document.createElement("div");el.id="toast";el.className="toast";document.body.appendChild(el);}
+el.textContent=m;el.className="toast "+tp+" show";
+setTimeout(function(){el.classList.remove("show")},2500);
 }
 
 init();
 </script>
 <div id="toast" class="toast"></div>
-</body></html>
+</body>
+</html>
