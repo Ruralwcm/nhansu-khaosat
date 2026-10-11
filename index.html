@@ -1255,26 +1255,38 @@
             var endInp = document.createElement("input"); endInp.type = "date"; endInp.className = "cf-date";
             endInp.setAttribute("data-mnv-end", emp.m);
             if (savedEmp[emp.m] && savedEmp[emp.m].endDate) endInp.value = savedEmp[emp.m].endDate;
-            // Expected leave date
-            var expLbl = document.createElement("span"); expLbl.textContent = "NKV:"; expLbl.style.fontSize = "11px";
-            var expInp = document.createElement("input"); expInp.type = "date"; expInp.className = "cf-date";
-            expInp.setAttribute("data-mnv-exp", emp.m);
-            if (savedEmp[emp.m] && savedEmp[emp.m].expDate) expInp.value = savedEmp[emp.m].expDate;
             
             dateDiv.appendChild(startLbl); dateDiv.appendChild(startInp);
             dateDiv.appendChild(endLbl); dateDiv.appendChild(endInp);
-            dateDiv.appendChild(expLbl); dateDiv.appendChild(expInp);
+            
+            // HR checkbox
+            var hrDiv = document.createElement("div"); hrDiv.style.marginTop = "4px";
+            var hrCb = document.createElement("input"); hrCb.type = "checkbox"; hrCb.setAttribute("data-mnv-hr", emp.m);
+            hrCb.style.marginRight = "4px";
+            if (savedEmp[emp.m] && savedEmp[emp.m].sentHR) hrCb.checked = true;
+            var hrLabel = document.createElement("label"); hrLabel.textContent = "Đã gửi đơn cho HR"; hrLabel.style.fontSize = "11px";
+            hrDiv.appendChild(hrCb); hrDiv.appendChild(hrLabel);
+            dateDiv.appendChild(hrDiv);
             
             function updateDateFields() {
                 var v = extraSel.value;
-                var showStartEnd = (v.indexOf("thai s") >= 0 || v.indexOf("ốm") >= 0 || v.indexOf("không lương") >= 0 || v.indexOf("khong luong") >= 0 || v.indexOf("om") >= 0 || v.indexOf("thai san") >= 0);
-                var showExp = (v.indexOf("Đã nghỉ") >= 0 || v.indexOf("Dự kiến") >= 0 || v.indexOf("Da nghi") >= 0 || v.indexOf("Du kien") >= 0);
-                startLbl.style.display = showStartEnd ? "" : "none";
-                startInp.style.display = showStartEnd ? "" : "none";
-                endLbl.style.display = showStartEnd ? "" : "none";
-                endInp.style.display = showStartEnd ? "" : "none";
-                expLbl.style.display = showExp ? "" : "none";
-                expInp.style.display = showExp ? "" : "none";
+                var isLeave = (v.indexOf("thai s") >= 0 || v.indexOf("ốm") >= 0 || v.indexOf("không lương") >= 0 || v.indexOf("khong luong") >= 0 || v.indexOf("om") >= 0 || v.indexOf("thai san") >= 0);
+                var isResign = (v.indexOf("Đã nghỉ") >= 0 || v.indexOf("Dự kiến") >= 0 || v.indexOf("Da nghi") >= 0 || v.indexOf("Du kien") >= 0);
+                if (isLeave) {
+                    startLbl.textContent = "Từ:"; startLbl.style.display = "";
+                    startInp.style.display = "";
+                    endLbl.textContent = "Đến:"; endLbl.style.display = "";
+                    endInp.style.display = "";
+                } else if (isResign) {
+                    startLbl.textContent = "Ngày:"; startLbl.style.display = "";
+                    startInp.style.display = "";
+                    endLbl.style.display = "none";
+                    endInp.style.display = "none";
+                } else {
+                    startLbl.style.display = "none"; startInp.style.display = "none";
+                    endLbl.style.display = "none"; endInp.style.display = "none";
+                }
+                hrDiv.style.display = (isLeave || isResign) ? "" : "none";
             }
             extraSel.onchange = updateDateFields;
             updateDateFields();
@@ -1393,16 +1405,14 @@
             var isCorrect = (hiddenInputs[i].value === "correct");
             empResult[mnv] = { correct: isCorrect, note: "" };
             if (!isCorrect) {
-                // Read extra status
                 var extraSel = body.querySelector("select[data-mnv-s='" + mnv + "']");
                 empResult[mnv].s = extraSel ? extraSel.value : "";
-                // Read dates
                 var startInp = body.querySelector("input[data-mnv-start='" + mnv + "']");
                 var endInp = body.querySelector("input[data-mnv-end='" + mnv + "']");
-                var expInp = body.querySelector("input[data-mnv-exp='" + mnv + "']");
+                var hrCb = body.querySelector("input[data-mnv-hr='" + mnv + "']");
                 if (startInp) empResult[mnv].startDate = startInp.value;
                 if (endInp) empResult[mnv].endDate = endInp.value;
-                if (expInp) empResult[mnv].expDate = expInp.value;
+                if (hrCb) empResult[mnv].sentHR = hrCb.checked;
             }
         }
         // Read notes
