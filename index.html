@@ -1300,6 +1300,24 @@
             if (savedEmp[emp.m] && savedEmp[emp.m].note) noteInp.value = savedEmp[emp.m].note;
             extraDiv.appendChild(noteLbl);
             extraDiv.appendChild(noteInp);
+            // Cap nhat button
+            var updateBtn = document.createElement("button");
+            updateBtn.className = "btn btn-p";
+            updateBtn.textContent = "✅ Cập nhật";
+            updateBtn.style.marginTop = "6px"; updateBtn.style.fontSize = "12px"; updateBtn.style.padding = "4px 12px";
+            updateBtn.onclick = (function(mnv, ex, td) {
+                return function() {
+                    ex.style.display = "none";
+                    // Show updated status
+                    var updSpan = document.createElement("span");
+                    updSpan.style.color = "#e67e22"; updSpan.style.fontWeight = "600"; updSpan.style.fontSize = "12px";
+                    var s = ex.querySelector("select[data-mnv-s]");
+                    updSpan.textContent = "⚠ " + (s ? s.value : "");
+                    updSpan.setAttribute("data-updated", mnv);
+                    td.appendChild(updSpan);
+                };
+            })(emp.m, extraDiv, tdSel);
+            extraDiv.appendChild(updateBtn);
             
             btnSai.onclick = (function(mnv, hinp, bd, bs, ex) {
                 return function() {
@@ -1341,7 +1359,12 @@
             if (showSaiForm) {
                 btnDung.style.display = "none";
                 btnSai.style.display = "none";
-                extraDiv.style.display = "block";
+                extraDiv.style.display = "none";
+                var updSpan = document.createElement("span");
+                updSpan.style.color = "#e67e22"; updSpan.style.fontWeight = "600"; updSpan.style.fontSize = "12px";
+                updSpan.textContent = "⚠ " + (savedEmp[emp.m].s || "");
+                updSpan.setAttribute("data-updated", emp.m);
+                tdSel.appendChild(updSpan);
             }
             row.appendChild(tdSel);
 
