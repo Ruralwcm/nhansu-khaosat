@@ -634,7 +634,7 @@
                 </div>
                 <div class="filter-item">
                     <label>Quản lý Khu vực (QLKV)</label>
-                    <select id="filterQlkv" onchange="applyFilters()">
+                    <select id="filterQlkv" onchange="onQlkvSelect()">
                         <option value="">-- Tất cả QLKV --</option>
                     </select>
                 </div>
@@ -901,13 +901,13 @@
             var c = chList[i];
             if (gdvFilter && c.gdv !== gdvFilter) continue;
             if (qlkvFilter && c.qlkv !== qlkvFilter) continue;
-            codes.push(c.maCost);
+            codes.push({code: c.maCost, name: c.tenCH || c.maCost});
         }
-        codes.sort();
+        codes.sort(function(a,b){ return a.code.localeCompare(b.code); });
         for (i = 0; i < codes.length; i++) {
             var opt = document.createElement("option");
-            opt.value = codes[i];
-            opt.textContent = codes[i];
+            opt.value = codes[i].code;
+            opt.textContent = codes[i].code + " - " + codes[i].name;
             sel.appendChild(opt);
         }
     }
@@ -971,6 +971,13 @@
         var qa = Array.from(qs).sort();
         for (i = 0; i < qa.length; i++) { var o = document.createElement("option"); o.value = qa[i]; o.textContent = qa[i]; qlkvSel.appendChild(o); }
         renderDashboard();
+    }
+
+    function onQlkvSelect() {
+        var gdvVal = document.getElementById("filterGdv").value;
+        var qlkvVal = document.getElementById("filterQlkv").value;
+        buildCHFilter(gdvVal, qlkvVal);
+        applyFilters();
     }
 
     function applyFilters() {
