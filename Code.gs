@@ -3,7 +3,7 @@
 // Copy to script.google.com → Deploy as Web App
 // ========================================
 
-var SHEET_ID = "1MFb9UE76jL_fBRya0KKFOZm2JRej0troawqvoGMJ2OE"; // ← Đổi nếu dùng Sheet khác
+var SHEET_ID = "1G5FVzbnLEPBVbLlYM664UEMQ5a6v49G7grQHzSR9_Tw";
 
 function doPost(e) {
   try {
