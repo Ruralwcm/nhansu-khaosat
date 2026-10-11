@@ -335,6 +335,88 @@
         margin-right: auto;
     }
 
+    /* Confirm Dung/Sai buttons */
+    .cf-btn-group {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 6px;
+    }
+
+    .cf-btn {
+        padding: 5px 10px;
+        border-radius: 6px;
+        border: 1px solid #d0dae4;
+        background: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        color: #607085;
+        transition: all 0.15s;
+        white-space: nowrap;
+    }
+
+    .cf-btn:hover {
+        opacity: 0.85;
+    }
+
+    .cf-btn.ok.active {
+        background: #0d8a5f;
+        color: #fff;
+        border-color: #0d8a5f;
+    }
+
+    .cf-btn.err.active {
+        background: #d32f2f;
+        color: #fff;
+        border-color: #d32f2f;
+    }
+
+    .cf-extra {
+        margin-top: 6px;
+        padding: 8px;
+        background: #fdf6f6;
+        border: 1px solid #fde0e0;
+        border-radius: 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 170px;
+    }
+
+    .cf-extra select {
+        padding: 5px 6px;
+        font-size: 12px;
+        width: 100%;
+    }
+
+    .cf-date-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .cf-date-field {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .cf-date-field label {
+        font-size: 10px;
+        color: #607085;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .cf-date {
+        padding: 5px 6px;
+        font-size: 11px;
+        border: 1px solid #d0dae4;
+        border-radius: 5px;
+        background: #fff;
+        color: #1a2a3a;
+    }
+
     /* Pagination */
     .pagination {
         display: flex;
@@ -496,6 +578,14 @@
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
     }
+
+    /* Confirm buttons (Dung/Sai) */
+    .cf-btn { padding: 4px 10px; border-radius: 4px; border: 1px solid #d0dae4; background: #fff; font-size: 12px; cursor: pointer; font-weight: 600; margin: 1px; }
+    .cf-btn.cf-ok { background: #0d8a5f; color: #fff; border-color: #0d8a5f; }
+    .cf-btn.cf-err { background: #c0392b; color: #fff; border-color: #c0392b; }
+    .cf-extra { background: #fef9e7; border: 1px solid #f0d060; border-radius: 6px; padding: 6px; margin-top: 4px; }
+    .cf-extra select { padding: 4px 6px; font-size: 12px; margin-bottom: 4px; }
+    .cf-date { padding: 3px 5px; border: 1px solid #d0dae4; border-radius: 4px; font-size: 11px; width: 110px; }
 
     @media (max-width: 700px) {
         .kpi-grid {
@@ -1015,7 +1105,7 @@
         for (i = 0; i < emps.length; i++) {
             var emp = emps[i];
             var surveyedEmp = surveyEntry.e[emp.m];
-            if (surveyedEmp && surveyedEmp.s && surveyedEmp.s !== emp.t) {
+            if (surveyedEmp && surveyedEmp.correct === false && surveyedEmp.s && surveyedEmp.s !== emp.t) {
                 count++;
             }
         }
@@ -1048,7 +1138,7 @@
 
         var thead = document.createElement("thead");
         var headRow = document.createElement("tr");
-        var headers = ["MNV", "Họ tên", "Chức danh", "Trạng thái Hệ thống", "Trạng thái Khảo sát", "Ghi chú"];
+        var headers = ["MNV", "Họ tên", "Chức danh", "Trạng thái Hệ thống", "Xác nhận", "Ghi chú"];
         var h;
         for (h = 0; h < headers.length; h++) {
             var th = document.createElement("th");
@@ -1085,25 +1175,115 @@
             row.appendChild(tdSys);
 
             var tdSel = document.createElement("td");
-            var sel = document.createElement("select");
-            sel.setAttribute("data-mnv", emp.m);
-            var defaultStatus = emp.t;
-            if (savedEmp[emp.m] && savedEmp[emp.m].s) {
-                defaultStatus = savedEmp[emp.m].s;
-            } else {
-                defaultStatus = mapSystemToOption(emp.t);
+            tdSel.style.whiteSpace = "nowrap";
+            // Hidden input stores correct/sai state
+            var hiddenInput = document.createElement("input");
+            hiddenInput.type = "hidden";
+            hiddenInput.setAttribute("data-mnv", emp.m);
+            hiddenInput.value = "correct";
+            // Check saved state
+            var isCorrect = true;
+            if (savedEmp[emp.m] && savedEmp[emp.m].correct === false) {
+                isCorrect = false;
+                hiddenInput.value = "incorrect";
             }
-            var s;
-            for (s = 0; s < STATUS_OPTIONS.length; s++) {
-                var optEl = document.createElement("option");
-                optEl.value = STATUS_OPTIONS[s];
-                optEl.textContent = STATUS_OPTIONS[s];
-                if (STATUS_OPTIONS[s] === defaultStatus) {
-                    optEl.selected = true;
-                }
-                sel.appendChild(optEl);
+            // Dung button
+            var btnDung = document.createElement("button");
+            btnDung.className = "cf-btn" + (isCorrect ? " cf-ok" : "");
+            btnDung.textContent = "Đúng";
+            btnDung.setAttribute("data-mnv-dung", emp.m);
+            btnDung.onclick = (function(mnv, hinp, bd, bs, extraDiv) {
+                return function() {
+                    hinp.value = "correct";
+                    bd.className = "cf-btn cf-ok";
+                    bs.className = "cf-btn";
+                    if (extraDiv) extraDiv.style.display = "none";
+                };
+            })(emp.m, hiddenInput);
+            // Sai button  
+            var btnSai = document.createElement("button");
+            btnSai.className = "cf-btn" + (!isCorrect ? " cf-err" : "");
+            btnSai.textContent = "Sai";
+            btnSai.setAttribute("data-mnv-sai", emp.m);
+            // Extra form (hidden by default)
+            var extraDiv = document.createElement("div");
+            extraDiv.className = "cf-extra";
+            extraDiv.style.display = isCorrect ? "none" : "block";
+            extraDiv.style.marginTop = "4px";
+            // Status dropdown in extra
+            var extraSel = document.createElement("select");
+            extraSel.setAttribute("data-mnv-s", emp.m);
+            extraSel.style.marginBottom = "4px";
+            var defaultSt = (savedEmp[emp.m] && savedEmp[emp.m].s) ? savedEmp[emp.m].s : mapSystemToOption(emp.t);
+            for (var s2 = 0; s2 < STATUS_OPTIONS.length; s2++) {
+                var optEl2 = document.createElement("option");
+                optEl2.value = STATUS_OPTIONS[s2];
+                optEl2.textContent = STATUS_OPTIONS[s2];
+                if (STATUS_OPTIONS[s2] === defaultSt) optEl2.selected = true;
+                extraSel.appendChild(optEl2);
             }
-            tdSel.appendChild(sel);
+            extraDiv.appendChild(extraSel);
+            // Date fields container
+            var dateDiv = document.createElement("div");
+            dateDiv.style.display = "flex"; dateDiv.style.gap = "6px"; dateDiv.style.flexWrap = "wrap";
+            dateDiv.setAttribute("data-date-div", emp.m);
+            // Start date
+            var startLbl = document.createElement("span"); startLbl.textContent = "Từ:"; startLbl.style.fontSize = "11px";
+            var startInp = document.createElement("input"); startInp.type = "date"; startInp.className = "cf-date";
+            startInp.setAttribute("data-mnv-start", emp.m);
+            if (savedEmp[emp.m] && savedEmp[emp.m].startDate) startInp.value = savedEmp[emp.m].startDate;
+            // End date
+            var endLbl = document.createElement("span"); endLbl.textContent = "Đến:"; endLbl.style.fontSize = "11px";
+            var endInp = document.createElement("input"); endInp.type = "date"; endInp.className = "cf-date";
+            endInp.setAttribute("data-mnv-end", emp.m);
+            if (savedEmp[emp.m] && savedEmp[emp.m].endDate) endInp.value = savedEmp[emp.m].endDate;
+            // Expected leave date
+            var expLbl = document.createElement("span"); expLbl.textContent = "NKV:"; expLbl.style.fontSize = "11px";
+            var expInp = document.createElement("input"); expInp.type = "date"; expInp.className = "cf-date";
+            expInp.setAttribute("data-mnv-exp", emp.m);
+            if (savedEmp[emp.m] && savedEmp[emp.m].expDate) expInp.value = savedEmp[emp.m].expDate;
+            
+            dateDiv.appendChild(startLbl); dateDiv.appendChild(startInp);
+            dateDiv.appendChild(endLbl); dateDiv.appendChild(endInp);
+            dateDiv.appendChild(expLbl); dateDiv.appendChild(expInp);
+            
+            function updateDateFields() {
+                var v = extraSel.value;
+                var showStartEnd = (v.indexOf("thai s") >= 0 || v.indexOf("ốm") >= 0 || v.indexOf("không lương") >= 0 || v.indexOf("khong luong") >= 0 || v.indexOf("om") >= 0 || v.indexOf("thai san") >= 0);
+                var showExp = (v.indexOf("Đã nghỉ") >= 0 || v.indexOf("Dự kiến") >= 0 || v.indexOf("Da nghi") >= 0 || v.indexOf("Du kien") >= 0);
+                startLbl.style.display = showStartEnd ? "" : "none";
+                startInp.style.display = showStartEnd ? "" : "none";
+                endLbl.style.display = showStartEnd ? "" : "none";
+                endInp.style.display = showStartEnd ? "" : "none";
+                expLbl.style.display = showExp ? "" : "none";
+                expInp.style.display = showExp ? "" : "none";
+            }
+            extraSel.onchange = updateDateFields;
+            updateDateFields();
+            extraDiv.appendChild(dateDiv);
+            
+            btnSai.onclick = (function(mnv, hinp, bd, bs, ex) {
+                return function() {
+                    hinp.value = "incorrect";
+                    bd.className = "cf-btn";
+                    bs.className = "cf-btn cf-err";
+                    if (ex) ex.style.display = "block";
+                };
+            })(emp.m, hiddenInput, btnDung, btnSai, extraDiv);
+            btnDung.onclick = (function(mnv, hinp, bd, bs, ex) {
+                return function() {
+                    hinp.value = "correct";
+                    bd.className = "cf-btn cf-ok";
+                    bs.className = "cf-btn";
+                    if (ex) ex.style.display = "none";
+                };
+            })(emp.m, hiddenInput, btnDung, btnSai, extraDiv);
+            
+            tdSel.appendChild(hiddenInput);
+            tdSel.appendChild(btnDung);
+            tdSel.appendChild(document.createTextNode(" "));
+            tdSel.appendChild(btnSai);
+            tdSel.appendChild(extraDiv);
             row.appendChild(tdSel);
 
             var tdNote = document.createElement("td");
@@ -1180,43 +1360,42 @@
 
     function saveStoreSurvey(maCost) {
         var body = document.getElementById("body-" + maCost);
-        if (!body) {
-            return;
-        }
-        var selects = body.querySelectorAll("select[data-mnv]");
-        var notes = body.querySelectorAll("input[data-mnv-note]");
-
+        if (!body) { return; }
+        // Read hidden correct/sai inputs
+        var hiddenInputs = body.querySelectorAll("input[type='hidden'][data-mnv]");
         var empResult = {};
         var i;
-        for (i = 0; i < selects.length; i++) {
-            var mnv = selects[i].getAttribute("data-mnv");
-            empResult[mnv] = { s: selects[i].value, note: "" };
+        for (i = 0; i < hiddenInputs.length; i++) {
+            var mnv = hiddenInputs[i].getAttribute("data-mnv");
+            var isCorrect = (hiddenInputs[i].value === "correct");
+            empResult[mnv] = { correct: isCorrect, note: "" };
+            if (!isCorrect) {
+                // Read extra status
+                var extraSel = body.querySelector("select[data-mnv-s='" + mnv + "']");
+                empResult[mnv].s = extraSel ? extraSel.value : "";
+                // Read dates
+                var startInp = body.querySelector("input[data-mnv-start='" + mnv + "']");
+                var endInp = body.querySelector("input[data-mnv-end='" + mnv + "']");
+                var expInp = body.querySelector("input[data-mnv-exp='" + mnv + "']");
+                if (startInp) empResult[mnv].startDate = startInp.value;
+                if (endInp) empResult[mnv].endDate = endInp.value;
+                if (expInp) empResult[mnv].expDate = expInp.value;
+            }
         }
+        // Read notes
+        var notes = body.querySelectorAll("input[data-mnv-note]");
         for (i = 0; i < notes.length; i++) {
             var mnv2 = notes[i].getAttribute("data-mnv-note");
-            if (!empResult[mnv2]) {
-                empResult[mnv2] = { s: "", note: "" };
-            }
+            if (!empResult[mnv2]) { empResult[mnv2] = { correct: true, note: "" }; }
             empResult[mnv2].note = notes[i].value;
         }
-
-        surveyData[maCost] = {
-            ts: new Date().toISOString(),
-            e: empResult
-        };
-
+        surveyData[maCost] = { ts: new Date().toISOString(), e: empResult };
         saveSurveyData();
-
         var msgEl = document.getElementById("saveMsg-" + maCost);
         if (msgEl) {
-            msgEl.textContent = "Da luu thanh cong!";
-            setTimeout(function () {
-                if (msgEl) {
-                    msgEl.textContent = "";
-                }
-            }, 3000);
+            msgEl.textContent = "Đã lưu thành công!";
+            setTimeout(function () { if (msgEl) { msgEl.textContent = ""; } }, 3000);
         }
-
         renderStoreList();
         updateSummaryBar();
     }
@@ -1452,7 +1631,7 @@
             for (j = 0; j < emps.length; j++) {
                 var emp = emps[j];
                 var savedEmp = surveyEntry.e[emp.m];
-                if (savedEmp && savedEmp.s && savedEmp.s !== emp.t) {
+                if (savedEmp && savedEmp.correct === false && savedEmp.s && savedEmp.s !== emp.t) {
                     rows.push({
                         maCost: store.maCost,
                         tenCH: store.tenCH,
@@ -1626,14 +1805,14 @@
         }
         if (codes.length === 0) { alert("Không có dữ liệu để xuất."); return; }
         var storeMap = buildStoreMapByCode();
-        var rows = [["Mã CH","Tên CH","GĐV","QLKV","Tỉnh","MNV","Họ tên","Chức danh","Trạng thái Hệ thống","Trạng thái Khảo sát","Ghi chú","Thời gian Khảo sát"]];
+        var rows = [["Mã CH","Tên CH","GĐV","QLKV","Tỉnh","MNV","Họ tên","Chức danh","Trạng thái Hệ thống","Xác nhận","Tình trạng KS","Ngày bắt đầu","Ngày kết thúc","Ngày NKV","Ghi chú","Thời gian Khảo sát"]];
         for (var i = 0; i < codes.length; i++) {
             var code = codes[i], entry = surveyData[code], storeInfo = storeMap[code], emps = empData[code] || [];
             if (!entry.e) continue;
             for (var j = 0; j < emps.length; j++) {
                 var emp = emps[j], savedEmp = entry.e[emp.m];
                 if (!savedEmp) continue;
-                rows.push([code, storeInfo ? storeInfo.tenCH : "", storeInfo ? storeInfo.gdv : "", storeInfo ? storeInfo.qlkv : "", storeInfo ? storeInfo.tinh : "", emp.m, emp.n, emp.c || "", emp.t, savedEmp.s || "", savedEmp.note || "", entry.ts || ""]);
+                rows.push([code, storeInfo ? storeInfo.tenCH : "", storeInfo ? storeInfo.gdv : "", storeInfo ? storeInfo.qlkv : "", storeInfo ? storeInfo.tinh : "", emp.m, emp.n, emp.c || "", emp.t, savedEmp.correct === false ? "Sai" : "Đúng", savedEmp.s || "", savedEmp.startDate || "", savedEmp.endDate || "", savedEmp.expDate || "", savedEmp.note || "", entry.ts || ""]);
             }
         }
         var ws = XLSX.utils.aoa_to_sheet(rows);
