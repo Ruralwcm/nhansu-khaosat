@@ -607,7 +607,7 @@
 
 <div class="header">
     <h1>Khảo sát Tình trạng Nhân sự</h1>
-    <p>He thong khao sat trang thai nhan vien tai cua hang</p>
+    <p>Dữ liệu: 10/10/2026 | 7.594 NS | 1.803 CH | ĐLV: 6.809 | NTS: 256 | ĐNV: 524 | NKL: 3 | NỐ: 2</p>
 </div>
 
 <div class="tabs">
@@ -731,9 +731,13 @@
     var STORAGE_KEY = "ns_v1";
 
     var STATUS_OPTIONS = [
-        "Dang lam viec",
-        "Nghi thai san",
-        "Nghi khong luong",
+        "Đang làm việc",
+        "Nghỉ thai sản",
+        "Nghỉ không lương",
+        "Nghỉ ốm",
+        "Đã nghỉ việc",
+        "Dự kiến nghỉ việc"
+    ];
         "Nghi om",
         "Da nghi viec",
         "Du kien nghi viec"
@@ -1335,27 +1339,14 @@
     }
 
     function mapSystemToOption(sysStatus) {
-        // try to map vietnamese accented system status to our ascii option list by matching known keywords
-        if (!sysStatus) {
-            return STATUS_OPTIONS[0];
-        }
+        if (!sysStatus) { return STATUS_OPTIONS[0]; }
         var s = sysStatus;
-        if (s.indexOf("thai sản") >= 0 || s.indexOf("thai san") >= 0) {
-            return "Nghi thai san";
-        }
-        if (s.indexOf("không lương") >= 0 || s.indexOf("khong luong") >= 0) {
-            return "Nghi khong luong";
-        }
-        if (s.indexOf("ốm") >= 0 || s.indexOf("om") >= 0) {
-            return "Nghi om";
-        }
-        if (s.indexOf("đã nghỉ") >= 0 || s.indexOf("da nghi") >= 0) {
-            return "Da nghi viec";
-        }
-        if (s.indexOf("dự kiến") >= 0 || s.indexOf("du kien") >= 0) {
-            return "Du kien nghi viec";
-        }
-        return "Dang lam viec";
+        if (s.indexOf("thai sản") >= 0 || s.indexOf("thai san") >= 0) { return "Nghỉ thai sản"; }
+        if (s.indexOf("không lương") >= 0 || s.indexOf("khong luong") >= 0) { return "Nghỉ không lương"; }
+        if (s.indexOf("ốm") >= 0 || s.indexOf("om") >= 0) { return "Nghỉ ốm"; }
+        if (s.indexOf("Đã nghỉ") >= 0 || s.indexOf("da nghi") >= 0) { return "Đã nghỉ việc"; }
+        if (s.indexOf("Dự kiến") >= 0 || s.indexOf("du kien") >= 0) { return "Dự kiến nghỉ việc"; }
+        return "Đang làm việc";
     }
 
     function saveStoreSurvey(maCost) {
