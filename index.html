@@ -2,386 +2,1703 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Khao Sat Nhan Su</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khảo sát Tình trạng Nhân sự</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#f0f2f5;color:#333}
-.hdr{background:linear-gradient(135deg,#1a5276,#2980b9);color:#fff;padding:16px 20px}
-.hdr h1{font-size:18px}.hdr .info{font-size:12px;opacity:.9}
-.tb{display:flex;background:#fff;border-bottom:2px solid #e0e0e0;position:sticky;top:0;z-index:10}
-.tbb{flex:1;padding:14px;text-align:center;cursor:pointer;font-weight:600;font-size:14px;border:none;background:none;color:#777}
-.tbb.ac{color:#2980b9;border-bottom:3px solid #2980b9;margin-bottom:-2px}
-.ct{max-width:1200px;margin:0 auto;padding:16px}
-.fb{background:#fff;border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
-.fb select{padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:14px;min-width:160px}
-.btn{padding:10px 20px;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px}
-.btn-p{background:#2980b9;color:#fff}.btn-o{background:#fff;color:#2980b9;border:1px solid #2980b9!important}.btn-d{background:#e74c3c;color:#fff}
-.card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-.chd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
-.cht{font-weight:700;font-size:15px}.chm{font-size:12px;color:#888}
-.et{width:100%;border-collapse:collapse;font-size:13px}
-.et th{background:#f8f9fa;padding:8px 10px;text-align:left;font-weight:600;border-bottom:2px solid #e0e0e0;font-size:12px}
-.et td{padding:8px 10px;border-bottom:1px solid #f0f0f0}
-.ss{padding:6px 8px;border-radius:6px;border:1px solid #ddd;font-size:13px}
-.ss.ok{border-color:#27ae60;background:#eafaf1}.ss.err{border-color:#e74c3c;background:#fdedec}
-.ni{padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:12px;width:100px}
-.kr{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
-.kc{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.1);text-align:center}
-.kv{font-size:28px;font-weight:800}.kl{font-size:12px;color:#888}
-.cg .kv{color:#27ae60}.cb .kv{color:#2980b9}.cr .kv{color:#e74c3c}.co .kv{color:#e67e22}
-.gg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin-bottom:16px}
-.gc{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-.gc h3{font-size:14px;margin-bottom:12px;color:#1a5276}
-.gb{height:28px;background:#e9ecef;border-radius:14px;overflow:hidden;margin-bottom:8px}
-.gbf{height:100%;background:linear-gradient(90deg,#27ae60,#2ecc71);border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px}
-.gs{display:flex;justify-content:space-between;font-size:12px;color:#666}
-.sec{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.1);margin-bottom:16px}
-.sec h3{font-size:15px;margin-bottom:12px}
-.stt{width:100%;border-collapse:collapse;font-size:13px}
-.stt th{background:#f8f9fa;padding:10px;text-align:left;font-weight:600;border-bottom:2px solid #e0e0e0}
-.stt td{padding:10px;border-bottom:1px solid #f0f0f0}
-.cx{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.1);margin-bottom:16px}
-.cx canvas{width:100%!important;max-height:300px}
-.h{display:none!important}
-.em{text-align:center;padding:40px;color:#999}.em .ic{font-size:48px;margin-bottom:8px}
-.pg{display:flex;gap:8px;justify-content:center;align-items:center;padding:16px;flex-wrap:wrap}
-.pg button{padding:8px 16px;border:1px solid #ddd;border-radius:8px;background:#fff;cursor:pointer;font-size:14px}
-.pg .cur{font-weight:700;color:#2980b9}
-.toast{position:fixed;bottom:24px;right:24px;background:#333;color:#fff;padding:12px 24px;border-radius:8px;z-index:100;display:none}
-.toast.show{display:block;animation:su .3s}.toast.ok{background:#27ae60}
-@keyframes su{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
-@media(max-width:768px){.fb{flex-direction:column}.gg{grid-template-columns:1fr}.kr{grid-template-columns:repeat(2,1fr)}}
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: #f0f4f8;
+        color: #1a2a3a;
+        padding-bottom: 40px;
+    }
+
+    .header {
+        background: linear-gradient(135deg, #1565c0, #0d8a5f);
+        color: #fff;
+        padding: 16px 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .header h1 {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .header p {
+        font-size: 13px;
+        opacity: 0.9;
+        margin-top: 4px;
+    }
+
+    .tabs {
+        display: flex;
+        background: #fff;
+        border-bottom: 2px solid #e0e6ed;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 14px 8px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: #607085;
+        background: none;
+        border: none;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+        color: #1565c0;
+        border-bottom-color: #1565c0;
+        background: #eaf2fb;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 16px;
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    /* Filters */
+    .filter-box {
+        background: #fff;
+        border-radius: 10px;
+        padding: 14px;
+        margin-bottom: 14px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: flex-end;
+    }
+
+    .filter-item {
+        flex: 1;
+        min-width: 140px;
+    }
+
+    .filter-item label {
+        display: block;
+        font-size: 12px;
+        color: #607085;
+        margin-bottom: 4px;
+        font-weight: 600;
+    }
+
+    select, input[type="text"], input[type="search"] {
+        width: 100%;
+        padding: 9px 10px;
+        border: 1px solid #d0dae4;
+        border-radius: 6px;
+        font-size: 13px;
+        background: #fff;
+        color: #1a2a3a;
+    }
+
+    select:focus, input:focus {
+        outline: none;
+        border-color: #1565c0;
+    }
+
+    .btn {
+        padding: 9px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+
+    .btn:hover {
+        opacity: 0.85;
+    }
+
+    .btn-primary {
+        background: #1565c0;
+        color: #fff;
+    }
+
+    .btn-green {
+        background: #0d8a5f;
+        color: #fff;
+    }
+
+    .btn-outline {
+        background: #fff;
+        color: #1565c0;
+        border: 1px solid #1565c0;
+    }
+
+    .btn-danger {
+        background: #d32f2f;
+        color: #fff;
+    }
+
+    /* Summary bar */
+    .summary-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        font-size: 13px;
+        color: #607085;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .summary-bar b {
+        color: #1a2a3a;
+    }
+
+    /* Store cards */
+    .store-card {
+        background: #fff;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        overflow: hidden;
+        border-left: 4px solid #d0dae4;
+    }
+
+    .store-card.surveyed {
+        border-left-color: #0d8a5f;
+    }
+
+    .store-card.has-mismatch {
+        border-left-color: #f57c00;
+    }
+
+    .store-head {
+        padding: 12px 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        gap: 10px;
+    }
+
+    .store-head:hover {
+        background: #f7fafc;
+    }
+
+    .store-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .store-name {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1a2a3a;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .store-meta {
+        font-size: 12px;
+        color: #607085;
+        margin-top: 3px;
+    }
+
+    .store-badge {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 12px;
+        white-space: nowrap;
+    }
+
+    .badge-done {
+        background: #e4f6ee;
+        color: #0d8a5f;
+    }
+
+    .badge-pending {
+        background: #fdeaea;
+        color: #c0392b;
+    }
+
+    .store-toggle {
+        font-size: 18px;
+        color: #a0aec0;
+        transition: transform 0.2s;
+    }
+
+    .store-body {
+        display: none;
+        border-top: 1px solid #eef2f6;
+        padding: 10px 14px 14px;
+    }
+
+    .store-body.open {
+        display: block;
+    }
+
+    table.emp-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+    }
+
+    table.emp-table th {
+        text-align: left;
+        padding: 6px 6px;
+        background: #f0f4f8;
+        color: #607085;
+        font-weight: 600;
+        border-bottom: 1px solid #e0e6ed;
+        white-space: nowrap;
+    }
+
+    table.emp-table td {
+        padding: 6px 6px;
+        border-bottom: 1px solid #f0f4f8;
+        vertical-align: middle;
+    }
+
+    table.emp-table select {
+        padding: 5px 6px;
+        font-size: 12px;
+    }
+
+    table.emp-table input[type="text"] {
+        padding: 5px 6px;
+        font-size: 12px;
+        min-width: 100px;
+    }
+
+    .sys-status {
+        font-size: 11px;
+        padding: 2px 7px;
+        border-radius: 10px;
+        white-space: nowrap;
+        display: inline-block;
+    }
+
+    .status-working {
+        background: #e4f6ee;
+        color: #0d8a5f;
+    }
+
+    .status-other {
+        background: #fdf1e6;
+        color: #d35400;
+    }
+
+    .status-leave {
+        background: #fdeaea;
+        color: #c0392b;
+    }
+
+    .mismatch-flag {
+        color: #f57c00;
+        font-weight: 700;
+        font-size: 11px;
+    }
+
+    .store-save-row {
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .save-msg {
+        font-size: 12px;
+        color: #0d8a5f;
+        font-weight: 600;
+        align-self: center;
+        margin-right: auto;
+    }
+
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        margin-top: 18px;
+        flex-wrap: wrap;
+    }
+
+    .page-btn {
+        padding: 7px 12px;
+        border: 1px solid #d0dae4;
+        background: #fff;
+        border-radius: 6px;
+        font-size: 13px;
+        cursor: pointer;
+        color: #1a2a3a;
+        min-width: 36px;
+    }
+
+    .page-btn.active {
+        background: #1565c0;
+        color: #fff;
+        border-color: #1565c0;
+    }
+
+    .page-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    /* Dashboard */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .kpi-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 16px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        text-align: center;
+    }
+
+    .kpi-value {
+        font-size: 26px;
+        font-weight: 800;
+        color: #1565c0;
+    }
+
+    .kpi-value.green {
+        color: #0d8a5f;
+    }
+
+    .kpi-value.orange {
+        color: #f57c00;
+    }
+
+    .kpi-value.red {
+        color: #c0392b;
+    }
+
+    .kpi-label {
+        font-size: 12px;
+        color: #607085;
+        margin-top: 6px;
+        font-weight: 600;
+    }
+
+    .section-box {
+        background: #fff;
+        border-radius: 10px;
+        padding: 16px;
+        margin-bottom: 16px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .section-title {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #1a2a3a;
+    }
+
+    #gdvChart {
+        width: 100%;
+        height: 320px;
+        display: block;
+    }
+
+    table.mismatch-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+    table.mismatch-table th {
+        text-align: left;
+        padding: 8px;
+        background: #f0f4f8;
+        color: #607085;
+        font-weight: 600;
+        border-bottom: 1px solid #e0e6ed;
+    }
+
+    table.mismatch-table td {
+        padding: 8px;
+        border-bottom: 1px solid #f0f4f8;
+    }
+
+    /* History */
+    .history-item {
+        background: #fff;
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin-bottom: 8px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .history-actions {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .empty-msg {
+        text-align: center;
+        color: #a0aec0;
+        padding: 40px 10px;
+        font-size: 14px;
+    }
+
+    .loading-box {
+        text-align: center;
+        padding: 60px 10px;
+        color: #607085;
+    }
+
+    .spinner {
+        width: 36px;
+        height: 36px;
+        border: 4px solid #e0e6ed;
+        border-top-color: #1565c0;
+        border-radius: 50%;
+        margin: 0 auto 14px;
+        animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 700px) {
+        .kpi-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .filter-item {
+            min-width: 100%;
+        }
+        table.emp-table {
+            font-size: 11px;
+        }
+        .store-name {
+            font-size: 13px;
+        }
+    }
 </style>
 </head>
 <body>
-<div class="hdr"><h1>Khao Sat Tinh Trang Nhan Su Cua Hang</h1><div class="info">Du lieu: 10/10/2026 | 7.594 NS | 1.803 CH | 10 GDV | v1.1</div></div>
-<div class="tb"><div class="tbb ac" onclick="switchTab(0)">Khao Sat</div><div class="tbb" onclick="switchTab(1)">Dashboard</div><div class="tbb" onclick="switchTab(2)">Lich Su</div></div>
-<div class="ct">
-<div id="t0">
-<div class="fb">
-<select id="fg" onchange="onGdvChange()"><option value="">Tat ca GDV</option></select>
-<select id="fq" onchange="renderSurvey()"><option value="">Tat ca QLKV</option></select>
-<select id="ft" onchange="renderSurvey()"><option value="">Tat ca Tinh</option></select>
-<select id="fs" onchange="renderSurvey()"><option value="">Tat ca</option><option value="d">Da KS</option><option value="p">Chua KS</option><option value="m">Co sai khac</option></select>
-<button class="btn btn-o" onclick="resetFilters()">Reset</button>
-<span id="rc" style="font-size:13px;color:#888"></span>
+
+<div class="header">
+    <h1>Khảo sát Tình trạng Nhân sự</h1>
+    <p>He thong khao sat trang thai nhan vien tai cua hang</p>
 </div>
-<div id="sl"></div>
-<div class="pg" id="pg"></div>
-<div id="lo">Dang tai du lieu...</div>
+
+<div class="tabs">
+    <button class="tab-btn active" data-tab="survey" onclick="switchTab('survey')">Khảo sát</button>
+    <button class="tab-btn" data-tab="dashboard" onclick="switchTab('dashboard')">Dashboard</button>
+    <button class="tab-btn" data-tab="history" onclick="switchTab('history')">Lịch sử</button>
 </div>
-<div id="t1" class="h"><div class="kr" id="kr"></div><div class="cx"><h3>Tien Do Khao Sat Theo GDV</h3><canvas id="gc"></canvas></div><div class="gg" id="gg"></div><div class="sec"><h3>Sai Khac Tinh Trang: SAP vs Khao Sat</h3><div id="sb"></div></div></div>
-<div id="t2" class="h"><div class="fb"><span id="hc" style="font-size:13px;color:#888"></span><button class="btn btn-d" onclick="clearHistory()" style="margin-left:auto">Xoa LS</button><button class="btn btn-o" onclick="exportCSV()">Xuat CSV</button></div><div id="hl"></div></div>
+
+<div class="container">
+
+    <!-- TAB: KHAO SAT -->
+    <div class="tab-content active" id="tab-survey">
+        <div id="surveyLoading" class="loading-box">
+            <div class="spinner"></div>
+            <div>Đang tải dữ liệu...</div>
+        </div>
+        <div id="surveyContent" style="display:none;">
+            <div class="filter-box">
+                <div class="filter-item">
+                    <label>Giam Doc Vung (GDV)</label>
+                    <select id="filterGdv" onchange="onGdvChange()">
+                        <option value="">-- Tất cả GĐV --</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>Quản lý Khu vực (QLKV)</label>
+                    <select id="filterQlkv" onchange="applyFilters()">
+                        <option value="">-- Tất cả QLKV --</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>Tinh / Thanh Pho</label>
+                    <select id="filterTinh" onchange="applyFilters()">
+                        <option value="">-- Tất cả Tỉnh --</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>Trạng thái Khảo sát</label>
+                    <select id="filterStatus" onchange="applyFilters()">
+                        <option value="">-- Tất cả --</option>
+                        <option value="done">Da khao sat</option>
+                        <option value="pending">Chua khao sat</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="summary-bar">
+                <div>Tim thay <b id="storeCountLabel">0</b> cua hang</div>
+                <div>Da khao sat: <b id="doneCountLabel" style="color:#0d8a5f;">0</b> / <span id="totalCountLabel">0</span></div>
+            </div>
+
+            <div id="storeList"></div>
+
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+
+    <!-- TAB: DASHBOARD -->
+    <div class="tab-content" id="tab-dashboard">
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-value" id="kpiTotalStores">0</div>
+                <div class="kpi-label">Tong So Cua Hang</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="kpiTotalEmp">0</div>
+                <div class="kpi-label">Tong So Nhan Vien</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value green" id="kpiSurveyed">0</div>
+                <div class="kpi-label">CH Đã Khảo sát</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value red" id="kpiNotSurveyed">0</div>
+                <div class="kpi-label">CH Chưa Khảo sát</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value orange" id="kpiMismatch">0</div>
+                <div class="kpi-label">Nhân viên Sai lệch</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="kpiProgress">0%</div>
+                <div class="kpi-label">Tiến độ Khảo sát</div>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <div class="section-title">Tiến độ Khảo sát Theo GDV</div>
+            <canvas id="gdvChart"></canvas>
+        </div>
+
+        <div class="section-box">
+            <div class="section-title">Chi tiết Sai lệch Trạng thái</div>
+            <div id="mismatchTableWrap">
+                <div class="empty-msg">Chua co du lieu sai lech</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB: LICH SU -->
+    <div class="tab-content" id="tab-history">
+        <div class="history-actions">
+            <button class="btn btn-green" onclick="exportCSV()">Xuất CSV</button>
+            <button class="btn btn-danger" onclick="clearAllHistory()">Xoa Tat Ca</button>
+        </div>
+        <div id="historyList"></div>
+    </div>
+
 </div>
+
 <script>
-var STO=["Dang lam viec","Nghi thai san","Nghi khong luong","Nghi om","Da nghi viec","Du kien nghi viec"];
-var PS=20,CM={},CL=[],SD={},CP=0;
+    // ===================== GLOBAL STATE =====================
+    var chList = [];          // array of {maCost, tenCH, gdv, qlkv, tinh, count}
+    var empData = {};         // object keyed by maCost -> array of emp {m,n,c,g,t,q,d,p}
+    var surveyData = {};      // loaded from localStorage, key ns_v1
+    var filteredList = [];    // current filtered ch list
+    var currentPage = 1;
+    var PAGE_SIZE = 20;
+    var openStoreCode = "";   // which store card is currently expanded
 
-async function init(){
-var v=localStorage.getItem("ns_v1");if(v){SD=JSON.parse(v);}
-try{
-var r=await fetch("emp-compact.json");var d=await r.json();
-CM={};CL=[];
-var codes=Object.keys(d);
-for(var ci=0;ci<codes.length;ci++){
-var code=codes[ci];var emps=d[code];
-var el=[];
-for(var ei=0;ei<emps.length;ei++){
-var x=emps[ei];
-el.push({m:x.m,n:x.n,c:x.c,g:x.g,t:x.t,q:x.q,d:x.d,p:x.p,code:code});
-}
-CM[code]=el;
-CL.push({code:code,name:code,gdv:el[0].d||"",qlkv:el[0].q||"",tinh:el[0].p||"",cnt:el.length});
-}
-}catch(e){document.getElementById("lo").innerHTML="Loi tai du lieu: "+e.message;return}
-populateFilters();renderSurvey();renderDashboard();renderHistory();
-document.getElementById("lo").classList.add("h");
-}
+    var STORAGE_KEY = "ns_v1";
 
-function populateFilters(){
-var gs=new Set(),qs=new Set(),ts=new Set();
-for(var i=0;i<CL.length;i++){var c=CL[i];if(c.gdv)gs.add(c.gdv);if(c.qlkv)qs.add(c.qlkv);if(c.tinh)ts.add(c.tinh);}
-var g=document.getElementById("fg");var ga=Array.from(gs).sort();
-for(var i=0;i<ga.length;i++){var o=document.createElement("option");o.value=ga[i];o.textContent=ga[i];g.appendChild(o);}
-var q=document.getElementById("fq");var qa=Array.from(qs).sort();
-for(var i=0;i<qa.length;i++){var o=document.createElement("option");o.value=qa[i];o.textContent=qa[i];q.appendChild(o);}
-var t=document.getElementById("ft");var ta=Array.from(ts).sort();
-for(var i=0;i<ta.length;i++){var o=document.createElement("option");o.value=ta[i];o.textContent=ta[i];t.appendChild(o);}
-}
+    var STATUS_OPTIONS = [
+        "Dang lam viec",
+        "Nghi thai san",
+        "Nghi khong luong",
+        "Nghi om",
+        "Da nghi viec",
+        "Du kien nghi viec"
+    ];
 
-function onGdvChange(){
-var g=document.getElementById("fg").value;var q=document.getElementById("fq");
-q.innerHTML="<option value=''>Tat ca QLKV</option>";var qs=new Set();
-for(var i=0;i<CL.length;i++){if(!g||CL[i].gdv===g)qs.add(CL[i].qlkv);}
-var qa=Array.from(qs).sort();
-for(var i=0;i<qa.length;i++){var o=document.createElement("option");o.value=qa[i];o.textContent=qa[i];q.appendChild(o);}
-CP=0;renderSurvey();
-}
+    // ===================== INIT =====================
+    function init() {
+        loadSurveyData();
+        loadDataFiles();
+    }
 
-function resetFilters(){
-document.getElementById("fg").value="";document.getElementById("fq").value="";
-document.getElementById("ft").value="";document.getElementById("fs").value="";
-onGdvChange();
-}
+    function loadDataFiles() {
+        var xhr1 = new XMLHttpRequest();
+        xhr1.open("GET", "ch-list.json", true);
+        xhr1.onreadystatechange = function () {
+            if (xhr1.readyState === 4) {
+                if (xhr1.status === 200 || xhr1.status === 0) {
+                    try {
+                        chList = JSON.parse(xhr1.responseText);
+                    } catch (e) {
+                        chList = [];
+                    }
+                    loadEmpData();
+                } else {
+                    showLoadError();
+                }
+            }
+        };
+        xhr1.send();
+    }
 
-function getFiltered(){
-var g=document.getElementById("fg").value;
-var q=document.getElementById("fq").value;
-var t=document.getElementById("ft").value;
-var s=document.getElementById("fs").value;
-return CL.filter(function(c){
-if(g&&c.gdv!==g)return false;
-if(q&&c.qlkv!==q)return false;
-if(t&&c.tinh!==t)return false;
-if(s==="d"&&!SD[c.code])return false;
-if(s==="p"&&SD[c.code])return false;
-if(s==="m"){
-var sd=SD[c.code];if(!sd||!sd.e)return false;
-var emps=CM[c.code]||[];
-var keys=Object.keys(sd.e);
-for(var i=0;i<keys.length;i++){
-var mnv=keys[i];var info=sd.e[mnv];
-var emp=emps.find(function(x){return x.m===mnv});
-if(emp&&info.s!==emp.t)return true;
-}
-return false;
-}
-return true;
-});
-}
+    function loadEmpData() {
+        var xhr2 = new XMLHttpRequest();
+        xhr2.open("GET", "emp-compact.json", true);
+        xhr2.onreadystatechange = function () {
+            if (xhr2.readyState === 4) {
+                if (xhr2.status === 200 || xhr2.status === 0) {
+                    try {
+                        empData = JSON.parse(xhr2.responseText);
+                    } catch (e) {
+                        empData = {};
+                    }
+                    onDataLoaded();
+                } else {
+                    showLoadError();
+                }
+            }
+        };
+        xhr2.send();
+    }
 
-function escHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
+    function showLoadError() {
+        var box = document.getElementById("surveyLoading");
+        box.innerHTML = "<div style=\"color:#c0392b;\">Khong the tai du lieu. Vui long kiem tra file ch-list.json va emp-compact.json co nam cung thu muc va chay qua web server.</div>";
+    }
 
-function renderSurvey(){
-var filtered=getFiltered();
-document.getElementById("rc").textContent=filtered.length+" CH";
-var tp=Math.ceil(filtered.length/PS);
-var p=Math.max(0,Math.min(CP,tp-1));CP=p;
-var items=filtered.slice(p*PS,(p+1)*PS);
-var ct=document.getElementById("sl");
-if(!items.length){ct.innerHTML="<div class='em'><div class='ic'>&#x1F4CB;</div>Khong co CH nao</div>";document.getElementById("pg").innerHTML="";return;}
-var h="";
-for(var ii=0;ii<items.length;ii++){
-var ch=items[ii];var code=ch.code;var emps=CM[code]||[];var done=!!SD[code];
-h+="<div class='card' style='border-left:4px solid "+(done?"#27ae60":"#e0e0e0")+"' id='ch-"+code+"'>";
-h+="<div class='chd'><div><div class='cht'>&#x1F3EA "+code+"</div>";
-h+="<div class='chm'>GDV: "+ch.gdv+" | QLKV: "+ch.qlkv+" | "+ch.tinh+" | "+emps.length+" NV</div></div>";
-h+="<div>"+(done?"<span style='color:#27ae60;font-weight:600'>Da KS - "+SD[code].ts+"</span>":"<span style='color:#e67e22'>Chua KS</span>")+"</div></div>";
-if(emps.length>0){
-h+="<div style='overflow-x:auto'><table class='et'><tr><th>MNV</th><th>Ho Ten</th><th>Chuc Danh</th><th>Gioi Tinh</th><th>TT SAP</th><th>Khao Sat</th><th>Ghi Chu</th></tr>";
-for(var ei=0;ei<emps.length;ei++){
-var e=emps[ei];var sv=SD[code]&&SD[code].e&&SD[code].e[e.m];
-var st=sv?sv.s:e.t;var match=!sv||st===e.t;var cls=match?"ok":"err";
-h+="<tr><td>"+e.m+"</td><td><strong>"+escHtml(e.n)+"</strong></td><td>"+escHtml(e.c)+"</td><td>"+e.g+"</td><td>"+escHtml(e.t)+"</td>";
-h+="<td><select class='ss "+cls+"' data-ch='"+code+"' data-mnv='"+e.m+"' onchange='onStatusChange(this)'>";
-for(var si=0;si<STO.length;si++){var s=STO[si];h+="<option value='"+s+"'"+(st===s?" selected":"")+">"+s+"</option>";}
-h+="</select>"+(match?"":"<br><small style='color:#e74c3c'>Khac SAP</small>")+"</td>";
-h+="<td><input class='ni' placeholder='Ghi chu...' data-ch='"+code+"' data-mnv='"+e.m+"' value='"+(sv?(sv.note||""):"")+"' onchange='onNoteChange(this)'></td></tr>";
-}
-h+="</table></div><div style='margin-top:12px;text-align:right'>";
-h+="<button class='btn btn-p' onclick='saveSurvey(\""+code+"\")'>Luu</button>";
-if(done)h+="<button class='btn btn-o' onclick='clearSurvey(\""+code+"\")' style='margin-left:8px'>Lam Lai</button>";
-h+="</div>";
-}
-h+="</div>";
-}
-ct.innerHTML=h;
-var pg="";
-if(tp>1){
-pg+="<button "+(p===0?"disabled":"onclick='CP=0;renderSurvey()'")+">|&lt;</button>";
-pg+="<button "+(p===0?"disabled":"onclick='CP--;renderSurvey()'")+">&lt;</button>";
-for(var i=Math.max(0,p-2);i<=Math.min(tp-1,p+2);i++){
-pg+="<button class='"+(i===p?"cur":"")+"' onclick='CP="+i+";renderSurvey()'>"+(i+1)+"</button>";
-}
-pg+="<button "+(p>=tp-1?"disabled":"onclick='CP++;renderSurvey()'")+">&gt;</button>";
-pg+="<button "+(p>=tp-1?"disabled":"onclick='CP="+(tp-1)+";renderSurvey()'")+">&gt;|</button>";
-pg+="<span style='font-size:12px;color:#888'>Trang "+(p+1)+"/"+tp+"</span>";
-}
-document.getElementById("pg").innerHTML=pg;
-}
+    function onDataLoaded() {
+        document.getElementById("surveyLoading").style.display = "none";
+        document.getElementById("surveyContent").style.display = "block";
 
-function onStatusChange(sel){
-var code=sel.dataset.ch;var mnv=sel.dataset.mnv;
-if(!SD[code])SD[code]={e:{},ts:""};
-if(!SD[code].e[mnv])SD[code].e[mnv]={s:"",note:""};
-SD[code].e[mnv].s=sel.value;
-var emps=CM[code]||[];
-var emp=emps.find(function(e){return e.m===mnv});
-sel.className="ss "+(emp&&sel.value===emp.t?"ok":"err");
-}
+        buildGdvFilter();
+        buildTinhFilter();
+        applyFilters();
+        renderDashboard();
+        renderHistory();
+    }
 
-function onNoteChange(inp){
-var code=inp.dataset.ch;var mnv=inp.dataset.mnv;
-if(!SD[code])SD[code]={e:{},ts:""};
-if(!SD[code].e[mnv])SD[code].e[mnv]={s:"",note:""};
-SD[code].e[mnv].note=inp.value;
-}
+    // ===================== LOCAL STORAGE =====================
+    function loadSurveyData() {
+        var raw = null;
+        try {
+            raw = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {
+            raw = null;
+        }
+        if (raw) {
+            try {
+                surveyData = JSON.parse(raw);
+            } catch (e) {
+                surveyData = {};
+            }
+        } else {
+            surveyData = {};
+        }
+    }
 
-function saveSurvey(code){
-SD[code]=SD[code]||{e:{},ts:""};
-var sels=document.querySelectorAll("#ch-"+code+" .ss");
-for(var i=0;i<sels.length;i++){var s=sels[i];SD[code].e[s.dataset.mnv]=SD[code].e[s.dataset.mnv]||{};SD[code].e[s.dataset.mnv].s=s.value;}
-var inps=document.querySelectorAll("#ch-"+code+" .ni");
-for(var i=0;i<inps.length;i++){var n=inps[i];SD[code].e[n.dataset.mnv]=SD[code].e[n.dataset.mnv]||{};SD[code].e[n.dataset.mnv].note=n.value;}
-var now=new Date();
-SD[code].ts=now.toLocaleDateString("vi-VN",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
-localStorage.setItem("ns_v1",JSON.stringify(SD));
-toast("Da luu KS cho "+code,"ok");
-renderSurvey();renderDashboard();renderHistory();
-}
+    function saveSurveyData() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(surveyData));
+        } catch (e) {
+            alert("Khong the luu du lieu vao trinh duyet.");
+        }
+    }
 
-function clearSurvey(code){
-if(confirm("Xoa KS cho "+code+"?")){
-delete SD[code];localStorage.setItem("ns_v1",JSON.stringify(SD));
-toast("Da xoa","ok");renderSurvey();renderDashboard();renderHistory();
-}
-}
+    // ===================== TAB SWITCH =====================
+    function switchTab(tabName) {
+        var btns = document.querySelectorAll(".tab-btn");
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].classList.remove("active");
+        }
+        var contents = document.querySelectorAll(".tab-content");
+        for (var j = 0; j < contents.length; j++) {
+            contents[j].classList.remove("active");
+        }
 
-function renderDashboard(){
-var total=CL.length,sCh=0,tChecked=0,tMis=0,gs={};
-for(var i=0;i<CL.length;i++){
-var c=CL[i];if(!gs[c.gdv])gs[c.gdv]={chT:0,chS:0,empT:0,empC:0,mis:0};
-gs[c.gdv].chT++;var emps=CM[c.code]||[];gs[c.gdv].empT+=emps.length;
-var sd=SD[c.code];
-if(sd&&sd.e){
-sCh++;gs[c.gdv].chS++;
-var keys=Object.keys(sd.e);
-for(var j=0;j<keys.length;j++){
-var mnv=keys[j];var info=sd.e[mnv];
-tChecked++;gs[c.gdv].empC++;
-var emp=emps.find(function(x){return x.m===mnv});
-if(emp&&info.s!==emp.t){tMis++;gs[c.gdv].mis++;}
-}
-}
-}
-var pct=total?Math.round(sCh/total*100):0;
-document.getElementById("kr").innerHTML=
-"<div class='kc cb'><div class='kv'>"+total+"</div><div class='kl'>Tong CH</div></div>"+
-"<div class='kc cg'><div class='kv'>"+sCh+"</div><div class='kl'>Da KS</div></div>"+
-"<div class='kc co'><div class='kv'>"+(total-sCh)+"</div><div class='kl'>Chua KS</div></div>"+
-"<div class='kc cb'><div class='kv'>"+pct+"%</div><div class='kl'>Ty Le</div></div>"+
-"<div class='kc cg'><div class='kv'>"+(tChecked-tMis)+"</div><div class='kl'>Dung TT</div></div>"+
-"<div class='kc cr'><div class='kv'>"+tMis+"</div><div class='kl'>Sai Khac</div></div>";
-var gh="";
-var gsEntries=Object.entries(gs).sort(function(a,b){return b[1].chT-a[1].chT});
-for(var i=0;i<gsEntries.length;i++){
-var g=gsEntries[i][0];var s=gsEntries[i][1];
-var pp=s.chT?Math.round(s.chS/s.chT*100):0;
-gh+="<div class='gc'><h3>"+g+" ("+s.chS+"/"+s.chT+" CH | "+s.empC+"/"+s.empT+" NV)</h3>";
-gh+="<div class='gb'><div class='gbf' style='width:"+pp+"%'>"+(pp>5?pp+"%":"")+"</div></div>";
-gh+="<div class='gs'><span>Da KS: "+s.chS+" CH</span><span>Sai: "+s.mis+"</span></div></div>";
-}
-document.getElementById("gg").innerHTML=gh;
-var chg={};
-var sdKeys=Object.keys(SD);
-for(var i=0;i<sdKeys.length;i++){
-var code=sdKeys[i];var d=SD[code];if(!d.e)continue;
-var emps=CM[code]||[];
-var dKeys=Object.keys(d.e);
-for(var j=0;j<dKeys.length;j++){
-var mnv=dKeys[j];var info=d.e[mnv];
-var emp=emps.find(function(x){return x.m===mnv});
-if(emp&&info.s!==emp.t){var k=emp.t+" -> "+info.s;chg[k]=(chg[k]||0)+1;}
-}
-}
-var bh="<table class='stt'><tr><th>Thay Doi Tinh Trang</th><th>So Luong</th></tr>";
-var sorted=Object.entries(chg).sort(function(a,b){return b[1]-a[1]});
-if(!sorted.length){bh+="<tr><td colspan='2' style='text-align:center;color:#999'>Chua co KS</td></tr>";}
-else{for(var i=0;i<sorted.length;i++){bh+="<tr><td>"+sorted[i][0]+"</td><td><strong>"+sorted[i][1]+"</strong></td></tr>";}}
-bh+="</table>";document.getElementById("sb").innerHTML=bh;
-drawChart(gs);
-}
+        var activeBtn = document.querySelector(".tab-btn[data-tab='" + tabName + "']");
+        if (activeBtn) {
+            activeBtn.classList.add("active");
+        }
+        var activeContent = document.getElementById("tab-" + tabName);
+        if (activeContent) {
+            activeContent.classList.add("active");
+        }
 
-function drawChart(gs){
-var cv=document.getElementById("gc"),rect=cv.parentElement.getBoundingClientRect();
-var w=Math.max(400,rect.width-40),h=280,dpr=window.devicePixelRatio||1;
-cv.width=w*dpr;cv.height=h*dpr;cv.style.width=w+"px";cv.style.height=h+"px";
-var ctx=cv.getContext("2d");ctx.scale(dpr,dpr);
-var entries=Object.entries(gs).sort(function(a,b){return b[1].chT-a[1].chT});
-if(!entries.length){ctx.fillStyle="#999";ctx.font="14px sans-serif";ctx.textAlign="center";ctx.fillText("Chua co du lieu",w/2,h/2);return;}
-var barW=Math.min(55,(w-100)/entries.length-12),chartH=200,startX=70;
-ctx.clearRect(0,0,w,h);ctx.strokeStyle="#e9e9e9";ctx.lineWidth=0.5;
-for(var i=0;i<=4;i++){
-var y=20+(chartH/4)*i;ctx.beginPath();ctx.moveTo(startX,y);ctx.lineTo(w-30,y);ctx.stroke();
-ctx.fillStyle="#999";ctx.font="10px sans-serif";ctx.textAlign="right";ctx.fillText((100-i*25)+"%",startX-8,y+3);
-}
-for(var i=0;i<entries.length;i++){
-var g=entries[i][0];var s=entries[i][1];
-var pp=s.chT?s.chS/s.chT*100:0;
-var x=startX+i*(barW+12)+5,barH=(pp/100)*chartH,y=20+chartH-barH;
-var grad=ctx.createLinearGradient(x,y,x,20+chartH);grad.addColorStop(0,"#27ae60");grad.addColorStop(1,"#52be80");
-ctx.fillStyle=grad;ctx.fillRect(x,y,barW,barH);
-if(pp>0){ctx.fillStyle="#333";ctx.font="bold 11px sans-serif";ctx.textAlign="center";ctx.fillText(Math.round(pp)+"%",x+barW/2,y-5);}
-ctx.fillStyle="#555";ctx.font="9px sans-serif";var label=g.length>14?g.substring(0,13)+"...":g;
-ctx.save();ctx.translate(x+barW/2,20+chartH+14);ctx.rotate(-0.5);ctx.textAlign="right";ctx.fillText(label,0,0);ctx.restore();
-}
-}
+        if (tabName === "dashboard") {
+            renderDashboard();
+        }
+        if (tabName === "history") {
+            renderHistory();
+        }
+    }
 
-function renderHistory(){
-var entries=Object.entries(SD);
-document.getElementById("hc").textContent=entries.length?entries.length+" CH da KS":"";
-if(!entries.length){document.getElementById("hl").innerHTML="<div class='em'><div class='ic'>&#x1F4DD;</div>Chua co KS nao</div>";return;}
-var hh="";
-entries.sort(function(a,b){return (b[1].ts||"").localeCompare(a[1].ts||"")});
-for(var i=0;i<entries.length;i++){
-var code=entries[i][0];var d=entries[i][1];
-var ch=CL.find(function(c){return c.code===code});if(!ch)continue;
-var mc=0;
-if(d.e){var emps=CM[code]||[];var dKeys=Object.keys(d.e);
-for(var j=0;j<dKeys.length;j++){var mnv=dKeys[j];var info=d.e[mnv];
-var emp=emps.find(function(x){return x.m===mnv});if(emp&&info.s!==emp.t)mc++;}
-}
-hh+="<div class='card'><div class='chd'><div><div class='cht'>&#x1F3EA "+code+"</div>";
-hh+="<div class='chm'>GDV: "+ch.gdv+" | QLKV: "+ch.qlkv+" | "+(d.ts||"N/A")+"</div></div><div>";
-hh+="<span style='color:#27ae60'>"+(d.e?Object.keys(d.e).length:0)+" NV</span>";
-if(mc>0)hh+="<span style='color:#e74c3c;margin-left:8px'> "+mc+" sai</span>";
-hh+="</div></div></div>";
-}
-document.getElementById("hl").innerHTML=hh;
-}
+    // ===================== FILTERS =====================
+    function buildGdvFilter() {
+        var gdvSet = {};
+        var i;
+        for (i = 0; i < chList.length; i++) {
+            if (chList[i].gdv) {
+                gdvSet[chList[i].gdv] = true;
+            }
+        }
+        var gdvNames = [];
+        for (var key in gdvSet) {
+            if (gdvSet.hasOwnProperty(key)) {
+                gdvNames.push(key);
+            }
+        }
+        gdvNames.sort();
 
-function clearHistory(){if(confirm("Xoa TOAN BO LS?")){SD={};localStorage.removeItem("ns_v1");toast("Da xoa","ok");renderSurvey();renderDashboard();renderHistory();}}
+        var sel = document.getElementById("filterGdv");
+        for (i = 0; i < gdvNames.length; i++) {
+            var opt = document.createElement("option");
+            opt.value = gdvNames[i];
+            opt.textContent = gdvNames[i];
+            sel.appendChild(opt);
+        }
+    }
 
-function exportCSV(){
-var csv="CH Code,GDV,QLKV,Tinh,MNV,Ho Ten,Chuc Danh,TT SAP,TT KS,Ket Qua,Ghi Chu,Thoi Gian\n";
-var sdKeys=Object.keys(SD);
-for(var i=0;i<sdKeys.length;i++){
-var code=sdKeys[i];var d=SD[code];if(!d.e)continue;
-var ch=CL.find(function(c){return c.code===code})||{},emps=CM[code]||[];
-var dKeys=Object.keys(d.e);
-for(var j=0;j<dKeys.length;j++){
-var mnv=dKeys[j];var inf=d.e[mnv];
-var emp=emps.find(function(x){return x.m===mnv})||{};
-var row=[code,ch.gdv||"",ch.qlkv||"",ch.tinh||"",mnv,emp.n||"",emp.c||"",emp.t||"",inf.s||"",inf.s===emp.t?"Dung":"Sai",inf.note||"",d.ts||""];
-csv+=row.map(function(v){return '"'+String(v).replace(/"/g,'""')+'"'}).join(",")+"\n";
-}
-}
-var b=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});
-var a=document.createElement("a");a.href=URL.createObjectURL(b);
-a.download="KS_NS_"+new Date().toISOString().slice(0,10)+".csv";a.click();
-}
+    function buildTinhFilter() {
+        var tinhSet = {};
+        var i;
+        for (i = 0; i < chList.length; i++) {
+            if (chList[i].tinh) {
+                tinhSet[chList[i].tinh] = true;
+            }
+        }
+        var tinhNames = [];
+        for (var key in tinhSet) {
+            if (tinhSet.hasOwnProperty(key)) {
+                tinhNames.push(key);
+            }
+        }
+        tinhNames.sort();
 
-function switchTab(idx){
-var tabs=document.querySelectorAll(".tbb");
-for(var i=0;i<tabs.length;i++)tabs[i].classList.remove("ac");
-tabs[idx].classList.add("ac");
-var panels=[document.getElementById("t0"),document.getElementById("t1"),document.getElementById("t2")];
-for(var i=0;i<panels.length;i++)panels[i].classList.add("h");
-panels[idx].classList.remove("h");
-if(idx===1)renderDashboard();
-if(idx===2)renderHistory();
-}
+        var sel = document.getElementById("filterTinh");
+        for (i = 0; i < tinhNames.length; i++) {
+            var opt = document.createElement("option");
+            opt.value = tinhNames[i];
+            opt.textContent = tinhNames[i];
+            sel.appendChild(opt);
+        }
+    }
 
-function toast(m,tp){
-var el=document.getElementById("toast");
-if(!el){el=document.createElement("div");el.id="toast";el.className="toast";document.body.appendChild(el);}
-el.textContent=m;el.className="toast "+tp+" show";
-setTimeout(function(){el.classList.remove("show")},2500);
-}
+    function onGdvChange() {
+        var gdvVal = document.getElementById("filterGdv").value;
+        var qlkvSel = document.getElementById("filterQlkv");
 
-init();
+        // clear existing options except first
+        qlkvSel.innerHTML = "<option value=''>-- Tất cả QLKV --</option>";
+
+        if (gdvVal) {
+            var qlkvSet = {};
+            for (var i = 0; i < chList.length; i++) {
+                if (chList[i].gdv === gdvVal && chList[i].qlkv) {
+                    qlkvSet[chList[i].qlkv] = true;
+                }
+            }
+            var qlkvNames = [];
+            for (var key in qlkvSet) {
+                if (qlkvSet.hasOwnProperty(key)) {
+                    qlkvNames.push(key);
+                }
+            }
+            qlkvNames.sort();
+            for (i = 0; i < qlkvNames.length; i++) {
+                var opt = document.createElement("option");
+                opt.value = qlkvNames[i];
+                opt.textContent = qlkvNames[i];
+                qlkvSel.appendChild(opt);
+            }
+        }
+
+        applyFilters();
+    }
+
+    function applyFilters() {
+        var gdvVal = document.getElementById("filterGdv").value;
+        var qlkvVal = document.getElementById("filterQlkv").value;
+        var tinhVal = document.getElementById("filterTinh").value;
+        var statusVal = document.getElementById("filterStatus").value;
+
+        filteredList = [];
+        var i;
+        for (i = 0; i < chList.length; i++) {
+            var store = chList[i];
+            if (gdvVal && store.gdv !== gdvVal) {
+                continue;
+            }
+            if (qlkvVal && store.qlkv !== qlkvVal) {
+                continue;
+            }
+            if (tinhVal && store.tinh !== tinhVal) {
+                continue;
+            }
+
+            var isDone = !!surveyData[store.maCost];
+            if (statusVal === "done" && !isDone) {
+                continue;
+            }
+            if (statusVal === "pending" && isDone) {
+                continue;
+            }
+
+            filteredList.push(store);
+        }
+
+        currentPage = 1;
+        renderStoreList();
+        updateSummaryBar();
+    }
+
+    function updateSummaryBar() {
+        document.getElementById("storeCountLabel").textContent = filteredList.length;
+
+        var doneCount = 0;
+        var i;
+        for (i = 0; i < filteredList.length; i++) {
+            if (surveyData[filteredList[i].maCost]) {
+                doneCount++;
+            }
+        }
+        document.getElementById("doneCountLabel").textContent = doneCount;
+        document.getElementById("totalCountLabel").textContent = filteredList.length;
+    }
+
+    // ===================== STORE LIST RENDER =====================
+    function renderStoreList() {
+        var listEl = document.getElementById("storeList");
+        listEl.innerHTML = "";
+
+        if (filteredList.length === 0) {
+            listEl.innerHTML = "<div class='empty-msg'>Khong tim thay cua hang nao phu hop.</div>";
+            document.getElementById("pagination").innerHTML = "";
+            return;
+        }
+
+        var totalPages = Math.ceil(filteredList.length / PAGE_SIZE);
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+        if (currentPage < 1) {
+            currentPage = 1;
+        }
+
+        var startIdx = (currentPage - 1) * PAGE_SIZE;
+        var endIdx = Math.min(startIdx + PAGE_SIZE, filteredList.length);
+
+        var i;
+        for (i = startIdx; i < endIdx; i++) {
+            var store = filteredList[i];
+            listEl.appendChild(buildStoreCard(store));
+        }
+
+        renderPagination(totalPages);
+    }
+
+    function buildStoreCard(store) {
+        var isDone = !!surveyData[store.maCost];
+        var mismatchCount = countMismatch(store.maCost);
+
+        var card = document.createElement("div");
+        card.className = "store-card";
+        if (isDone) {
+            card.className += " surveyed";
+        }
+        if (mismatchCount > 0) {
+            card.className += " has-mismatch";
+        }
+        card.setAttribute("data-code", store.maCost);
+
+        var head = document.createElement("div");
+        head.className = "store-head";
+        head.onclick = (function (code) {
+            return function () { toggleStoreBody(code); };
+        })(store.maCost);
+
+        var info = document.createElement("div");
+        info.className = "store-info";
+
+        var nameDiv = document.createElement("div");
+        nameDiv.className = "store-name";
+        nameDiv.textContent = store.tenCH + " (" + store.maCost + ")";
+
+        var metaDiv = document.createElement("div");
+        metaDiv.className = "store-meta";
+        var metaText = "GDV: " + (store.gdv || "-") + " | QLKV: " + (store.qlkv || "-") + " | " + (store.tinh || "-") + " | " + store.count + " NV";
+        if (mismatchCount > 0) {
+            metaText += " | ";
+        }
+        metaDiv.textContent = metaText;
+        if (mismatchCount > 0) {
+            var flagSpan = document.createElement("span");
+            flagSpan.className = "mismatch-flag";
+            flagSpan.textContent = mismatchCount + " sai lech";
+            metaDiv.appendChild(flagSpan);
+        }
+
+        info.appendChild(nameDiv);
+        info.appendChild(metaDiv);
+
+        var badge = document.createElement("div");
+        badge.className = "store-badge " + (isDone ? "badge-done" : "badge-pending");
+        badge.textContent = isDone ? "Da khao sat" : "Chua khao sat";
+
+        var toggle = document.createElement("div");
+        toggle.className = "store-toggle";
+        toggle.textContent = "+";
+
+        head.appendChild(info);
+        head.appendChild(badge);
+        head.appendChild(toggle);
+
+        var body = document.createElement("div");
+        body.className = "store-body";
+        body.id = "body-" + store.maCost;
+        if (openStoreCode === store.maCost) {
+            body.classList.add("open");
+            toggle.textContent = "-";
+        }
+        body.appendChild(buildEmpTable(store.maCost));
+
+        card.appendChild(head);
+        card.appendChild(body);
+
+        return card;
+    }
+
+    function countMismatch(maCost) {
+        var emps = empData[maCost];
+        if (!emps) {
+            return 0;
+        }
+        var surveyEntry = surveyData[maCost];
+        if (!surveyEntry || !surveyEntry.e) {
+            return 0;
+        }
+        var count = 0;
+        var i;
+        for (i = 0; i < emps.length; i++) {
+            var emp = emps[i];
+            var surveyedEmp = surveyEntry.e[emp.m];
+            if (surveyedEmp && surveyedEmp.s && surveyedEmp.s !== emp.t) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    function toggleStoreBody(code) {
+        if (openStoreCode === code) {
+            openStoreCode = "";
+        } else {
+            openStoreCode = code;
+        }
+        renderStoreList();
+    }
+
+    function buildEmpTable(maCost) {
+        var wrapper = document.createElement("div");
+
+        var emps = empData[maCost];
+        if (!emps || emps.length === 0) {
+            wrapper.innerHTML = "<div class='empty-msg'>Khong co du lieu nhan vien cho cua hang nay.</div>";
+            return wrapper;
+        }
+
+        var surveyEntry = surveyData[maCost];
+        var savedEmp = (surveyEntry && surveyEntry.e) ? surveyEntry.e : {};
+
+        var table = document.createElement("table");
+        table.className = "emp-table";
+
+        var thead = document.createElement("thead");
+        var headRow = document.createElement("tr");
+        var headers = ["MNV", "Họ tên", "Chức danh", "Trạng thái Hệ thống", "Trạng thái Khảo sát", "Ghi chú"];
+        var h;
+        for (h = 0; h < headers.length; h++) {
+            var th = document.createElement("th");
+            th.textContent = headers[h];
+            headRow.appendChild(th);
+        }
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        var tbody = document.createElement("tbody");
+
+        var i;
+        for (i = 0; i < emps.length; i++) {
+            var emp = emps[i];
+            var row = document.createElement("tr");
+
+            var tdMnv = document.createElement("td");
+            tdMnv.textContent = emp.m;
+            row.appendChild(tdMnv);
+
+            var tdName = document.createElement("td");
+            tdName.textContent = emp.n;
+            row.appendChild(tdName);
+
+            var tdTitle = document.createElement("td");
+            tdTitle.textContent = emp.c;
+            row.appendChild(tdTitle);
+
+            var tdSys = document.createElement("td");
+            var sysSpan = document.createElement("span");
+            sysSpan.className = "sys-status " + statusCssClass(emp.t);
+            sysSpan.textContent = emp.t;
+            tdSys.appendChild(sysSpan);
+            row.appendChild(tdSys);
+
+            var tdSel = document.createElement("td");
+            var sel = document.createElement("select");
+            sel.setAttribute("data-mnv", emp.m);
+            var defaultStatus = emp.t;
+            if (savedEmp[emp.m] && savedEmp[emp.m].s) {
+                defaultStatus = savedEmp[emp.m].s;
+            } else {
+                defaultStatus = mapSystemToOption(emp.t);
+            }
+            var s;
+            for (s = 0; s < STATUS_OPTIONS.length; s++) {
+                var optEl = document.createElement("option");
+                optEl.value = STATUS_OPTIONS[s];
+                optEl.textContent = STATUS_OPTIONS[s];
+                if (STATUS_OPTIONS[s] === defaultStatus) {
+                    optEl.selected = true;
+                }
+                sel.appendChild(optEl);
+            }
+            tdSel.appendChild(sel);
+            row.appendChild(tdSel);
+
+            var tdNote = document.createElement("td");
+            var noteInput = document.createElement("input");
+            noteInput.type = "text";
+            noteInput.setAttribute("data-mnv-note", emp.m);
+            noteInput.placeholder = "Ghi chú...";
+            if (savedEmp[emp.m] && savedEmp[emp.m].note) {
+                noteInput.value = savedEmp[emp.m].note;
+            }
+            tdNote.appendChild(noteInput);
+            row.appendChild(tdNote);
+
+            tbody.appendChild(row);
+        }
+
+        table.appendChild(tbody);
+        wrapper.appendChild(table);
+
+        var saveRow = document.createElement("div");
+        saveRow.className = "store-save-row";
+
+        var msgSpan = document.createElement("span");
+        msgSpan.className = "save-msg";
+        msgSpan.id = "saveMsg-" + maCost;
+
+        var saveBtn = document.createElement("button");
+        saveBtn.className = "btn btn-primary";
+        saveBtn.textContent = "Lưu Khảo sát";
+        saveBtn.onclick = (function (code) {
+            return function () { saveStoreSurvey(code); };
+        })(maCost);
+
+        saveRow.appendChild(msgSpan);
+        saveRow.appendChild(saveBtn);
+        wrapper.appendChild(saveRow);
+
+        return wrapper;
+    }
+
+    function statusCssClass(sysStatus) {
+        if (sysStatus === "Đang làm việc") {
+            return "status-working";
+        }
+        if (sysStatus === "Đã nghỉ việc") {
+            return "status-leave";
+        }
+        return "status-other";
+    }
+
+    function mapSystemToOption(sysStatus) {
+        // try to map vietnamese accented system status to our ascii option list by matching known keywords
+        if (!sysStatus) {
+            return STATUS_OPTIONS[0];
+        }
+        var s = sysStatus;
+        if (s.indexOf("thai sản") >= 0 || s.indexOf("thai san") >= 0) {
+            return "Nghi thai san";
+        }
+        if (s.indexOf("không lương") >= 0 || s.indexOf("khong luong") >= 0) {
+            return "Nghi khong luong";
+        }
+        if (s.indexOf("ốm") >= 0 || s.indexOf("om") >= 0) {
+            return "Nghi om";
+        }
+        if (s.indexOf("đã nghỉ") >= 0 || s.indexOf("da nghi") >= 0) {
+            return "Da nghi viec";
+        }
+        if (s.indexOf("dự kiến") >= 0 || s.indexOf("du kien") >= 0) {
+            return "Du kien nghi viec";
+        }
+        return "Dang lam viec";
+    }
+
+    function saveStoreSurvey(maCost) {
+        var body = document.getElementById("body-" + maCost);
+        if (!body) {
+            return;
+        }
+        var selects = body.querySelectorAll("select[data-mnv]");
+        var notes = body.querySelectorAll("input[data-mnv-note]");
+
+        var empResult = {};
+        var i;
+        for (i = 0; i < selects.length; i++) {
+            var mnv = selects[i].getAttribute("data-mnv");
+            empResult[mnv] = { s: selects[i].value, note: "" };
+        }
+        for (i = 0; i < notes.length; i++) {
+            var mnv2 = notes[i].getAttribute("data-mnv-note");
+            if (!empResult[mnv2]) {
+                empResult[mnv2] = { s: "", note: "" };
+            }
+            empResult[mnv2].note = notes[i].value;
+        }
+
+        surveyData[maCost] = {
+            ts: new Date().toISOString(),
+            e: empResult
+        };
+
+        saveSurveyData();
+
+        var msgEl = document.getElementById("saveMsg-" + maCost);
+        if (msgEl) {
+            msgEl.textContent = "Da luu thanh cong!";
+            setTimeout(function () {
+                if (msgEl) {
+                    msgEl.textContent = "";
+                }
+            }, 3000);
+        }
+
+        renderStoreList();
+        updateSummaryBar();
+    }
+
+    // ===================== PAGINATION =====================
+    function renderPagination(totalPages) {
+        var pagEl = document.getElementById("pagination");
+        pagEl.innerHTML = "";
+
+        if (totalPages <= 1) {
+            return;
+        }
+
+        var prevBtn = document.createElement("button");
+        prevBtn.className = "page-btn";
+        prevBtn.textContent = "<";
+        prevBtn.disabled = (currentPage === 1);
+        prevBtn.onclick = function () {
+            goToPage(currentPage - 1);
+        };
+        pagEl.appendChild(prevBtn);
+
+        var maxButtons = 7;
+        var startPage = Math.max(1, currentPage - 3);
+        var endPage = Math.min(totalPages, startPage + maxButtons - 1);
+        if (endPage - startPage < maxButtons - 1) {
+            startPage = Math.max(1, endPage - maxButtons + 1);
+        }
+
+        var p;
+        for (p = startPage; p <= endPage; p++) {
+            var btn = document.createElement("button");
+            btn.className = "page-btn";
+            if (p === currentPage) {
+                btn.className += " active";
+            }
+            btn.textContent = p;
+            btn.onclick = (function (pageNum) {
+                return function () { goToPage(pageNum); };
+            })(p);
+            pagEl.appendChild(btn);
+        }
+
+        var nextBtn = document.createElement("button");
+        nextBtn.className = "page-btn";
+        nextBtn.textContent = ">";
+        nextBtn.disabled = (currentPage === totalPages);
+        nextBtn.onclick = function () {
+            goToPage(currentPage + 1);
+        };
+        pagEl.appendChild(nextBtn);
+    }
+
+    function goToPage(pageNum) {
+        currentPage = pageNum;
+        openStoreCode = "";
+        renderStoreList();
+        window.scrollTo(0, 0);
+    }
+
+    // ===================== DASHBOARD =====================
+    function renderDashboard() {
+        if (chList.length === 0) {
+            return;
+        }
+
+        var totalStores = chList.length;
+        var totalEmp = 0;
+        var i;
+        for (i = 0; i < chList.length; i++) {
+            totalEmp += chList[i].count || 0;
+        }
+
+        var surveyedCount = 0;
+        for (var key in surveyData) {
+            if (surveyData.hasOwnProperty(key)) {
+                surveyedCount++;
+            }
+        }
+
+        var notSurveyed = totalStores - surveyedCount;
+
+        var totalMismatch = 0;
+        for (i = 0; i < chList.length; i++) {
+            totalMismatch += countMismatch(chList[i].maCost);
+        }
+
+        var progressPct = totalStores > 0 ? Math.round((surveyedCount / totalStores) * 100) : 0;
+
+        document.getElementById("kpiTotalStores").textContent = totalStores;
+        document.getElementById("kpiTotalEmp").textContent = totalEmp;
+        document.getElementById("kpiSurveyed").textContent = surveyedCount;
+        document.getElementById("kpiNotSurveyed").textContent = notSurveyed;
+        document.getElementById("kpiMismatch").textContent = totalMismatch;
+        document.getElementById("kpiProgress").textContent = progressPct + "%";
+
+        renderGdvChart();
+        renderMismatchTable();
+    }
+
+    function renderGdvChart() {
+        var gdvMap = {};
+        var i;
+        for (i = 0; i < chList.length; i++) {
+            var store = chList[i];
+            var g = store.gdv || "Khong xac dinh";
+            if (!gdvMap[g]) {
+                gdvMap[g] = { total: 0, done: 0 };
+            }
+            gdvMap[g].total++;
+            if (surveyData[store.maCost]) {
+                gdvMap[g].done++;
+            }
+        }
+
+        var gdvNames = [];
+        for (var key in gdvMap) {
+            if (gdvMap.hasOwnProperty(key)) {
+                gdvNames.push(key);
+            }
+        }
+        gdvNames.sort(function (a, b) {
+            return gdvMap[b].total - gdvMap[a].total;
+        });
+
+        drawBarChart(gdvNames, gdvMap);
+    }
+
+    function drawBarChart(gdvNames, gdvMap) {
+        var canvas = document.getElementById("gdvChart");
+        var dpr = window.devicePixelRatio || 1;
+        var cssWidth = canvas.parentElement.clientWidth - 32;
+        var cssHeight = 320;
+
+        canvas.width = cssWidth * dpr;
+        canvas.height = cssHeight * dpr;
+        canvas.style.width = cssWidth + "px";
+        canvas.style.height = cssHeight + "px";
+
+        var ctx = canvas.getContext("2d");
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+        if (gdvNames.length === 0) {
+            ctx.fillStyle = "#a0aec0";
+            ctx.font = "13px sans-serif";
+            ctx.fillText("Khong co du lieu", 10, 20);
+            return;
+        }
+
+        var leftMargin = 10;
+        var rightMargin = 10;
+        var topMargin = 20;
+        var bottomMargin = 70;
+        var chartWidth = cssWidth - leftMargin - rightMargin;
+        var chartHeight = cssHeight - topMargin - bottomMargin;
+
+        var maxTotal = 0;
+        var i;
+        for (i = 0; i < gdvNames.length; i++) {
+            if (gdvMap[gdvNames[i]].total > maxTotal) {
+                maxTotal = gdvMap[gdvNames[i]].total;
+            }
+        }
+        if (maxTotal === 0) {
+            maxTotal = 1;
+        }
+
+        var barCount = gdvNames.length;
+        var barGroupWidth = chartWidth / barCount;
+        var barWidth = Math.min(28, barGroupWidth * 0.6);
+
+        // draw baseline
+        ctx.strokeStyle = "#e0e6ed";
+        ctx.beginPath();
+        ctx.moveTo(leftMargin, topMargin + chartHeight);
+        ctx.lineTo(leftMargin + chartWidth, topMargin + chartHeight);
+        ctx.stroke();
+
+        for (i = 0; i < barCount; i++) {
+            var name = gdvNames[i];
+            var data = gdvMap[name];
+            var groupX = leftMargin + i * barGroupWidth + (barGroupWidth - barWidth) / 2;
+
+            var totalBarHeight = (data.total / maxTotal) * chartHeight;
+            var doneBarHeight = (data.done / maxTotal) * chartHeight;
+
+            var totalY = topMargin + chartHeight - totalBarHeight;
+            var doneY = topMargin + chartHeight - doneBarHeight;
+
+            // total bar (light gray-blue)
+            ctx.fillStyle = "#d6e4f5";
+            ctx.fillRect(groupX, totalY, barWidth, totalBarHeight);
+
+            // done bar (green) overlay
+            ctx.fillStyle = "#0d8a5f";
+            ctx.fillRect(groupX, doneY, barWidth, doneBarHeight);
+
+            // count label on top
+            ctx.fillStyle = "#1a2a3a";
+            ctx.font = "10px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(data.done + "/" + data.total, groupX + barWidth / 2, totalY - 4);
+
+            // gdv name label (rotated)
+            ctx.save();
+            ctx.translate(groupX + barWidth / 2, topMargin + chartHeight + 10);
+            ctx.rotate(-Math.PI / 4);
+            ctx.textAlign = "right";
+            ctx.font = "10px sans-serif";
+            ctx.fillStyle = "#607085";
+            var shortName = name.length > 16 ? name.substring(0, 15) + "." : name;
+            ctx.fillText(shortName, 0, 0);
+            ctx.restore();
+        }
+
+        ctx.textAlign = "left";
+    }
+
+    function renderMismatchTable() {
+        var wrap = document.getElementById("mismatchTableWrap");
+        var rows = [];
+
+        var i;
+        for (i = 0; i < chList.length; i++) {
+            var store = chList[i];
+            var emps = empData[store.maCost];
+            var surveyEntry = surveyData[store.maCost];
+            if (!emps || !surveyEntry || !surveyEntry.e) {
+                continue;
+            }
+            var j;
+            for (j = 0; j < emps.length; j++) {
+                var emp = emps[j];
+                var savedEmp = surveyEntry.e[emp.m];
+                if (savedEmp && savedEmp.s && savedEmp.s !== emp.t) {
+                    rows.push({
+                        maCost: store.maCost,
+                        tenCH: store.tenCH,
+                        mnv: emp.m,
+                        hoTen: emp.n,
+                        sysStatus: emp.t,
+                        surveyStatus: savedEmp.s,
+                        note: savedEmp.note || ""
+                    });
+                }
+            }
+        }
+
+        if (rows.length === 0) {
+            wrap.innerHTML = "<div class='empty-msg'>Chua co du lieu sai lech</div>";
+            return;
+        }
+
+        var table = document.createElement("table");
+        table.className = "mismatch-table";
+
+        var thead = document.createElement("thead");
+        var headRow = document.createElement("tr");
+        var headers = ["Mã CH", "Tên CH", "MNV", "Họ tên", "Trạng thái Hệ thống", "Trạng thái Khảo sát", "Ghi chú"];
+        var h;
+        for (h = 0; h < headers.length; h++) {
+            var th = document.createElement("th");
+            th.textContent = headers[h];
+            headRow.appendChild(th);
+        }
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        var tbody = document.createElement("tbody");
+        for (i = 0; i < rows.length; i++) {
+            var r = rows[i];
+            var tr = document.createElement("tr");
+            var cells = [r.maCost, r.tenCH, r.mnv, r.hoTen, r.sysStatus, r.surveyStatus, r.note];
+            var c;
+            for (c = 0; c < cells.length; c++) {
+                var td = document.createElement("td");
+                td.textContent = cells[c];
+                tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+        }
+        table.appendChild(tbody);
+
+        wrap.innerHTML = "";
+        wrap.appendChild(table);
+    }
+
+    // ===================== HISTORY =====================
+    function renderHistory() {
+        var listEl = document.getElementById("historyList");
+        listEl.innerHTML = "";
+
+        var codes = [];
+        for (var key in surveyData) {
+            if (surveyData.hasOwnProperty(key)) {
+                codes.push(key);
+            }
+        }
+
+        if (codes.length === 0) {
+            listEl.innerHTML = "<div class='empty-msg'>Chua co cua hang nao duoc khao sat</div>";
+            return;
+        }
+
+        codes.sort(function (a, b) {
+            var tsA = surveyData[a].ts || "";
+            var tsB = surveyData[b].ts || "";
+            return tsB.localeCompare(tsA);
+        });
+
+        var storeMap = buildStoreMapByCode();
+
+        var i;
+        for (i = 0; i < codes.length; i++) {
+            var code = codes[i];
+            var entry = surveyData[code];
+            var storeInfo = storeMap[code];
+
+            var item = document.createElement("div");
+            item.className = "history-item";
+
+            var left = document.createElement("div");
+            var titleDiv = document.createElement("div");
+            titleDiv.style.fontWeight = "700";
+            titleDiv.style.fontSize = "13px";
+            titleDiv.textContent = storeInfo ? (storeInfo.tenCH + " (" + code + ")") : code;
+
+            var subDiv = document.createElement("div");
+            subDiv.style.fontSize = "12px";
+            subDiv.style.color = "#607085";
+            subDiv.style.marginTop = "3px";
+            var empCount = entry.e ? Object.keys(entry.e).length : 0;
+            subDiv.textContent = "Khao sat luc: " + formatTimestamp(entry.ts) + " | " + empCount + " nhan vien";
+
+            left.appendChild(titleDiv);
+            left.appendChild(subDiv);
+
+            var right = document.createElement("div");
+            var delBtn = document.createElement("button");
+            delBtn.className = "btn btn-outline";
+            delBtn.textContent = "Xoa";
+            delBtn.onclick = (function (c) {
+                return function () { deleteHistoryItem(c); };
+            })(code);
+            right.appendChild(delBtn);
+
+            item.appendChild(left);
+            item.appendChild(right);
+            listEl.appendChild(item);
+        }
+    }
+
+    function buildStoreMapByCode() {
+        var map = {};
+        var i;
+        for (i = 0; i < chList.length; i++) {
+            map[chList[i].maCost] = chList[i];
+        }
+        return map;
+    }
+
+    function formatTimestamp(isoStr) {
+        if (!isoStr) {
+            return "-";
+        }
+        try {
+            var d = new Date(isoStr);
+            var dd = String(d.getDate()).padStart(2, "0");
+            var mm = String(d.getMonth() + 1).padStart(2, "0");
+            var yyyy = d.getFullYear();
+            var hh = String(d.getHours()).padStart(2, "0");
+            var min = String(d.getMinutes()).padStart(2, "0");
+            return dd + "/" + mm + "/" + yyyy + " " + hh + ":" + min;
+        } catch (e) {
+            return isoStr;
+        }
+    }
+
+    function deleteHistoryItem(code) {
+        if (!confirm("Xoa ket qua khao sat cua cua hang " + code + "?")) {
+            return;
+        }
+        delete surveyData[code];
+        saveSurveyData();
+        renderHistory();
+        renderStoreList();
+        updateSummaryBar();
+    }
+
+    function clearAllHistory() {
+        if (!confirm("Bạn có chắc muốn xoá TAT CA du lieu khao sat? Hanh dong nay khong the hoan tac.")) {
+            return;
+        }
+        surveyData = {};
+        saveSurveyData();
+        renderHistory();
+        renderStoreList();
+        updateSummaryBar();
+        renderDashboard();
+    }
+
+    function exportCSV() {
+        var codes = [];
+        for (var key in surveyData) {
+            if (surveyData.hasOwnProperty(key)) {
+                codes.push(key);
+            }
+        }
+
+        if (codes.length === 0) {
+            alert("Khong co du lieu de xuat.");
+            return;
+        }
+
+        var storeMap = buildStoreMapByCode();
+
+        var csvRows = [];
+        csvRows.push(["Mã CH", "Tên CH", "GDV", "QLKV", "Tinh", "MNV", "Họ tên", "Trạng thái Hệ thống", "Trạng thái Khảo sát", "Ghi chú", "Thời gian Khảo sát"].join(","));
+
+        var i;
+        for (i = 0; i < codes.length; i++) {
+            var code = codes[i];
+            var entry = surveyData[code];
+            var storeInfo = storeMap[code];
+            var emps = empData[code] || [];
+
+            if (!entry.e) {
+                continue;
+            }
+
+            var j;
+            for (j = 0; j < emps.length; j++) {
+                var emp = emps[j];
+                var savedEmp = entry.e[emp.m];
+                if (!savedEmp) {
+                    continue;
+                }
+                var rowData = [
+                    code,
+                    storeInfo ? storeInfo.tenCH : "",
+                    storeInfo ? storeInfo.gdv : "",
+                    storeInfo ? storeInfo.qlkv : "",
+                    storeInfo ? storeInfo.tinh : "",
+                    emp.m,
+                    emp.n,
+                    emp.t,
+                    savedEmp.s || "",
+                    savedEmp.note || "",
+                    entry.ts || ""
+                ];
+                csvRows.push(csvEscapeRow(rowData));
+            }
+        }
+
+        var csvContent = csvRows.join("\n");
+        var blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = "khao-sat-nhan-su-" + Date.now() + ".csv";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    function csvEscapeRow(arr) {
+        var result = [];
+        var i;
+        for (i = 0; i < arr.length; i++) {
+            var val = String(arr[i] === undefined || arr[i] === null ? "" : arr[i]);
+            if (val.indexOf(",") >= 0 || val.indexOf("\"") >= 0 || val.indexOf("\n") >= 0) {
+                val = "\"" + val.replace(/"/g, "\"\"") + "\"";
+            }
+            result.push(val);
+        }
+        return result.join(",");
+    }
+
+    // ===================== START =====================
+    init();
 </script>
-<div id="toast" class="toast"></div>
+
 </body>
 </html>
