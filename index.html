@@ -1138,7 +1138,7 @@
 
         var thead = document.createElement("thead");
         var headRow = document.createElement("tr");
-        var headers = ["MNV", "Họ tên", "Chức danh", "Trạng thái Hệ thống", "Thời gian", "Xác nhận", "Ghi chú"];
+        var headers = ["MNV", "Họ tên", "Chức danh", "Trạng thái Hệ thống", "Thời gian", "Xác nhận"];
         var h;
         for (h = 0; h < headers.length; h++) {
             var th = document.createElement("th");
@@ -1193,10 +1193,13 @@
             hiddenInput.value = "correct";
             // Check saved state
             var isCorrect = true;
-            if (savedEmp[emp.m] && savedEmp[emp.m].correct === false) {
+            var hasSurvey = (savedEmp[emp.m] !== undefined);
+            if (hasSurvey && savedEmp[emp.m].correct === false) {
                 isCorrect = false;
                 hiddenInput.value = "incorrect";
             }
+            var showDone = hasSurvey && isCorrect;
+            var showSaiForm = hasSurvey && !isCorrect;
             // Dung button - checkmark icon
             var btnDung = document.createElement("button");
             btnDung.className = "cf-btn" + (isCorrect ? " cf-ok" : "");
@@ -1276,6 +1279,15 @@
             extraSel.onchange = updateDateFields;
             updateDateFields();
             extraDiv.appendChild(dateDiv);
+            // Note input inside extra
+            var noteLbl = document.createElement("div");
+            noteLbl.textContent = "Thông tin cập nhật:"; noteLbl.style.fontSize = "11px"; noteLbl.style.marginTop = "4px"; noteLbl.style.color = "#607085";
+            var noteInp = document.createElement("input");
+            noteInp.type = "text"; noteInp.setAttribute("data-mnv-note", emp.m); noteInp.className = "note-inp";
+            noteInp.style.width = "100%"; noteInp.style.padding = "4px 6px"; noteInp.style.fontSize = "12px";
+            if (savedEmp[emp.m] && savedEmp[emp.m].note) noteInp.value = savedEmp[emp.m].note;
+            extraDiv.appendChild(noteLbl);
+            extraDiv.appendChild(noteInp);
             
             btnSai.onclick = (function(mnv, hinp, bd, bs, ex) {
                 return function() {
@@ -1293,7 +1305,7 @@
                     if (ex) ex.style.display = "none";
                     var doneSpan = document.createElement("span");
                     doneSpan.style.color = "#0d8a5f"; doneSpan.style.fontWeight = "600"; doneSpan.style.fontSize = "12px";
-                    doneSpan.textContent = "✅ Đã xong";
+                    doneSpan.textContent = "✅ Đã KS";
                     doneSpan.setAttribute("data-done", mnv);
                     parentTd.appendChild(doneSpan);
                 };
@@ -1305,27 +1317,21 @@
             tdSel.appendChild(btnSai);
             tdSel.appendChild(extraDiv);
             // Restore done state
-            if (isCorrect) {
+            if (showDone) {
                 btnDung.style.display = "none";
                 btnSai.style.display = "none";
                 var doneSpan2 = document.createElement("span");
                 doneSpan2.style.color = "#0d8a5f"; doneSpan2.style.fontWeight = "600"; doneSpan2.style.fontSize = "12px";
-                doneSpan2.textContent = "✅ Đã xong";
+                doneSpan2.textContent = "✅ Đã KS";
                 doneSpan2.setAttribute("data-done", emp.m);
                 tdSel.appendChild(doneSpan2);
             }
-            row.appendChild(tdSel);
-
-            var tdNote = document.createElement("td");
-            var noteInput = document.createElement("input");
-            noteInput.type = "text";
-            noteInput.setAttribute("data-mnv-note", emp.m);
-            noteInput.placeholder = "Ghi chú...";
-            if (savedEmp[emp.m] && savedEmp[emp.m].note) {
-                noteInput.value = savedEmp[emp.m].note;
+            if (showSaiForm) {
+                btnDung.style.display = "none";
+                btnSai.style.display = "none";
+                extraDiv.style.display = "block";
             }
-            tdNote.appendChild(noteInput);
-            row.appendChild(tdNote);
+            row.appendChild(tdSel);
 
             tbody.appendChild(row);
         }
