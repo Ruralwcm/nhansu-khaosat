@@ -627,7 +627,7 @@
 <body>
 
 <div class="header">
-    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.21</span></h1>
+    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.22</span></h1>
     <p>Dữ liệu: 10/10/2026 | 7.594 nhân sự | 1.803 cửa hàng</p>
 </div>
 
@@ -741,7 +741,7 @@
     <!-- TAB: LICH SU -->
     <div class="tab-content" id="tab-history">
         <div class="history-actions">
-            <button class="btn btn-green" onclick="exportXLSB()">Xuất XLSB</button>
+            <button class="btn btn-green" onclick="exportXLSB()">Xuất XLSX</button>
             <button class="btn btn-danger" onclick="clearAllHistory()">Xoa Tat Ca</button>
         </div>
         <div id="historyList"></div>
@@ -2028,7 +2028,7 @@
         var ws = XLSX.utils.aoa_to_sheet(rows);
         var wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Khảo sát Nhân sự");
-        XLSX.writeFile(wb, "khao-sat-nhan-su-" + Date.now() + ".xlsb", { bookType: "xlsb", type: "binary" });
+        XLSX.writeFile(wb, "khao-sat-nhan-su-" + Date.now() + ".xlsx", { bookType: "xlsx", type: "binary" });
     }
 
     function exportCSV_old() {
