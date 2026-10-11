@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Khảo sát Tình trạng Nhân sự</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
 <style>
     * {
         margin: 0;
@@ -619,7 +620,7 @@
     <!-- TAB: LICH SU -->
     <div class="tab-content" id="tab-history">
         <div class="history-actions">
-            <button class="btn btn-green" onclick="exportCSV()">Xuất CSV</button>
+            <button class="btn btn-green" onclick="exportXLSB()">Xuất XLSB</button>
             <button class="btn btn-danger" onclick="clearAllHistory()">Xoa Tat Ca</button>
         </div>
         <div id="historyList"></div>
@@ -1618,7 +1619,30 @@
         renderDashboard();
     }
 
-    function exportCSV() {
+    function exportXLSB() {
+        var codes = [];
+        for (var key in surveyData) {
+            if (surveyData.hasOwnProperty(key)) { codes.push(key); }
+        }
+        if (codes.length === 0) { alert("Không có dữ liệu để xuất."); return; }
+        var storeMap = buildStoreMapByCode();
+        var rows = [["Mã CH","Tên CH","GĐV","QLKV","Tỉnh","MNV","Họ tên","Chức danh","Trạng thái Hệ thống","Trạng thái Khảo sát","Ghi chú","Thời gian Khảo sát"]];
+        for (var i = 0; i < codes.length; i++) {
+            var code = codes[i], entry = surveyData[code], storeInfo = storeMap[code], emps = empData[code] || [];
+            if (!entry.e) continue;
+            for (var j = 0; j < emps.length; j++) {
+                var emp = emps[j], savedEmp = entry.e[emp.m];
+                if (!savedEmp) continue;
+                rows.push([code, storeInfo ? storeInfo.tenCH : "", storeInfo ? storeInfo.gdv : "", storeInfo ? storeInfo.qlkv : "", storeInfo ? storeInfo.tinh : "", emp.m, emp.n, emp.c || "", emp.t, savedEmp.s || "", savedEmp.note || "", entry.ts || ""]);
+            }
+        }
+        var ws = XLSX.utils.aoa_to_sheet(rows);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Khảo sát Nhân sự");
+        XLSX.writeFile(wb, "khao-sat-nhan-su-" + Date.now() + ".xlsb", { bookType: "xlsb", type: "binary" });
+    }
+
+    function exportCSV_old() {
         var codes = [];
         for (var key in surveyData) {
             if (surveyData.hasOwnProperty(key)) {
