@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khảo Sát Tình Trạng Nhân Sự - Rural</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#f0f2f5; color:#333; }
+.header { background: linear-gradient(135deg, #1a5276, #2980b9); color:white; padding:16px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+.header h1 { font-size:18px; }
+.header .info { font-size:12px; opacity:0.9; }
+.tabs { display:flex; background:white; border-bottom:2px solid #e0e0e0; position:sticky; top:0; z-index:10; }
+.tab { flex:1; padding:14px; text-align:center; cursor:pointer; font-weight:600; font-size:14px; border:none; background:none; color:#777; transition:all 0.2s; }
+.tab.active { color:#2980b9; border-bottom:3px solid #2980b9; margin-bottom:-2px; }
+.content { max-width:1200px; margin:0 auto; padding:16px; }
+
+/* Survey Form */
+.filter-bar { background:white; border-radius:12px; padding:16px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1); display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
+.filter-bar select, .filter-bar input { padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; min-width:160px; }
+.filter-bar select:focus { border-color:#2980b9; outline:none; }
+.filter-bar .btn { padding:10px 20px; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-size:14px; }
+.btn-primary { background:#2980b9; color:white; }
+.btn-primary:hover { background:#2471a3; }
+.btn-success { background:#27ae60; color:white; }
+.btn-success:hover { background:#229954; }
+.btn-danger { background:#e74c3c; color:white; }
+.btn-danger:hover { background:#c0392b; }
+.btn-outline { background:white; color:#2980b9; border:1px solid #2980b9 !important; }
+
+.store-card { background:white; border-radius:12px; padding:16px; margin-bottom:12px; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
+.store-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px; }
+.store-title { font-weight:700; font-size:15px; }
+.store-meta { font-size:12px; color:#888; }
+.employee-table { width:100%; border-collapse:collapse; font-size:13px; }
+.employee-table th { background:#f8f9fa; padding:8px 10px; text-align:left; font-weight:600; border-bottom:2px solid #e0e0e0; font-size:12px; white-space:nowrap; }
+.employee-table td { padding:8px 10px; border-bottom:1px solid #f0f0f0; vertical-align:middle; }
+.employee-table tr:hover { background:#f8f9fa; }
+.employee-table .status-select { padding:6px 8px; border-radius:6px; border:1px solid #ddd; font-size:13px; }
+.employee-table .status-select.status-ok { border-color:#27ae60; background:#eafaf1; }
+.employee-table .status-select.status-warn { border-color:#e67e22; background:#fef5e7; }
+.employee-table .status-select.status-err { border-color:#e74c3c; background:#fdedec; }
+.date-input { padding:4px 6px; border:1px solid #ddd; border-radius:4px; font-size:12px; width:100px; }
+
+/* Dashboard */
+.kpi-row { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:12px; margin-bottom:16px; }
+.kpi-card { background:white; border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; }
+.kpi-value { font-size:32px; font-weight:800; }
+.kpi-label { font-size:12px; color:#888; margin-top:4px; }
+.kpi-card.green .kpi-value { color:#27ae60; }
+.kpi-card.blue .kpi-value { color:#2980b9; }
+.kpi-card.red .kpi-value { color:#e74c3c; }
+.kpi-card.orange .kpi-value { color:#e67e22; }
+
+.gdv-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px,1fr)); gap:12px; margin-bottom:16px; }
+.gdv-card { background:white; border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
+.gdv-card h3 { font-size:15px; margin-bottom:12px; color:#1a5276; }
+.gdv-progress { height:24px; background:#e9ecef; border-radius:12px; overflow:hidden; margin-bottom:8px; position:relative; }
+.gdv-progress-bar { height:100%; background:linear-gradient(90deg,#27ae60,#2ecc71); border-radius:12px; transition:width 0.5s; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:12px; }
+.gdv-stats { display:flex; justify-content:space-between; font-size:12px; color:#666; }
+
+.status-breakdown { background:white; border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-bottom:16px; }
+.status-breakdown h3 { font-size:15px; margin-bottom:12px; }
+.status-table { width:100%; border-collapse:collapse; font-size:13px; }
+.status-table th { background:#f8f9fa; padding:10px; text-align:left; font-weight:600; border-bottom:2px solid #e0e0e0; }
+.status-table td { padding:10px; border-bottom:1px solid #f0f0f0; }
+.match-badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+.match-badge.correct { background:#eafaf1; color:#27ae60; }
+.match-badge.incorrect { background:#fdedec; color:#e74c3c; }
+.match-badge.unchecked { background:#fef9e7; color:#e67e22; }
+
+.chart-container { background:white; border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-bottom:16px; }
+.chart-container canvas { max-height:300px; }
+
+.hidden { display:none !important; }
+.empty-state { text-align:center; padding:40px; color:#999; }
+.empty-state .icon { font-size:48px; margin-bottom:8px; }
+.loading { text-align:center; padding:40px; color:#999; }
+
+.submit-bar { position:sticky; bottom:0; background:white; padding:12px 20px; border-top:2px solid #e0e0e0; display:flex; justify-content:space-between; align-items:center; gap:12px; box-shadow:0 -2px 10px rgba(0,0,0,0.1); z-index:10; margin-top:16px; border-radius:12px 12px 0 0; }
+
+/* Toast */
+.toast { position:fixed; bottom:24px; right:24px; background:#333; color:white; padding:12px 24px; border-radius:8px; z-index:100; animation:slideUp 0.3s ease-out; display:none; }
+.toast.show { display:block; }
+.toast.success { background:#27ae60; }
+.toast.error { background:#e74c3c; }
+@keyframes slideUp { from { transform:translateY(50px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+
+@media (max-width:768px) {
+  .header h1 { font-size:15px; }
+  .filter-bar { flex-direction:column; }
+  .employee-table { font-size:11px; }
+  .employee-table th, .employee-table td { padding:6px 4px; }
+  .gdv-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <h1>🏪 Khảo Sát Tình Trạng Nhân Sự Cửa Hàng</h1>
+    <div class="info">Dữ liệu cập nhật: 10/10/2026 · 7.594 nhân sự · 1.803 CH</div>
+  </div>
+  <div style="font-size:13px;">v1.0 · 11/10/2026</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('survey')">📋 Khảo Sát</button>
+  <button class="tab" onclick="switchTab('dashboard')">📊 Dashboard</button>
+  <button class="tab" onclick="switchTab('history')">📝 Lịch Sử</button>
+</div>
+
+<div class="content">
+
+<!-- SURVEY TAB -->
+<div id="tab-survey">
+  <div class="filter-bar">
+    <select id="filterGdv" onchange="onGdvChange()">
+      <option value="">Tất cả GĐV</option>
+    </select>
+    <select id="filterQlkv" onchange="onQlkvChange()">
+      <option value="">Tất cả QLKV</option>
+    </select>
+    <select id="filterTinh" onchange="onTinhChange()">
+      <option value="">Tất cả Tỉnh/TP</option>
+    </select>
+    <select id="filterStatus" onchange="renderSurvey()">
+      <option value="">Tất cả trạng thái khảo sát</option>
+      <option value="done">Đã khảo sát</option>
+      <option value="pending">Chưa khảo sát</option>
+    </select>
+    <button class="btn btn-outline" onclick="resetFilters()">🔄 Reset</button>
+  </div>
+  <div id="surveyList"></div>
+  <div id="surveyLoading" class="loading">Đang tải dữ liệu...</div>
+</div>
+
+<!-- DASHBOARD TAB -->
+<div id="tab-dashboard" class="hidden">
+  <div class="kpi-row" id="kpiRow"></div>
+  <div class="chart-container">
+    <h3>📊 Tiến Độ Khảo Sát Theo GĐV</h3>
+    <canvas id="gdvChart"></canvas>
+  </div>
+  <div class="gdv-grid" id="gdvGrid"></div>
+  <div class="status-breakdown">
+    <h3>📋 So Sánh Tình Trạng: SAP vs Khảo Sát</h3>
+    <div id="statusBreakdown"></div>
+  </div>
+  <div class="chart-container">
+    <h3>🍩 Phân Bố Tình Trạng Nhân Sự</h3>
+    <canvas id="statusChart"></canvas>
+  </div>
+</div>
+
+<!-- HISTORY TAB -->
+<div id="tab-history" class="hidden">
+  <div class="filter-bar">
+    <button class="btn btn-danger" onclick="clearHistory()" style="margin-left:auto;">🗑 Xóa Lịch Sử</button>
+  </div>
+  <div id="historyList"></div>
+</div>
+
+</div>
+
+<script>
+// ============ DATA ============
+let allCH = [];
+let employees = [];
+let surveyData = {}; // storeCode -> {employees: {mnv: status}, timestamp, surveyor}
+
+// Status options from template
+const STATUS_OPTIONS = ['Đang làm việc', 'Nghỉ thai sản', 'Nghỉ không lương', 'Nghỉ ốm', 'Đã nghỉ việc', 'Dự kiến nghỉ việc'];
+
+// ============ INIT ============
+async function init() {
+  try {
+    const [chResp, empResp] = await Promise.all([
+      fetch('ch-list.json'),
+      fetch('employees.json')
+    ]);
+    allCH = await chResp.json();
+    employees = await empResp.json();
+  } catch(e) {
+    // Fallback: embed small dataset or use sample
+    console.error('Cannot load data:', e);
+    document.getElementById('surveyLoading').innerHTML = '⚠️ Không tải được dữ liệu. Vui lòng kiểm tra kết nối.';
+    return;
+  }
+
+  // Load survey from localStorage
+  const saved = localStorage.getItem('nhansu_survey');
+  if (saved) surveyData = JSON.parse(saved);
+
+  // Populate filters
+  populateFilters();
+  renderSurvey();
+  renderDashboard();
+  renderHistory();
+
+  document.getElementById('surveyLoading').classList.add('hidden');
+}
+
+function populateFilters() {
+  const gdvSet = new Set(), qlkvSet = new Set(), tinhSet = new Set();
+  allCH.forEach(c => {
+    if (c.gdv) gdvSet.add(c.gdv);
+    if (c.qlkv) qlkvSet.add(c.qlkv);
+    if (c.tinh) tinhSet.add(c.tinh);
+  });
+
+  const gdvSelect = document.getElementById('filterGdv');
+  [...gdvSet].sort().forEach(g => { const o = document.createElement('option'); o.value=g; o.textContent=g; gdvSelect.appendChild(o); });
+
+  const qlkvSelect = document.getElementById('filterQlkv');
+  [...qlkvSet].sort().forEach(q => { const o = document.createElement('option'); o.value=q; o.textContent=q; qlkvSelect.appendChild(o); });
+
+  const tinhSelect = document.getElementById('filterTinh');
+  [...tinhSet].sort().forEach(t => { const o = document.createElement('option'); o.value=t; o.textContent=t; tinhSelect.appendChild(o); });
+}
+
+function onGdvChange() {
+  const gdv = document.getElementById('filterGdv').value;
+  const qlkvSelect = document.getElementById('filterQlkv');
+  qlkvSelect.innerHTML = '<option value="">Tất cả QLKV</option>';
+  const qlkvSet = new Set();
+  allCH.filter(c => !gdv || c.gdv === gdv).forEach(c => qlkvSet.add(c.qlkv));
+  [...qlkvSet].sort().forEach(q => { const o = document.createElement('option'); o.value=q; o.textContent=q; qlkvSelect.appendChild(o); });
+  renderSurvey();
+}
+
+function onQlkvChange() { renderSurvey(); }
+function onTinhChange() { renderSurvey(); }
+
+function resetFilters() {
+  document.getElementById('filterGdv').value = '';
+  document.getElementById('filterQlkv').value = '';
+  document.getElementById('filterTinh').value = '';
+  document.getElementById('filterStatus').value = '';
+  onGdvChange();
+}
+
+// ============ SURVEY RENDERING ============
+function getFilteredCH() {
+  const gdv = document.getElementById('filterGdv').value;
+  const qlkv = document.getElementById('filterQlkv').value;
+  const tinh = document.getElementById('filterTinh').value;
+  const status = document.getElementById('filterStatus').value;
+
+  return allCH.filter(c => {
+    if (gdv && c.gdv !== gdv) return false;
+    if (qlkv && c.qlkv !== qlkv) return false;
+    if (tinh && c.tinh !== tinh) return false;
+    const chCode = c.maCost;
+    if (status === 'done' && !surveyData[chCode]) return false;
+    if (status === 'pending' && surveyData[chCode]) return false;
+    return true;
+  });
+}
+
+function renderSurvey() {
+  const filtered = getFilteredCH();
+  const container = document.getElementById('surveyList');
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">📋</div>Không có cửa hàng nào</div>';
+    return;
+  }
+
+  let html = `<p style="margin-bottom:12px;color:#888;font-size:13px;">Hiển thị ${filtered.length} cửa hàng</p>`;
+  filtered.forEach(ch => {
+    const chCode = ch.maCost;
+    const chEmps = employees.filter(e => e.maCost === chCode);
+    const isSurveyed = !!surveyData[chCode];
+    const cardClass = isSurveyed ? 'store-card' : 'store-card';
+    const borderStyle = isSurveyed ? 'border-left:4px solid #27ae60;' : 'border-left:4px solid #e0e0e0;';
+
+    html += `<div class="store-card" style="${borderStyle}" id="ch-${chCode}">
+      <div class="store-header">
+        <div>
+          <div class="store-title">🏪 ${ch.tenCH} <span style="font-size:12px;color:#888;">[${chCode}]</span></div>
+          <div class="store-meta">GĐV: ${ch.gdv} · QLKV: ${ch.qlkv} · ${ch.tinh} · ${chEmps.length} nhân sự</div>
+        </div>
+        <div>
+          ${isSurveyed ? '<span style="color:#27ae60;font-weight:600;">✅ Đã KS · ' + (surveyData[chCode].timestamp || '') + '</span>' : '<span style="color:#e67e22;">⏳ Chưa khảo sát</span>'}
+        </div>
+      </div>`;
+
+    if (chEmps.length > 0) {
+      html += `<div style="overflow-x:auto;">
+        <table class="employee-table">
+          <tr>
+            <th>MNV</th><th>Họ Tên</th><th>Chức Danh</th><th>Giới Tính</th>
+            <th>Trạng Thái SAP</th><th>➡️ Khảo Sát Thực Tế</th>
+            <th>Ghi Chú</th>
+          </tr>`;
+
+      chEmps.forEach(emp => {
+        const saved = surveyData[chCode] && surveyData[chCode].employees && surveyData[chCode].employees[emp.mnv];
+        const surveyStatus = saved ? saved.status : emp.trinhTrang;
+        const match = !saved || surveyStatus === emp.trinhTrang;
+        const selectClass = match ? 'status-ok' : (saved ? 'status-warn' : '');
+
+        html += `<tr>
+          <td>${emp.mnv}</td>
+          <td><strong>${emp.hoTen}</strong></td>
+          <td>${emp.chucDanh}</td>
+          <td>${emp.gioiTinh}</td>
+          <td>${emp.trinhTrang}</td>
+          <td>
+            <select class="status-select ${selectClass}" data-ch="${chCode}" data-mnv="${emp.mnv}" onchange="onStatusChange(this)">
+              ${STATUS_OPTIONS.map(s => `<option value="${s}" ${surveyStatus === s ? 'selected' : ''}>${s}</option>`).join('')}
+            </select>
+            ${!match ? '<br><small style="color:#e74c3c;">⚠ Khác SAP</small>' : ''}
+          </td>
+          <td>
+            <input type="text" class="date-input" placeholder="Ghi chú..." data-ch="${chCode}" data-mnv="${emp.mnv}" value="${saved ? saved.note || '' : ''}" onchange="onNoteChange(this)">
+          </td>
+        </tr>`;
+      });
+      html += `</table></div>`;
+
+      html += `<div style="margin-top:12px;text-align:right;">
+        <button class="btn btn-primary" onclick="saveSurvey('${chCode}')">💾 Lưu Khảo Sát</button>
+        ${isSurveyed ? `<button class="btn btn-outline" onclick="clearSurvey('${chCode}')" style="margin-left:8px;">🔄 Làm Lại</button>` : ''}
+      </div>`;
+    } else {
+      html += '<p style="color:#999;">Không có nhân sự</p>';
+    }
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+function onStatusChange(select) {
+  const chCode = select.dataset.ch;
+  const mnv = select.dataset.mnv;
+  const newStatus = select.value;
+
+  // Initialize survey entry
+  if (!surveyData[chCode]) surveyData[chCode] = { employees: {}, timestamp: '' };
+  if (!surveyData[chCode].employees[mnv]) {
+    surveyData[chCode].employees[mnv] = { status: newStatus, note: '' };
+  } else {
+    surveyData[chCode].employees[mnv].status = newStatus;
+  }
+
+  // Update visual
+  const emp = employees.find(e => e.maCost === chCode && e.mnv === mnv);
+  const match = newStatus === (emp ? emp.trinhTrang : '');
+  select.className = 'status-select ' + (match ? 'status-ok' : 'status-err');
+
+  // Update match indicator
+  const td = select.parentElement;
+  let warnEl = td.querySelector('small');
+  if (!match) {
+    if (!warnEl) {
+      warnEl = document.createElement('small');
+      warnEl.style.color = '#e74c3c';
+      warnEl.textContent = ' ⚠ Khác SAP';
+      td.appendChild(warnEl);
+    }
+    warnEl.style.display = '';
+  } else if (warnEl) {
+    warnEl.style.display = 'none';
+  }
+}
+
+function onNoteChange(input) {
+  const chCode = input.dataset.ch;
+  const mnv = input.dataset.mnv;
+  if (!surveyData[chCode]) surveyData[chCode] = { employees: {}, timestamp: '' };
+  if (!surveyData[chCode].employees[mnv]) {
+    surveyData[chCode].employees[mnv] = { status: 'Đang làm việc', note: '' };
+  }
+  surveyData[chCode].employees[mnv].note = input.value;
+}
+
+function saveSurvey(chCode) {
+  // Gather all current form data
+  const form = document.getElementById('ch-' + chCode);
+  if (!form) return;
+
+  const selects = form.querySelectorAll('select.status-select');
+  const notes = form.querySelectorAll('input.date-input');
+
+  if (!surveyData[chCode]) surveyData[chCode] = { employees: {}, timestamp: '' };
+
+  selects.forEach(s => {
+    const mnv = s.dataset.mnv;
+    if (!surveyData[chCode].employees[mnv]) surveyData[chCode].employees[mnv] = {};
+    surveyData[chCode].employees[mnv].status = s.value;
+  });
+
+  notes.forEach(n => {
+    const mnv = n.dataset.mnv;
+    if (!surveyData[chCode].employees[mnv]) surveyData[chCode].employees[mnv] = {};
+    surveyData[chCode].employees[mnv].note = n.value;
+  });
+
+  const now = new Date();
+  surveyData[chCode].timestamp = now.toLocaleDateString('vi-VN', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+
+  localStorage.setItem('nhansu_survey', JSON.stringify(surveyData));
+
+  toast('✅ Đã lưu khảo sát cho ' + chCode, 'success');
+  renderSurvey();
+  renderDashboard();
+  renderHistory();
+}
+
+function clearSurvey(chCode) {
+  if (confirm('Xóa kết quả khảo sát của CH ' + chCode + '?')) {
+    delete surveyData[chCode];
+    localStorage.setItem('nhansu_survey', JSON.stringify(surveyData));
+    toast('Đã xóa khảo sát', 'success');
+    renderSurvey();
+    renderDashboard();
+    renderHistory();
+  }
+}
+
+// ============ DASHBOARD ============
+function renderDashboard() {
+  const totalCH = allCH.length;
+  const surveyedCH = Object.keys(surveyData).filter(k => allCH.some(c => c.maCost === k)).length;
+  const pendingCH = totalCH - surveyedCH;
+  const pct = totalCH > 0 ? Math.round(surveyedCH / totalCH * 100) : 0;
+
+  // Count discrepancies
+  let totalChecked = 0, mismatches = 0, matches = 0;
+  Object.entries(surveyData).forEach(([chCode, data]) => {
+    if (!data.employees) return;
+    Object.entries(data.employees).forEach(([mnv, info]) => {
+      totalChecked++;
+      const emp = employees.find(e => e.maCost === chCode && e.mnv === mnv);
+      if (emp && info.status !== emp.trinhTrang) mismatches++;
+      else matches++;
+    });
+  });
+
+  document.getElementById('kpiRow').innerHTML = `
+    <div class="kpi-card blue"><div class="kpi-value">${totalCH}</div><div class="kpi-label">Tổng CH</div></div>
+    <div class="kpi-card green"><div class="kpi-value">${surveyedCH}</div><div class="kpi-label">Đã Khảo Sát</div></div>
+    <div class="kpi-card orange"><div class="kpi-value">${pendingCH}</div><div class="kpi-label">Chưa Khảo Sát</div></div>
+    <div class="kpi-card blue"><div class="kpi-value">${pct}%</div><div class="kpi-label">Tỷ Lệ Hoàn Thành</div></div>
+    <div class="kpi-card green"><div class="kpi-value">${matches}</div><div class="kpi-label">Đúng Trạng Thái</div></div>
+    <div class="kpi-card red"><div class="kpi-value">${mismatches}</div><div class="kpi-label">Sai Khác</div></div>
+  `;
+
+  // Per GĐV
+  const gdvStats = {};
+  allCH.forEach(c => {
+    if (!gdvStats[c.gdv]) gdvStats[c.gdv] = { total: 0, surveyed: 0, employees: 0, checked: 0, mismatches: 0, statusBreakdown: {} };
+    gdvStats[c.gdv].total++;
+
+    const chCode = c.maCost;
+    const chEmps = employees.filter(e => e.maCost === chCode);
+    gdvStats[c.gdv].employees += chEmps.length;
+
+    if (surveyData[chCode] && surveyData[chCode].employees) {
+      gdvStats[c.gdv].surveyed++;
+      Object.entries(surveyData[chCode].employees).forEach(([mnv, info]) => {
+        gdvStats[c.gdv].checked++;
+        const emp = chEmps.find(e => e.mnv === mnv);
+        if (emp && info.status !== emp.trinhTrang) {
+          gdvStats[c.gdv].mismatches++;
+
+          // Track status changes
+          const key = `${emp.trinhTrang} → ${info.status}`;
+          gdvStats[c.gdv].statusBreakdown[key] = (gdvStats[c.gdv].statusBreakdown[key] || 0) + 1;
+        }
+      });
+    }
+  });
+
+  // GĐV cards
+  let gdvHtml = '';
+  Object.entries(gdvStats).sort((a,b) => b[1].total - a[1].total).forEach(([gdv, stats]) => {
+    const pctGDV = stats.total > 0 ? Math.round(stats.surveyed / stats.total * 100) : 0;
+    gdvHtml += `<div class="gdv-card">
+      <h3>👤 ${gdv}</h3>
+      <div class="gdv-stats"><span>CH: ${stats.surveyed}/${stats.total}</span><span>Nhân sự: ${stats.employees}</span></div>
+      <div class="gdv-progress"><div class="gdv-progress-bar" style="width:${pctGDV}%">${pctGDV}%</div></div>
+      <div class="gdv-stats" style="margin-top:4px;">
+        <span>✅ Đã KS: ${stats.surveyed}</span>
+        <span>❌ Sai khác: ${stats.mismatches}</span>
+      </div>
+    </div>`;
+  });
+  document.getElementById('gdvGrid').innerHTML = gdvHtml;
+
+  // Chart: GĐV progress
+  drawGdvChart(gdvStats);
+
+  // Status breakdown
+  let allChanges = {};
+  Object.values(gdvStats).forEach(s => {
+    Object.entries(s.statusBreakdown).forEach(([k,v]) => {
+      allChanges[k] = (allChanges[k] || 0) + v;
+    });
+  });
+
+  let breakdownHtml = '<table class="status-table"><tr><th>Thay Đổi</th><th>Số Lượng</th></tr>';
+  const sorted = Object.entries(allChanges).sort((a,b) => b[1] - a[1]);
+  if (sorted.length === 0) {
+    breakdownHtml += '<tr><td colspan="2" style="text-align:center;color:#999;">Chưa có dữ liệu khảo sát</td></tr>';
+  } else {
+    sorted.forEach(([key, val]) => {
+      breakdownHtml += `<tr><td>${key}</td><td><strong>${val}</strong></td></tr>`;
+    });
+  }
+  breakdownHtml += '</table>';
+  document.getElementById('statusBreakdown').innerHTML = breakdownHtml;
+
+  // Status distribution chart
+  drawStatusChart();
+}
+
+function drawGdvChart(gdvStats) {
+  const canvas = document.getElementById('gdvChart');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = 300 * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = '300px';
+  ctx.scale(dpr, dpr);
+
+  const entries = Object.entries(gdvStats).sort((a,b) => b[1].total - a[1].total);
+  const barWidth = Math.min(60, (rect.width - 100) / entries.length - 10);
+  const chartH = 240;
+  const startX = 80;
+
+  ctx.clearRect(0, 0, rect.width, 300);
+
+  // Grid
+  ctx.strokeStyle = '#e0e0e0';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 4; i++) {
+    const y = 20 + (chartH / 4) * i;
+    ctx.beginPath(); ctx.moveTo(startX, y); ctx.lineTo(rect.width - 20, y); ctx.stroke();
+    ctx.fillStyle = '#999'; ctx.font = '11px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText((100 - i*25) + '%', startX - 10, y + 4);
+  }
+
+  // Bars
+  entries.forEach(([gdv, stats], i) => {
+    const pct = stats.total > 0 ? stats.surveyed / stats.total * 100 : 0;
+    const x = startX + i * (barWidth + 15) + 10;
+    const barH = (pct / 100) * chartH;
+    const y = 20 + chartH - barH;
+
+    // Bar
+    const grad = ctx.createLinearGradient(x, y, x, 20 + chartH);
+    grad.addColorStop(0, '#27ae60');
+    grad.addColorStop(1, '#2ecc71');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x, y, barWidth, barH);
+
+    // Value on top
+    ctx.fillStyle = '#333'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(Math.round(pct) + '%', x + barWidth/2, y - 6);
+
+    // Label
+    ctx.fillStyle = '#555'; ctx.font = '10px sans-serif';
+    const label = gdv.replace(' ', '\n').substring(0, 15);
+    const lines = label.split('\n');
+    lines.forEach((line, li) => {
+      ctx.fillText(line, x + barWidth/2, 20 + chartH + 16 + li * 13);
+    });
+  });
+}
+
+function drawStatusChart() {
+  // Count status from survey vs SAP
+  const sapCounts = { 'Đang làm việc': 0, 'Nghỉ thai sản': 0, 'Nghỉ không lương': 0, 'Nghỉ ốm': 0, 'Đã nghỉ việc': 0 };
+  employees.forEach(e => {
+    const st = e.trinhTrang || 'Đang làm việc';
+    if (sapCounts[st] !== undefined) sapCounts[st]++;
+  });
+
+  const canvas = document.getElementById('statusChart');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = 400 * dpr;
+  canvas.height = 250 * dpr;
+  canvas.style.width = '400px';
+  canvas.style.height = '250px';
+  ctx.scale(dpr, dpr);
+
+  const cx = 200, cy = 130, radius = 100;
+  const colors = ['#27ae60','#e74c3c','#e67e22','#f39c12','#95a5a6'];
+  const entries = Object.entries(sapCounts).filter(([_,v]) => v > 0);
+  const total = entries.reduce((s,[_,v]) => s+v, 0);
+
+  let angle = -Math.PI/2;
+  entries.forEach(([label, val], i) => {
+    const slice = (val / total) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, radius, angle, angle + slice);
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.fill();
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Label
+    const midAngle = angle + slice/2;
+    const lx = cx + Math.cos(midAngle) * (radius + 30);
+    const ly = cy + Math.sin(midAngle) * (radius + 30);
+    ctx.fillStyle = '#333';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = midAngle > Math.PI/2 && midAngle < 3*Math.PI/2 ? 'right' : 'left';
+    ctx.fillText(label + ' (' + val + ')', lx, ly);
+
+    angle += slice;
+  });
+
+  // Legend
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'left';
+  entries.forEach(([label, val], i) => {
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.fillRect(20, 200 + i*20, 12, 12);
+    ctx.fillStyle = '#333';
+    ctx.fillText(label + ': ' + val + ' (' + Math.round(val/total*100) + '%)', 38, 210 + i*20);
+  });
+}
+
+// ============ HISTORY ============
+function renderHistory() {
+  const container = document.getElementById('historyList');
+  const entries = Object.entries(surveyData);
+
+  if (entries.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">📝</div>Chưa có khảo sát nào được lưu</div>';
+    return;
+  }
+
+  let html = '';
+  entries.sort((a,b) => (b[1].timestamp || '').localeCompare(a[1].timestamp || '')).forEach(([chCode, data]) => {
+    const ch = allCH.find(c => c.maCost === chCode);
+    if (!ch) return;
+    const empCount = data.employees ? Object.keys(data.employees).length : 0;
+    let mismatchCount = 0;
+    if (data.employees) {
+      Object.entries(data.employees).forEach(([mnv, info]) => {
+        const emp = employees.find(e => e.maCost === chCode && e.mnv === mnv);
+        if (emp && info.status !== emp.trinhTrang) mismatchCount++;
+      });
+    }
+    html += `<div class="store-card">
+      <div class="store-header">
+        <div>
+          <div class="store-title">🏪 ${ch.tenCH} [${chCode}]</div>
+          <div class="store-meta">GĐV: ${ch.gdv} · QLKV: ${ch.qlkv} · ${data.timestamp || 'N/A'}</div>
+        </div>
+        <div>
+          <span style="color:#27ae60;">✅ ${empCount} NV đã KS</span>
+          ${mismatchCount > 0 ? `<span style="color:#e74c3c;margin-left:8px;">⚠ ${mismatchCount} sai khác</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function clearHistory() {
+  if (confirm('Xóa TOÀN BỘ lịch sử khảo sát? Hành động này không thể hoàn tác!')) {
+    surveyData = {};
+    localStorage.removeItem('nhansu_survey');
+    toast('Đã xóa lịch sử', 'success');
+    renderSurvey();
+    renderDashboard();
+    renderHistory();
+  }
+}
+
+// ============ TABS ============
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('[id^="tab-"]').forEach(d => d.classList.add('hidden'));
+
+  document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+  document.getElementById('tab-' + tab).classList.remove('hidden');
+
+  if (tab === 'dashboard') renderDashboard();
+  if (tab === 'history') renderHistory();
+  if (tab === 'survey') renderSurvey();
+}
+
+// ============ TOAST ============
+function toast(msg, type) {
+  let el = document.getElementById('toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'toast';
+    el.className = 'toast';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.className = 'toast ' + type + ' show';
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ============ START ============
+init();
+</script>
+<div id="toast" class="toast"></div>
+</body>
+</html>
