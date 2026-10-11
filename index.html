@@ -591,21 +591,25 @@
         .kpi-grid { grid-template-columns: repeat(2, 1fr); }
         .filter-item { min-width: 100%; }
         .filter-box { flex-direction: column; }
-        table.emp-table { font-size: 11px; display: block; overflow-x: auto; white-space: nowrap; }
-        table.emp-table th, table.emp-table td { padding: 4px 5px; }
         .store-name { font-size: 13px; }
         .store-head { flex-direction: column; align-items: flex-start; }
         .store-body { padding: 6px 8px 10px; }
+        .store-card { padding: 10px; }
+        /* Mobile: stack employee rows vertically */
+        table.emp-table, table.emp-table thead, table.emp-table tbody, table.emp-table th, table.emp-table td, table.emp-table tr { display: block; }
+        table.emp-table thead tr { display: none; }
+        table.emp-table tr { border: 1px solid #e0e6ed; border-radius: 6px; margin-bottom: 8px; padding: 8px; background: #fff; }
+        table.emp-table td { border: none; padding: 2px 6px; display: flex; justify-content: space-between; }
+        table.emp-table td:before { content: attr(data-label); font-weight: 600; color: #607085; margin-right: 8px; white-space: nowrap; }
         .cf-btn { padding: 3px 8px; font-size: 11px; }
         .cf-extra select, .cf-extra input { font-size: 11px; }
-        .store-card { padding: 10px; }
     }
 </style>
 </head>
 <body>
 
 <div class="header">
-    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.16</span></h1>
+    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.17</span></h1>
     <p>Dữ liệu: 10/10/2026 | 7.594 nhân sự | 1.803 cửa hàng</p>
 </div>
 
@@ -1202,18 +1206,22 @@
             var row = document.createElement("tr");
 
             var tdMnv = document.createElement("td");
+            tdMnv.setAttribute("data-label", "MNV");
             tdMnv.textContent = emp.m;
             row.appendChild(tdMnv);
 
             var tdName = document.createElement("td");
+            tdName.setAttribute("data-label", "Họ tên");
             tdName.textContent = emp.n;
             row.appendChild(tdName);
 
             var tdTitle = document.createElement("td");
+            tdTitle.setAttribute("data-label", "Chức danh");
             tdTitle.textContent = emp.c;
             row.appendChild(tdTitle);
 
             var tdSys = document.createElement("td");
+            tdSys.setAttribute("data-label", "TT Hệ thống");
             var sysSpan = document.createElement("span");
             sysSpan.className = "sys-status " + statusCssClass(emp.t);
             sysSpan.textContent = emp.t;
@@ -1222,6 +1230,7 @@
 
             // Time column
             var tdTime = document.createElement("td");
+            tdTime.setAttribute("data-label", "Thời gian");
             tdTime.style.fontSize = "11px"; tdTime.style.color = "#607085"; tdTime.style.whiteSpace = "nowrap";
             if (emp.t === "Đã nghỉ việc" && emp.ed) {
                 tdTime.textContent = emp.ed;
@@ -1231,6 +1240,7 @@
             row.appendChild(tdTime);
 
             var tdSel = document.createElement("td");
+            tdSel.setAttribute("data-label", "Xác nhận");
             tdSel.style.whiteSpace = "nowrap";
             // Hidden input stores correct/sai state
             var hiddenInput = document.createElement("input");
@@ -1451,8 +1461,26 @@
         var saveBtn = document.createElement("button");
         saveBtn.className = "btn btn-primary";
         saveBtn.textContent = "Lưu Khảo sát";
+        saveBtn.id = "saveBtn-" + maCost;
         saveBtn.onclick = (function (code) {
-            return function () { saveStoreSurvey(code); };
+            return function () {
+                // Check all employees confirmed
+                var body = document.getElementById("body-" + code);
+                if (!body) return;
+                var hiddenInputs = body.querySelectorAll("input[type='hidden'][data-mnv]");
+                var allConfirmed = true;
+                for (var i = 0; i < hiddenInputs.length; i++) {
+                    if (!hiddenInputs[i].value || (hiddenInputs[i].value !== "correct" && hiddenInputs[i].value !== "incorrect")) {
+                        allConfirmed = false; break;
+                    }
+                }
+                if (!allConfirmed) {
+                    alert("Vui lòng xác nhận tất cả nhân viên trước khi lưu!");
+                    return;
+                }
+                saveStoreSurvey(code);
+                alert("✅ Đã lưu khảo sát thành công!");
+            };
         })(maCost);
 
         saveRow.appendChild(msgSpan);
