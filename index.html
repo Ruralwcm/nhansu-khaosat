@@ -627,7 +627,7 @@
 <body>
 
 <div class="header">
-    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.23</span></h1>
+    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.24</span></h1>
     <p>Dữ liệu: 10/10/2026 | 7.594 nhân sự | 1.803 cửa hàng</p>
 </div>
 
@@ -1174,8 +1174,7 @@
     }
 
     function pushToGAS(maCost, empResult) {
-        var gasUrl = localStorage.getItem("ns_gas_url");
-        if (!gasUrl) return;
+        var gasUrl = "https://script.google.com/macros/s/AKfycbxaGm5eD7bEKMy53ojLWHMXggUacrBJw2k7b7QEhPfBcarFTScPWcoBFjeMZxPYl2pUPQ/exec";
         var storeInfo = buildStoreMapByCode()[maCost] || {};
         var emps = empData[maCost] || [];
         var empMeta = {};
