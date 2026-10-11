@@ -1,0 +1,2142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khảo sát Tình trạng Nhân sự</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: #f0f4f8;
+        color: #1a2a3a;
+        padding-bottom: 40px;
+    }
+
+    .header {
+        background: linear-gradient(135deg, #1565c0, #0d8a5f);
+        color: #fff;
+        padding: 16px 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .header h1 {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .header p {
+        font-size: 13px;
+        opacity: 0.9;
+        margin-top: 4px;
+    }
+
+    .tabs {
+        display: flex;
+        background: #fff;
+        border-bottom: 2px solid #e0e6ed;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 14px 8px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: #607085;
+        background: none;
+        border: none;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+        color: #1565c0;
+        border-bottom-color: #1565c0;
+        background: #eaf2fb;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 16px;
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    /* Filters */
+    .filter-box {
+        background: #fff;
+        border-radius: 10px;
+        padding: 14px;
+        margin-bottom: 14px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: flex-end;
+    }
+
+    .filter-item {
+        flex: 1;
+        min-width: 140px;
+    }
+
+    .filter-item label {
+        display: block;
+        font-size: 12px;
+        color: #607085;
+        margin-bottom: 4px;
+        font-weight: 600;
+    }
+
+    select, input[type="text"], input[type="search"] {
+        width: 100%;
+        padding: 9px 10px;
+        border: 1px solid #d0dae4;
+        border-radius: 6px;
+        font-size: 13px;
+        background: #fff;
+        color: #1a2a3a;
+    }
+
+    select:focus, input:focus {
+        outline: none;
+        border-color: #1565c0;
+    }
+
+    .btn {
+        padding: 9px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+
+    .btn:hover {
+        opacity: 0.85;
+    }
+
+    .btn-primary {
+        background: #1565c0;
+        color: #fff;
+    }
+
+    .btn-green {
+        background: #0d8a5f;
+        color: #fff;
+    }
+
+    .btn-outline {
+        background: #fff;
+        color: #1565c0;
+        border: 1px solid #1565c0;
+    }
+
+    .btn-danger {
+        background: #d32f2f;
+        color: #fff;
+    }
+
+    /* Summary bar */
+    .summary-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        font-size: 13px;
+        color: #607085;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .summary-bar b {
+        color: #1a2a3a;
+    }
+
+    /* Store cards */
+    .store-card {
+        background: #fff;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        overflow: hidden;
+        border-left: 4px solid #d0dae4;
+    }
+
+    .store-card.surveyed {
+        border-left-color: #0d8a5f;
+    }
+
+    .store-card.has-mismatch {
+        border-left-color: #f57c00;
+    }
+
+    .store-head {
+        padding: 12px 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        gap: 10px;
+    }
+
+    .store-head:hover {
+        background: #f7fafc;
+    }
+
+    .store-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .store-name {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1a2a3a;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .store-meta {
+        font-size: 12px;
+        color: #607085;
+        margin-top: 3px;
+    }
+
+    .store-badge {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 12px;
+        white-space: nowrap;
+    }
+
+    .badge-done {
+        background: #e4f6ee;
+        color: #0d8a5f;
+    }
+
+    .badge-pending {
+        background: #fdeaea;
+        color: #c0392b;
+    }
+
+    .store-toggle {
+        font-size: 18px;
+        color: #a0aec0;
+        transition: transform 0.2s;
+    }
+
+    .store-body {
+        display: none;
+        border-top: 1px solid #eef2f6;
+        padding: 10px 14px 14px;
+    }
+
+    .store-body.open {
+        display: block;
+    }
+
+    table.emp-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+    }
+
+    table.emp-table th {
+        text-align: left;
+        padding: 6px 6px;
+        background: #f0f4f8;
+        color: #607085;
+        font-weight: 600;
+        border-bottom: 1px solid #e0e6ed;
+        white-space: nowrap;
+    }
+
+    table.emp-table td {
+        padding: 6px 6px;
+        border-bottom: 1px solid #f0f4f8;
+        vertical-align: middle;
+    }
+
+    table.emp-table select {
+        padding: 5px 6px;
+        font-size: 12px;
+    }
+
+    table.emp-table input[type="text"] {
+        padding: 5px 6px;
+        font-size: 12px;
+        min-width: 100px;
+    }
+
+    .sys-status {
+        font-size: 11px;
+        padding: 2px 7px;
+        border-radius: 10px;
+        white-space: nowrap;
+        display: inline-block;
+    }
+
+    .status-working {
+        background: #e4f6ee;
+        color: #0d8a5f;
+    }
+
+    .status-other {
+        background: #fdf1e6;
+        color: #d35400;
+    }
+
+    .status-leave {
+        background: #fdeaea;
+        color: #c0392b;
+    }
+
+    .mismatch-flag {
+        color: #f57c00;
+        font-weight: 700;
+        font-size: 11px;
+    }
+
+    .store-save-row {
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .save-msg {
+        font-size: 12px;
+        color: #0d8a5f;
+        font-weight: 600;
+        align-self: center;
+        margin-right: auto;
+    }
+
+    /* Confirm Dung/Sai buttons */
+    .cf-btn-group {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 6px;
+    }
+
+    .cf-btn {
+        padding: 5px 10px;
+        border-radius: 6px;
+        border: 1px solid #d0dae4;
+        background: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        color: #607085;
+        transition: all 0.15s;
+        white-space: nowrap;
+    }
+
+    .cf-btn:hover {
+        opacity: 0.85;
+    }
+
+    .cf-btn.ok.active {
+        background: #0d8a5f;
+        color: #fff;
+        border-color: #0d8a5f;
+    }
+
+    .cf-btn.err.active {
+        background: #d32f2f;
+        color: #fff;
+        border-color: #d32f2f;
+    }
+
+    .cf-extra {
+        margin-top: 6px;
+        padding: 8px;
+        background: #fdf6f6;
+        border: 1px solid #fde0e0;
+        border-radius: 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 170px;
+    }
+
+    .cf-extra select {
+        padding: 5px 6px;
+        font-size: 12px;
+        width: 100%;
+    }
+
+    .cf-date-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .cf-date-field {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .cf-date-field label {
+        font-size: 10px;
+        color: #607085;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .cf-date {
+        padding: 5px 6px;
+        font-size: 11px;
+        border: 1px solid #d0dae4;
+        border-radius: 5px;
+        background: #fff;
+        color: #1a2a3a;
+    }
+
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        margin-top: 18px;
+        flex-wrap: wrap;
+    }
+
+    .page-btn {
+        padding: 7px 12px;
+        border: 1px solid #d0dae4;
+        background: #fff;
+        border-radius: 6px;
+        font-size: 13px;
+        cursor: pointer;
+        color: #1a2a3a;
+        min-width: 36px;
+    }
+
+    .page-btn.active {
+        background: #1565c0;
+        color: #fff;
+        border-color: #1565c0;
+    }
+
+    .page-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    /* Dashboard */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .kpi-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 16px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        text-align: center;
+    }
+
+    .kpi-value {
+        font-size: 26px;
+        font-weight: 800;
+        color: #1565c0;
+    }
+
+    .kpi-value.green {
+        color: #0d8a5f;
+    }
+
+    .kpi-value.orange {
+        color: #f57c00;
+    }
+
+    .kpi-value.red {
+        color: #c0392b;
+    }
+
+    .kpi-label {
+        font-size: 12px;
+        color: #607085;
+        margin-top: 6px;
+        font-weight: 600;
+    }
+
+    .section-box {
+        background: #fff;
+        border-radius: 10px;
+        padding: 16px;
+        margin-bottom: 16px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .section-title {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #1a2a3a;
+    }
+
+    #gdvChart {
+        width: 100%;
+        height: 320px;
+        display: block;
+    }
+
+    table.mismatch-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+    table.mismatch-table th {
+        text-align: left;
+        padding: 8px;
+        background: #f0f4f8;
+        color: #607085;
+        font-weight: 600;
+        border-bottom: 1px solid #e0e6ed;
+    }
+
+    table.mismatch-table td {
+        padding: 8px;
+        border-bottom: 1px solid #f0f4f8;
+    }
+
+    /* History */
+    .history-item {
+        background: #fff;
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin-bottom: 8px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .history-actions {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .empty-msg {
+        text-align: center;
+        color: #a0aec0;
+        padding: 40px 10px;
+        font-size: 14px;
+    }
+
+    .loading-box {
+        text-align: center;
+        padding: 60px 10px;
+        color: #607085;
+    }
+
+    .spinner {
+        width: 36px;
+        height: 36px;
+        border: 4px solid #e0e6ed;
+        border-top-color: #1565c0;
+        border-radius: 50%;
+        margin: 0 auto 14px;
+        animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    /* Confirm buttons (Dung/Sai) */
+    .cf-btn { padding: 4px 10px; border-radius: 4px; border: 1px solid #d0dae4; background: #fff; font-size: 12px; cursor: pointer; font-weight: 600; margin: 1px; }
+    .cf-btn-green { background: #0d8a5f; color: #fff; border-color: #0d8a5f; }
+    .cf-btn-red { background: #c0392b; color: #fff; border-color: #c0392b; }
+    /* Toast notification */
+    .toast-container { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+    .toast { padding: 12px 20px; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.2); animation: toastIn 0.3s ease-out; max-width: 90vw; text-align: center; }
+    .toast.success { background: #0d8a5f; }
+    .toast.warn { background: #e67e22; }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    /* Confirm modal */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; display: flex; align-items: center; justify-content: center; }
+    .modal-box { background: #fff; border-radius: 12px; padding: 24px; max-width: 400px; width: 90%; box-shadow: 0 8px 30px rgba(0,0,0,0.3); text-align: center; }
+    .modal-box h3 { font-size: 18px; margin-bottom: 16px; color: #1a5276; }
+    .modal-stats { text-align: left; margin: 12px 0; font-size: 14px; line-height: 1.8; }
+    .modal-stats span { font-weight: 700; color: #2980b9; }
+    .modal-btns { display: flex; gap: 10px; justify-content: center; margin-top: 16px; }
+    .modal-btns button { padding: 10px 24px; border-radius: 8px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; }
+    .modal-btn-confirm { background: #0d8a5f; color: #fff; }
+    .modal-btn-cancel { background: #ddd; color: #333; }
+    .cf-btn.cf-ok { background: #0d8a5f; color: #fff; border-color: #0d8a5f; }
+    .cf-btn.cf-err { background: #c0392b; color: #fff; border-color: #c0392b; }
+    .cf-extra { background: #fef9e7; border: 1px solid #f0d060; border-radius: 6px; padding: 6px; margin-top: 4px; }
+    .cf-extra select { padding: 4px 6px; font-size: 12px; margin-bottom: 4px; }
+    .cf-date { padding: 3px 5px; border: 1px solid #d0dae4; border-radius: 4px; font-size: 11px; width: 110px; }
+
+    @media (max-width: 700px) {
+        .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        .filter-item { min-width: 100%; }
+        .filter-box { flex-direction: column; }
+        .store-name { font-size: 13px; }
+        .store-head { flex-direction: column; align-items: flex-start; }
+        .store-body { padding: 6px 8px 10px; }
+        .store-card { padding: 10px; }
+        /* Mobile: stack employee rows vertically */
+        table.emp-table, table.emp-table thead, table.emp-table tbody, table.emp-table th, table.emp-table td, table.emp-table tr { display: block; }
+        table.emp-table thead tr { display: none; }
+        table.emp-table tr { border: 1px solid #e0e6ed; border-radius: 6px; margin-bottom: 8px; padding: 8px; background: #fff; }
+        table.emp-table td { border: none; padding: 2px 6px; display: flex; justify-content: space-between; }
+        table.emp-table td:before { content: attr(data-label); font-weight: 600; color: #607085; margin-right: 8px; white-space: nowrap; }
+        .cf-btn { padding: 3px 8px; font-size: 11px; }
+        .cf-extra select, .cf-extra input { font-size: 11px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.0-store</span></h1>
+    <p>Dữ liệu: 10/10/2026 | 7.594 nhân sự | 1.803 cửa hàng</p>
+</div>
+
+<div class="tabs">
+    <button class="tab-btn active" data-tab="survey" onclick="switchTab('survey')">Khảo sát</button>
+    <button class="tab-btn" data-tab="dashboard" onclick="switchTab('dashboard')">Dashboard</button>
+    <button class="tab-btn" data-tab="history" onclick="switchTab('history')">Lịch sử</button>
+</div>
+
+<div class="container">
+
+    <!-- TAB: KHAO SAT -->
+    <div class="tab-content active" id="tab-survey">
+        <div id="surveyLoading" class="loading-box">
+            <div class="spinner"></div>
+            <div>Đang tải dữ liệu...</div>
+        </div>
+        <div id="surveyContent" style="display:none;">
+            <div class="filter-box">
+                <div class="filter-item">
+                    <label>Giam Doc Vung (GDV)</label>
+                    <select id="filterGdv" onchange="onGdvChange()">
+                        <option value="">-- Tất cả GĐV --</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>Quản lý Khu vực (QLKV)</label>
+                    <select id="filterQlkv" onchange="onQlkvSelect()">
+                        <option value="">-- Tất cả QLKV --</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>Cửa hàng</label>
+                    <select id="filterCH" onchange="applyFilters()">
+                        <option value="">-- Tất cả CH --</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label style="display:none">Trạng thái Khảo sát</label>
+                    <select id="filterStatus" onchange="applyFilters()" style="display:none">
+                        <option value="">-- Tất cả --</option>
+                        <option value="done">Da khao sat</option>
+                        <option value="pending">Chua khao sat</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="summary-bar">
+                <div>Tim thay <b id="storeCountLabel">0</b> cua hang</div>
+                <div>Da khao sat: <b id="doneCountLabel" style="color:#0d8a5f;">0</b> / <span id="totalCountLabel">0</span></div>
+            </div>
+
+            <div id="storeList"></div>
+
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+
+    <!-- TAB: DASHBOARD -->
+    <div class="tab-content" id="tab-dashboard">
+        <div class="filter-box" style="margin-bottom:16px">
+            <div class="filter-item">
+                <label>GĐV</label>
+                <select id="dashGdv" onchange="onDashGdvChange()"><option value="">-- Tất cả GĐV --</option></select>
+            </div>
+            <div class="filter-item">
+                <label>QLKV</label>
+                <select id="dashQlkv" onchange="renderDashboard()"><option value="">-- Tất cả QLKV --</option></select>
+            </div>
+        </div>
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-value" id="kpiTotalStores">0</div>
+                <div class="kpi-label">Tong So Cua Hang</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="kpiTotalEmp">0</div>
+                <div class="kpi-label">Tong So Nhan Vien</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value green" id="kpiSurveyed">0</div>
+                <div class="kpi-label">CH Đã Khảo sát</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value red" id="kpiNotSurveyed">0</div>
+                <div class="kpi-label">CH Chưa Khảo sát</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value orange" id="kpiMismatch">0</div>
+                <div class="kpi-label">Nhân viên Sai lệch</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="kpiProgress">0%</div>
+                <div class="kpi-label">Tiến độ Khảo sát</div>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <div class="section-title">Tiến độ Khảo sát Theo GDV</div>
+            <canvas id="gdvChart"></canvas>
+        </div>
+
+        <div class="section-box">
+            <div class="section-title">Chi tiết Sai lệch Trạng thái</div>
+            <div id="mismatchTableWrap">
+                <div class="empty-msg">Chua co du lieu sai lech</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB: LICH SU -->
+    <div class="tab-content" id="tab-history">
+        <div class="history-actions">
+            <button class="btn btn-green" onclick="exportXLSB()">Xuất XLSX</button>
+            <button class="btn btn-danger" onclick="clearAllHistory()">Xoa Tat Ca</button>
+        </div>
+        <div id="historyList"></div>
+    </div>
+
+</div>
+
+<script>
+    // ===================== GLOBAL STATE =====================
+    var chList = [];          // array of {maCost, tenCH, gdv, qlkv, tinh, count}
+    var empData = {};         // object keyed by maCost -> array of emp {m,n,c,g,t,q,d,p}
+    var surveyData = {};      // loaded from localStorage, key ns_v1
+    var filteredList = [];    // current filtered ch list
+    var currentPage = 1;
+    var PAGE_SIZE = 20;
+    var openStoreCode = "";   // which store card is currently expanded
+
+    var STORAGE_KEY = "ns_v1";
+
+    var STATUS_OPTIONS = [
+        "Đang làm việc",
+        "Nghỉ thai sản",
+        "Nghỉ không lương",
+        "Nghỉ ốm",
+        "Đã nghỉ việc",
+        "Dự kiến nghỉ việc"
+    ];
+
+    // ===================== INIT =====================
+    function showToast(msg, type) {
+        var container = document.querySelector(".toast-container");
+        if (!container) {
+            container = document.createElement("div");
+            container.className = "toast-container";
+            document.body.appendChild(container);
+        }
+        var toast = document.createElement("div");
+        toast.className = "toast " + (type || "success");
+        toast.textContent = msg;
+        container.appendChild(toast);
+        setTimeout(function() { toast.style.opacity = "0"; toast.style.transition = "opacity 0.3s"; setTimeout(function() { toast.remove(); }, 300); }, 2500);
+    }
+
+    function init() {
+        loadSurveyData();
+        loadDataFiles();
+    }
+
+    function loadDataFiles() {
+        var xhr1 = new XMLHttpRequest();
+        xhr1.open("GET", "ch-list.json", true);
+        xhr1.onreadystatechange = function () {
+            if (xhr1.readyState === 4) {
+                if (xhr1.status === 200 || xhr1.status === 0) {
+                    try {
+                        chList = JSON.parse(xhr1.responseText);
+                    } catch (e) {
+                        chList = [];
+                    }
+                    loadEmpData();
+                } else {
+                    showLoadError();
+                }
+            }
+        };
+        xhr1.send();
+    }
+
+    function loadEmpData() {
+        var xhr2 = new XMLHttpRequest();
+        xhr2.open("GET", "emp-compact.json", true);
+        xhr2.onreadystatechange = function () {
+            if (xhr2.readyState === 4) {
+                if (xhr2.status === 200 || xhr2.status === 0) {
+                    try {
+                        empData = JSON.parse(xhr2.responseText);
+                    } catch (e) {
+                        empData = {};
+                    }
+                    onDataLoaded();
+                } else {
+                    showLoadError();
+                }
+            }
+        };
+        xhr2.send();
+    }
+
+    function showLoadError() {
+        var box = document.getElementById("surveyLoading");
+        box.innerHTML = "<div style=\"color:#c0392b;\">Khong the tai du lieu. Vui long kiem tra file ch-list.json va emp-compact.json co nam cung thu muc va chay qua web server.</div>";
+    }
+
+    function onDataLoaded() {
+        document.getElementById("surveyLoading").style.display = "none";
+        document.getElementById("surveyContent").style.display = "block";
+
+        buildGdvFilter();
+        buildCHFilter();
+        applyFilters();
+        populateDashFilters();
+        renderDashboard();
+        renderHistory();
+    }
+
+    // ===================== LOCAL STORAGE =====================
+    function loadSurveyData() {
+        var raw = null;
+        try {
+            raw = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {
+            raw = null;
+        }
+        if (raw) {
+            try {
+                surveyData = JSON.parse(raw);
+            } catch (e) {
+                surveyData = {};
+            }
+        } else {
+            surveyData = {};
+        }
+    }
+
+    function saveSurveyData() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(surveyData));
+        } catch (e) {
+            alert("Khong the luu du lieu vao trinh duyet.");
+        }
+    }
+
+    // ===================== TAB SWITCH =====================
+    function switchTab(tabName) {
+        var btns = document.querySelectorAll(".tab-btn");
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].classList.remove("active");
+        }
+        var contents = document.querySelectorAll(".tab-content");
+        for (var j = 0; j < contents.length; j++) {
+            contents[j].classList.remove("active");
+        }
+
+        var activeBtn = document.querySelector(".tab-btn[data-tab='" + tabName + "']");
+        if (activeBtn) {
+            activeBtn.classList.add("active");
+        }
+        var activeContent = document.getElementById("tab-" + tabName);
+        if (activeContent) {
+            activeContent.classList.add("active");
+        }
+
+        if (tabName === "dashboard") {
+            renderDashboard();
+        }
+        if (tabName === "history") {
+            renderHistory();
+        }
+    }
+
+    // ===================== FILTERS =====================
+    function buildGdvFilter() {
+        var gdvSet = {};
+        var i;
+        for (i = 0; i < chList.length; i++) {
+            if (chList[i].gdv) {
+                gdvSet[chList[i].gdv] = true;
+            }
+        }
+        var gdvNames = [];
+        for (var key in gdvSet) {
+            if (gdvSet.hasOwnProperty(key)) {
+                gdvNames.push(key);
+            }
+        }
+        gdvNames.sort();
+
+        var sel = document.getElementById("filterGdv");
+        for (i = 0; i < gdvNames.length; i++) {
+            var opt = document.createElement("option");
+            opt.value = gdvNames[i];
+            opt.textContent = gdvNames[i];
+            sel.appendChild(opt);
+        }
+    }
+
+    function buildCHFilter(gdvFilter, qlkvFilter) {
+        var sel = document.getElementById("filterCH");
+        sel.innerHTML = "<option value=''>-- Tất cả CH --</option>";
+        var codes = [];
+        for (var i = 0; i < chList.length; i++) {
+            var c = chList[i];
+            if (gdvFilter && c.gdv !== gdvFilter) continue;
+            if (qlkvFilter && c.qlkv !== qlkvFilter) continue;
+            codes.push({code: c.maCost, name: c.tenCH || c.maCost});
+        }
+        codes.sort(function(a,b){ return a.code.localeCompare(b.code); });
+        for (i = 0; i < codes.length; i++) {
+            var opt = document.createElement("option");
+            opt.value = codes[i].code;
+            opt.textContent = codes[i].name;
+            sel.appendChild(opt);
+        }
+    }
+
+    function onGdvChange() {
+        var gdvVal = document.getElementById("filterGdv").value;
+        var qlkvSel = document.getElementById("filterQlkv");
+
+        // clear existing options except first
+        qlkvSel.innerHTML = "<option value=''>-- Tất cả QLKV --</option>";
+
+        if (gdvVal) {
+            var qlkvSet = {};
+            for (var i = 0; i < chList.length; i++) {
+                if (chList[i].gdv === gdvVal && chList[i].qlkv) {
+                    qlkvSet[chList[i].qlkv] = true;
+                }
+            }
+            var qlkvNames = [];
+            for (var key in qlkvSet) {
+                if (qlkvSet.hasOwnProperty(key)) {
+                    qlkvNames.push(key);
+                }
+            }
+            qlkvNames.sort();
+            for (i = 0; i < qlkvNames.length; i++) {
+                var opt = document.createElement("option");
+                opt.value = qlkvNames[i];
+                opt.textContent = qlkvNames[i];
+                qlkvSel.appendChild(opt);
+            }
+        }
+        var qlkvVal = document.getElementById("filterQlkv").value;
+        buildCHFilter(gdvVal, qlkvVal);
+        applyFilters();
+    }
+
+    function populateDashFilters() {
+        var gdvSel = document.getElementById("dashGdv");
+        var qlkvSel = document.getElementById("dashQlkv");
+        if (!gdvSel || !qlkvSel) return;
+        var gdvSet = new Set(), qlkvSet = new Set();
+        for (var i = 0; i < chList.length; i++) {
+            if (chList[i].gdv) gdvSet.add(chList[i].gdv);
+            if (chList[i].qlkv) qlkvSet.add(chList[i].qlkv);
+        }
+        var ga = Array.from(gdvSet).sort();
+        for (i = 0; i < ga.length; i++) { var o = document.createElement("option"); o.value = ga[i]; o.textContent = ga[i]; gdvSel.appendChild(o); }
+        var qa = Array.from(qlkvSet).sort();
+        for (i = 0; i < qa.length; i++) { var o = document.createElement("option"); o.value = qa[i]; o.textContent = qa[i]; qlkvSel.appendChild(o); }
+    }
+
+    function onDashGdvChange() {
+        var gdvVal = document.getElementById("dashGdv").value;
+        var qlkvSel = document.getElementById("dashQlkv");
+        qlkvSel.innerHTML = "<option value=''>-- Tất cả QLKV --</option>";
+        var qs = new Set();
+        for (var i = 0; i < chList.length; i++) {
+            if (!gdvVal || chList[i].gdv === gdvVal) qs.add(chList[i].qlkv);
+        }
+        var qa = Array.from(qs).sort();
+        for (i = 0; i < qa.length; i++) { var o = document.createElement("option"); o.value = qa[i]; o.textContent = qa[i]; qlkvSel.appendChild(o); }
+        renderDashboard();
+    }
+
+    function onQlkvSelect() {
+        var gdvVal = document.getElementById("filterGdv").value;
+        var qlkvVal = document.getElementById("filterQlkv").value;
+        buildCHFilter(gdvVal, qlkvVal);
+        applyFilters();
+    }
+
+    function applyFilters() {
+        var gdvVal = document.getElementById("filterGdv").value;
+        var qlkvVal = document.getElementById("filterQlkv").value;
+        var chVal = document.getElementById("filterCH").value;
+        var statusVal = document.getElementById("filterStatus").value;
+
+        filteredList = [];
+        var i;
+        for (i = 0; i < chList.length; i++) {
+            var store = chList[i];
+            if (gdvVal && store.gdv !== gdvVal) {
+                continue;
+            }
+            if (qlkvVal && store.qlkv !== qlkvVal) {
+                continue;
+            }
+            if (chVal && store.maCost !== chVal) {
+                continue;
+            }
+
+            var isDone = !!surveyData[store.maCost];
+            if (statusVal === "done" && !isDone) {
+                continue;
+            }
+            if (statusVal === "pending" && isDone) {
+                continue;
+            }
+
+            filteredList.push(store);
+        }
+
+        currentPage = 1;
+        renderStoreList();
+        updateSummaryBar();
+    }
+
+    function updateSummaryBar() {
+        document.getElementById("storeCountLabel").textContent = filteredList.length;
+
+        var doneCount = 0;
+        var i;
+        for (i = 0; i < filteredList.length; i++) {
+            if (surveyData[filteredList[i].maCost]) {
+                doneCount++;
+            }
+        }
+        document.getElementById("doneCountLabel").textContent = doneCount;
+        document.getElementById("totalCountLabel").textContent = filteredList.length;
+    }
+
+    // ===================== STORE LIST RENDER =====================
+    function renderStoreList() {
+        var listEl = document.getElementById("storeList");
+        listEl.innerHTML = "";
+        var chVal = document.getElementById("filterCH").value;
+        if (!chVal) {
+            listEl.innerHTML = "<div class='empty-msg' style='padding:60px'><div style='font-size:48px;margin-bottom:16px'>&#x1F3EA;</div>Vui lòng chọn Cửa hàng để bắt đầu khảo sát</div>";
+            document.getElementById("pagination").innerHTML = "";
+            return;
+        }
+
+        if (filteredList.length === 0) {
+            listEl.innerHTML = "<div class='empty-msg'>Vui lòng chọn Cửa hàng để bắt đầu khảo sát.</div>";
+            document.getElementById("pagination").innerHTML = "";
+            return;
+        }
+
+        var totalPages = Math.ceil(filteredList.length / PAGE_SIZE);
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+        if (currentPage < 1) {
+            currentPage = 1;
+        }
+
+        var startIdx = (currentPage - 1) * PAGE_SIZE;
+        var endIdx = Math.min(startIdx + PAGE_SIZE, filteredList.length);
+
+        var i;
+        for (i = startIdx; i < endIdx; i++) {
+            var store = filteredList[i];
+            listEl.appendChild(buildStoreCard(store));
+        }
+
+        renderPagination(totalPages);
+    }
+
+    function buildStoreCard(store) {
+        var isDone = !!surveyData[store.maCost];
+        var mismatchCount = countMismatch(store.maCost);
+
+        var card = document.createElement("div");
+        card.className = "store-card";
+        if (isDone) {
+            card.className += " surveyed";
+        }
+        if (mismatchCount > 0) {
+            card.className += " has-mismatch";
+        }
+        card.setAttribute("data-code", store.maCost);
+
+        var head = document.createElement("div");
+        head.className = "store-head";
+        head.onclick = (function (code) {
+            return function () { toggleStoreBody(code); };
+        })(store.maCost);
+
+        var info = document.createElement("div");
+        info.className = "store-info";
+
+        var nameDiv = document.createElement("div");
+        nameDiv.className = "store-name";
+        nameDiv.textContent = store.tenCH + " (" + store.maCost + ")";
+
+        var metaDiv = document.createElement("div");
+        metaDiv.className = "store-meta";
+        var metaText = "GDV: " + (store.gdv || "-") + " | QLKV: " + (store.qlkv || "-") + " | " + (store.tinh || "-") + " | " + store.count + " NV";
+        if (mismatchCount > 0) {
+            metaText += " | ";
+        }
+        metaDiv.textContent = metaText;
+        if (mismatchCount > 0) {
+            var flagSpan = document.createElement("span");
+            flagSpan.className = "mismatch-flag";
+            flagSpan.textContent = mismatchCount + " sai lech";
+            metaDiv.appendChild(flagSpan);
+        }
+
+        info.appendChild(nameDiv);
+        info.appendChild(metaDiv);
+
+        var badge = document.createElement("div");
+        badge.className = "store-badge " + (isDone ? "badge-done" : "badge-pending");
+        badge.textContent = isDone ? "Da khao sat" : "Chua khao sat";
+
+        var toggle = document.createElement("div");
+        toggle.className = "store-toggle";
+        toggle.textContent = "+";
+
+        head.appendChild(info);
+        head.appendChild(badge);
+        head.appendChild(toggle);
+
+        var body = document.createElement("div");
+        body.className = "store-body";
+        body.id = "body-" + store.maCost;
+        if (openStoreCode === store.maCost) {
+            body.classList.add("open");
+            toggle.textContent = "-";
+        }
+        body.appendChild(buildEmpTable(store.maCost));
+
+        card.appendChild(head);
+        card.appendChild(body);
+
+        return card;
+    }
+
+    function pushToGAS(maCost, empResult) {
+        var gasUrl = "https://script.google.com/macros/s/AKfycbxaGm5eD7bEKMy53ojLWHMXggUacrBJw2k7b7QEhPfBcarFTScPWcoBFjeMZxPYl2pUPQ/exec";
+        var storeInfo = buildStoreMapByCode()[maCost] || {};
+        var emps = empData[maCost] || [];
+        var empMeta = {};
+        for (var i = 0; i < emps.length; i++) {
+            var e = emps[i];
+            empMeta[e.m] = { n: e.n || "", c: e.c || "", t: e.t || "" };
+        }
+        var payload = {
+            maCost: maCost, tenCH: storeInfo.tenCH || maCost,
+            gdv: storeInfo.gdv || "", qlkv: storeInfo.qlkv || "", tinh: storeInfo.tinh || "",
+            ts: new Date().toISOString(), employees: empResult, empMeta: empMeta
+        };
+        try {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", gasUrl, true);
+            xhr.setRequestHeader("Content-Type", "text/plain;charset=utf-8");
+            xhr.send(JSON.stringify(payload));
+        } catch(e) {}
+    }
+
+    function countMismatch(maCost) {
+        var emps = empData[maCost];
+        if (!emps) {
+            return 0;
+        }
+        var surveyEntry = surveyData[maCost];
+        if (!surveyEntry || !surveyEntry.e) {
+            return 0;
+        }
+        var count = 0;
+        var i;
+        for (i = 0; i < emps.length; i++) {
+            var emp = emps[i];
+            var surveyedEmp = surveyEntry.e[emp.m];
+            if (surveyedEmp && surveyedEmp.correct === false && surveyedEmp.s && surveyedEmp.s !== emp.t) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    function toggleStoreBody(code) {
+        if (openStoreCode === code) {
+            openStoreCode = "";
+        } else {
+            openStoreCode = code;
+        }
+        renderStoreList();
+    }
+
+    function buildEmpTable(maCost) {
+        var wrapper = document.createElement("div");
+
+        var emps = empData[maCost];
+        if (!emps || emps.length === 0) {
+            wrapper.innerHTML = "<div class='empty-msg'>Khong co du lieu nhan vien cho cua hang nay.</div>";
+            return wrapper;
+        }
+
+        var surveyEntry = surveyData[maCost];
+        var savedEmp = (surveyEntry && surveyEntry.e) ? surveyEntry.e : {};
+
+        var table = document.createElement("table");
+        table.className = "emp-table";
+
+        var thead = document.createElement("thead");
+        var headRow = document.createElement("tr");
+        var headers = ["MNV", "Họ tên", "Chức danh", "Trạng thái Hệ thống", "Thời gian", "Xác nhận"];
+        var h;
+        for (h = 0; h < headers.length; h++) {
+            var th = document.createElement("th");
+            th.textContent = headers[h];
+            headRow.appendChild(th);
+        }
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        var tbody = document.createElement("tbody");
+
+        var i;
+        for (i = 0; i < emps.length; i++) {
+            var emp = emps[i];
+            var row = document.createElement("tr");
+
+            var tdMnv = document.createElement("td");
+            tdMnv.setAttribute("data-label", "MNV");
+            tdMnv.textContent = emp.m;
+            row.appendChild(tdMnv);
+
+            var tdName = document.createElement("td");
+            tdName.setAttribute("data-label", "Họ tên");
+            tdName.textContent = emp.n;
+            row.appendChild(tdName);
+
+            var tdTitle = document.createElement("td");
+            tdTitle.setAttribute("data-label", "Chức danh");
+            tdTitle.textContent = emp.c;
+            row.appendChild(tdTitle);
+
+            var tdSys = document.createElement("td");
+            tdSys.setAttribute("data-label", "TT Hệ thống");
+            var sysSpan = document.createElement("span");
+            sysSpan.className = "sys-status " + statusCssClass(emp.t);
+            sysSpan.textContent = emp.t;
+            tdSys.appendChild(sysSpan);
+            row.appendChild(tdSys);
+
+            // Time column
+            var tdTime = document.createElement("td");
+            tdTime.setAttribute("data-label", "Thời gian");
+            tdTime.style.fontSize = "11px"; tdTime.style.color = "#607085"; tdTime.style.whiteSpace = "nowrap";
+            if (emp.t === "Đã nghỉ việc" && emp.ed) {
+                tdTime.textContent = emp.ed;
+            } else if ((emp.t.indexOf("thai") >= 0 || emp.t.indexOf("ốm") >= 0 || emp.t.indexOf("không") >= 0 || emp.t.indexOf("om") >= 0) && emp.sd) {
+                tdTime.textContent = (emp.sd||"") + " - " + (emp.ed||"");
+            }
+            row.appendChild(tdTime);
+
+            var tdSel = document.createElement("td");
+            tdSel.setAttribute("data-label", "Xác nhận");
+            tdSel.style.whiteSpace = "nowrap";
+            // Hidden input stores correct/sai state
+            var hiddenInput = document.createElement("input");
+            hiddenInput.type = "hidden";
+            hiddenInput.setAttribute("data-mnv", emp.m);
+            hiddenInput.value = "correct";
+            // Check saved state
+            var isCorrect = true;
+            var hasSurvey = (savedEmp[emp.m] !== undefined);
+            if (hasSurvey && savedEmp[emp.m].correct === false) {
+                isCorrect = false;
+                hiddenInput.value = "incorrect";
+            }
+            var showDone = hasSurvey && isCorrect;
+            var showSaiForm = hasSurvey && !isCorrect;
+            // Dung button - checkmark icon
+            var btnDung = document.createElement("button");
+            btnDung.className = "cf-btn cf-btn-green";
+            btnDung.textContent = "Đúng";
+            btnDung.title = "Xác nhận đúng";
+            btnDung.setAttribute("data-mnv-dung", emp.m);
+            btnDung.onclick = (function(mnv, hinp, bd, bs, extraDiv) {
+                return function() {
+                    hinp.value = "correct";
+                    bd.className = "cf-btn cf-ok";
+                    bs.className = "cf-btn";
+                    if (extraDiv) extraDiv.style.display = "none";
+                };
+            })(emp.m, hiddenInput);
+            // Sai button
+            var btnSai = document.createElement("button");
+            btnSai.className = "cf-btn cf-btn-red";
+            btnSai.textContent = "Sai";
+            btnSai.title = "Xác nhận sai";
+            btnSai.setAttribute("data-mnv-sai", emp.m);
+            // Extra form (hidden by default)
+            var extraDiv = document.createElement("div");
+            extraDiv.className = "cf-extra";
+            extraDiv.style.display = isCorrect ? "none" : "block";
+            extraDiv.style.marginTop = "4px";
+            // Status dropdown in extra
+            var extraSel = document.createElement("select");
+            extraSel.setAttribute("data-mnv-s", emp.m);
+            extraSel.style.marginBottom = "4px";
+            var defaultSt = (savedEmp[emp.m] && savedEmp[emp.m].s) ? savedEmp[emp.m].s : "";
+            for (var s2 = 0; s2 < STATUS_OPTIONS.length; s2++) {
+                // Skip the current SAP status when showing "Sai" options
+                if (STATUS_OPTIONS[s2] === emp.t) continue;
+                var optEl2 = document.createElement("option");
+                optEl2.value = STATUS_OPTIONS[s2];
+                optEl2.textContent = STATUS_OPTIONS[s2];
+                if (STATUS_OPTIONS[s2] === defaultSt) optEl2.selected = true;
+                if (!defaultSt && s2 === 0) optEl2.selected = true;
+                extraSel.appendChild(optEl2);
+            }
+            extraDiv.appendChild(extraSel);
+            // Date fields container
+            var dateDiv = document.createElement("div");
+            dateDiv.style.display = "flex"; dateDiv.style.gap = "6px"; dateDiv.style.flexWrap = "wrap";
+            dateDiv.setAttribute("data-date-div", emp.m);
+            // Start date
+            var startLbl = document.createElement("span"); startLbl.textContent = "Từ:"; startLbl.style.fontSize = "11px";
+            var startInp = document.createElement("input"); startInp.type = "date"; startInp.className = "cf-date";
+            startInp.setAttribute("data-mnv-start", emp.m);
+            if (savedEmp[emp.m] && savedEmp[emp.m].startDate) startInp.value = savedEmp[emp.m].startDate;
+            // End date
+            var endLbl = document.createElement("span"); endLbl.textContent = "Đến:"; endLbl.style.fontSize = "11px";
+            var endInp = document.createElement("input"); endInp.type = "date"; endInp.className = "cf-date";
+            endInp.setAttribute("data-mnv-end", emp.m);
+            if (savedEmp[emp.m] && savedEmp[emp.m].endDate) endInp.value = savedEmp[emp.m].endDate;
+            
+            dateDiv.appendChild(startLbl); dateDiv.appendChild(startInp);
+            dateDiv.appendChild(endLbl); dateDiv.appendChild(endInp);
+            
+            // HR checkbox
+            var hrDiv = document.createElement("div"); hrDiv.style.marginTop = "4px";
+            var hrCb = document.createElement("input"); hrCb.type = "checkbox"; hrCb.setAttribute("data-mnv-hr", emp.m);
+            hrCb.style.marginRight = "4px";
+            if (savedEmp[emp.m] && savedEmp[emp.m].sentHR) hrCb.checked = true;
+            var hrLabel = document.createElement("label"); hrLabel.textContent = "Đã gửi đơn cho HR"; hrLabel.style.fontSize = "11px";
+            hrDiv.appendChild(hrCb); hrDiv.appendChild(hrLabel);
+            dateDiv.appendChild(hrDiv);
+            
+            function updateDateFields() {
+                var v = extraSel.value;
+                var isLeave = (v.indexOf("thai s") >= 0 || v.indexOf("ốm") >= 0 || v.indexOf("không lương") >= 0 || v.indexOf("khong luong") >= 0 || v.indexOf("om") >= 0 || v.indexOf("thai san") >= 0);
+                var isResign = (v.indexOf("Đã nghỉ") >= 0 || v.indexOf("Dự kiến") >= 0 || v.indexOf("Da nghi") >= 0 || v.indexOf("Du kien") >= 0);
+                if (isLeave) {
+                    startLbl.textContent = "Từ:"; startLbl.style.display = "";
+                    startInp.style.display = "";
+                    endLbl.textContent = "Đến:"; endLbl.style.display = "";
+                    endInp.style.display = "";
+                } else if (isResign) {
+                    startLbl.textContent = "Ngày:"; startLbl.style.display = "";
+                    startInp.style.display = "";
+                    endLbl.style.display = "none";
+                    endInp.style.display = "none";
+                } else {
+                    startLbl.style.display = "none"; startInp.style.display = "none";
+                    endLbl.style.display = "none"; endInp.style.display = "none";
+                }
+                hrDiv.style.display = (isLeave || isResign) ? "" : "none";
+            }
+            extraSel.onchange = updateDateFields;
+            updateDateFields();
+            extraDiv.appendChild(dateDiv);
+            // Cap nhat button
+            var updateBtn = document.createElement("button");
+            updateBtn.className = "btn btn-p";
+            updateBtn.textContent = "✅ Xác nhận";
+            updateBtn.style.marginTop = "6px"; updateBtn.style.fontSize = "12px"; updateBtn.style.padding = "4px 12px";
+            // Remove note input - add note as hidden
+            var noteHid = document.createElement("input");
+            noteHid.type = "hidden"; noteHid.setAttribute("data-mnv-note", emp.m);
+            if (savedEmp[emp.m] && savedEmp[emp.m].note) noteHid.value = savedEmp[emp.m].note;
+            extraDiv.appendChild(noteHid);
+            updateBtn.onclick = (function(mnv, ex, td, startI, endI, hrC, selEl) {
+                return function() {
+                    var s = selEl.value;
+                    // Validate: need dates filled
+                    var sd = startI.value, ed = endI.value;
+                    var isLeave = (s.indexOf("thai") >= 0 || s.indexOf("ốm") >= 0 || s.indexOf("không") >= 0);
+                    var isResign = (s.indexOf("Đã nghỉ") >= 0 || s.indexOf("Dự kiến") >= 0);
+                    if (isLeave && (!sd || !ed)) { showToast("Vui lòng nhập đủ ngày bắt đầu và kết thúc!", "warn"); return; }
+                    if (isResign && !sd) { showToast("Vui lòng nhập ngày nghỉ!", "warn"); return; }
+                    ex.style.display = "none";
+                    var updSpan = document.createElement("span");
+                    updSpan.style.color = "#e67e22"; updSpan.style.fontWeight = "600"; updSpan.style.fontSize = "11px";
+                    var desc = s;
+                    if (sd) desc += " - " + sd;
+                    if (ed && isLeave) desc += " - " + ed;
+                    desc += " - " + (hrC.checked ? "Đã gửi đơn" : "Chưa gửi đơn");
+                    updSpan.textContent = "⚠ " + desc;
+                    updSpan.setAttribute("data-updated", mnv);
+                    td.appendChild(updSpan);
+                };
+            })(emp.m, extraDiv, tdSel, startInp, endInp, hrCb, extraSel);
+            extraDiv.appendChild(updateBtn);
+            
+            btnSai.onclick = (function(mnv, hinp, bd, bs, ex) {
+                return function() {
+                    hinp.value = "incorrect";
+                    bd.style.display = "none";
+                    bs.style.display = "none";
+                    if (ex) ex.style.display = "block";
+                };
+            })(emp.m, hiddenInput, btnDung, btnSai, extraDiv);
+            btnDung.onclick = (function(mnv, hinp, bd, bs, ex, parentTd) {
+                return function() {
+                    hinp.value = "correct";
+                    bd.style.display = "none";
+                    bs.style.display = "none";
+                    if (ex) ex.style.display = "none";
+                    var doneSpan = document.createElement("span");
+                    doneSpan.style.color = "#0d8a5f"; doneSpan.style.fontWeight = "600"; doneSpan.style.fontSize = "12px";
+                    doneSpan.textContent = "✅ Đúng";
+                    doneSpan.style.fontSize = "11px";
+                    doneSpan.setAttribute("data-done", mnv);
+                    parentTd.appendChild(doneSpan);
+                    var edA = document.createElement("a");
+                    edA.href = "#"; edA.textContent = "Sửa"; edA.style.fontSize = "10px"; edA.style.marginLeft = "4px"; edA.style.color = "#2980b9";
+                    edA.onclick = function(e) { e.preventDefault(); bd.style.display = ""; bs.style.display = ""; doneSpan.remove(); edA.remove(); };
+                    parentTd.appendChild(edA);
+                };
+            })(emp.m, hiddenInput, btnDung, btnSai, extraDiv, tdSel);
+            
+            tdSel.appendChild(hiddenInput);
+            tdSel.appendChild(btnDung);
+            tdSel.appendChild(document.createTextNode(" "));
+            tdSel.appendChild(btnSai);
+            tdSel.appendChild(extraDiv);
+            // Restore done state
+            if (showDone) {
+                btnDung.style.display = "none";
+                btnSai.style.display = "none";
+                var doneSpan2 = document.createElement("span");
+                doneSpan2.style.color = "#0d8a5f"; doneSpan2.style.fontWeight = "600"; doneSpan2.style.fontSize = "12px";
+                doneSpan2.textContent = "✅ Đúng";
+                doneSpan2.style.fontSize = "11px";
+                doneSpan2.setAttribute("data-done", emp.m);
+                tdSel.appendChild(doneSpan2);
+                var editLink = document.createElement("a");
+                editLink.href = "#"; editLink.textContent = "Sửa"; editLink.style.fontSize = "10px"; editLink.style.marginLeft = "4px"; editLink.style.color = "#2980b9";
+                editLink.onclick = (function(bd, bs, ds) { return function(e) { e.preventDefault(); bd.style.display = ""; bs.style.display = ""; ds.remove(); editLink.remove(); }; })(btnDung, btnSai, doneSpan2);
+                tdSel.appendChild(editLink);
+            }
+            if (showSaiForm) {
+                btnDung.style.display = "none";
+                btnSai.style.display = "none";
+                extraDiv.style.display = "none";
+                var updSpan = document.createElement("span");
+                updSpan.style.color = "#e67e22"; updSpan.style.fontWeight = "600"; updSpan.style.fontSize = "11px";
+                var desc = savedEmp[emp.m].s || "";
+                if (savedEmp[emp.m].startDate) desc += " - " + savedEmp[emp.m].startDate;
+                if (savedEmp[emp.m].endDate) desc += " - " + savedEmp[emp.m].endDate;
+                desc += " - " + (savedEmp[emp.m].sentHR ? "Đã gửi đơn" : "Chưa gửi đơn");
+                updSpan.textContent = "⚠ " + desc;
+                updSpan.setAttribute("data-updated", emp.m);
+                tdSel.appendChild(updSpan);
+                var editLink2 = document.createElement("a");
+                editLink2.href = "#"; editLink2.textContent = "Sửa"; editLink2.style.fontSize = "10px"; editLink2.style.marginLeft = "4px"; editLink2.style.color = "#2980b9";
+                editLink2.onclick = (function(bd, bs, us, ex) { return function(e) { e.preventDefault(); bd.style.display = "none"; bs.style.display = "none"; us.remove(); editLink2.remove(); ex.style.display = "block"; }; })(btnDung, btnSai, updSpan, extraDiv);
+                tdSel.appendChild(editLink2);
+            }
+            row.appendChild(tdSel);
+
+            tbody.appendChild(row);
+        }
+
+        table.appendChild(tbody);
+        wrapper.appendChild(table);
+
+        var saveRow = document.createElement("div");
+        saveRow.className = "store-save-row";
+
+        var msgSpan = document.createElement("span");
+        msgSpan.className = "save-msg";
+        msgSpan.id = "saveMsg-" + maCost;
+
+        var saveBtn = document.createElement("button");
+        saveBtn.className = "btn btn-primary";
+        saveBtn.textContent = "Lưu Khảo sát";
+        saveBtn.id = "saveBtn-" + maCost;
+        saveBtn.onclick = (function (code) {
+            return function () {
+                var body = document.getElementById("body-" + code);
+                if (!body) return;
+                var hiddenInputs = body.querySelectorAll("input[type='hidden'][data-mnv]");
+                var allConfirmed = true;
+                for (var i = 0; i < hiddenInputs.length; i++) {
+                    if (!hiddenInputs[i].value || (hiddenInputs[i].value !== "correct" && hiddenInputs[i].value !== "incorrect")) {
+                        allConfirmed = false; break;
+                    }
+                }
+                if (!allConfirmed) {
+                    showToast("Vui lòng xác nhận tất cả nhân viên trước khi lưu!", "warn");
+                    return;
+                }
+                // Count stats
+                var total = hiddenInputs.length, correct = 0, incorrect = 0;
+                for (var i = 0; i < hiddenInputs.length; i++) {
+                    if (hiddenInputs[i].value === "correct") correct++;
+                    else incorrect++;
+                }
+                // Find store name
+                var chName = code;
+                var chOpt = document.getElementById("filterCH");
+                if (chOpt) chName = chOpt.options[chOpt.selectedIndex].textContent;
+                // Show modal
+                var overlay = document.createElement("div");
+                overlay.className = "modal-overlay";
+                overlay.innerHTML = '<div class="modal-box"><h3>📋 Xác nhận Khảo sát</h3><p style="font-size:13px;color:#666;margin-bottom:8px">' + chName + '</p><div class="modal-stats">👥 Tổng NV rà soát: <span>' + total + '</span><br>✅ Xác nhận đúng: <span>' + correct + '</span><br>⚠️ Điều chỉnh: <span>' + incorrect + '</span></div><div class="modal-btns"><button class="modal-btn-cancel" id="modalCancel">Hủy</button><button class="modal-btn-confirm" id="modalConfirm">✅ Xác nhận Lưu</button></div></div>';
+                document.body.appendChild(overlay);
+                document.getElementById("modalCancel").onclick = function() { overlay.remove(); };
+                document.getElementById("modalConfirm").onclick = function() {
+                    overlay.remove();
+                    saveStoreSurvey(code);
+                    showToast("✅ Đã lưu khảo sát thành công!", "success");
+                };
+            };
+        })(maCost);
+
+        saveRow.appendChild(msgSpan);
+        saveRow.appendChild(saveBtn);
+        wrapper.appendChild(saveRow);
+
+        return wrapper;
+    }
+
+    function statusCssClass(sysStatus) {
+        if (sysStatus === "Đang làm việc") {
+            return "status-working";
+        }
+        if (sysStatus === "Đã nghỉ việc") {
+            return "status-leave";
+        }
+        return "status-other";
+    }
+
+    function mapSystemToOption(sysStatus) {
+        if (!sysStatus) { return STATUS_OPTIONS[0]; }
+        var s = sysStatus;
+        if (s.indexOf("thai sản") >= 0 || s.indexOf("thai san") >= 0) { return "Nghỉ thai sản"; }
+        if (s.indexOf("không lương") >= 0 || s.indexOf("khong luong") >= 0) { return "Nghỉ không lương"; }
+        if (s.indexOf("ốm") >= 0 || s.indexOf("om") >= 0) { return "Nghỉ ốm"; }
+        if (s.indexOf("Đã nghỉ") >= 0 || s.indexOf("da nghi") >= 0) { return "Đã nghỉ việc"; }
+        if (s.indexOf("Dự kiến") >= 0 || s.indexOf("du kien") >= 0) { return "Dự kiến nghỉ việc"; }
+        return "Đang làm việc";
+    }
+
+    function saveStoreSurvey(maCost) {
+        var body = document.getElementById("body-" + maCost);
+        if (!body) { return; }
+        // Read hidden correct/sai inputs
+        var hiddenInputs = body.querySelectorAll("input[type='hidden'][data-mnv]");
+        var empResult = {};
+        var i;
+        for (i = 0; i < hiddenInputs.length; i++) {
+            var mnv = hiddenInputs[i].getAttribute("data-mnv");
+            var isCorrect = (hiddenInputs[i].value === "correct");
+            empResult[mnv] = { correct: isCorrect, note: "" };
+            if (!isCorrect) {
+                var extraSel = body.querySelector("select[data-mnv-s='" + mnv + "']");
+                empResult[mnv].s = extraSel ? extraSel.value : "";
+                var startInp = body.querySelector("input[data-mnv-start='" + mnv + "']");
+                var endInp = body.querySelector("input[data-mnv-end='" + mnv + "']");
+                var hrCb = body.querySelector("input[data-mnv-hr='" + mnv + "']");
+                if (startInp) empResult[mnv].startDate = startInp.value;
+                if (endInp) empResult[mnv].endDate = endInp.value;
+                if (hrCb) empResult[mnv].sentHR = hrCb.checked;
+            }
+        }
+        // Read notes
+        var notes = body.querySelectorAll("input[data-mnv-note]");
+        for (i = 0; i < notes.length; i++) {
+            var mnv2 = notes[i].getAttribute("data-mnv-note");
+            if (!empResult[mnv2]) { empResult[mnv2] = { correct: true, note: "" }; }
+            empResult[mnv2].note = notes[i].value;
+        }
+        surveyData[maCost] = { ts: new Date().toISOString(), e: empResult };
+        saveSurveyData();
+        // Push to Google Sheets
+        pushToGAS(maCost, empResult);
+        var msgEl = document.getElementById("saveMsg-" + maCost);
+        if (msgEl) {
+            msgEl.textContent = "Đã lưu thành công!";
+            setTimeout(function () { if (msgEl) { msgEl.textContent = ""; } }, 3000);
+        }
+        renderStoreList();
+        updateSummaryBar();
+    }
+
+    // ===================== PAGINATION =====================
+    function renderPagination(totalPages) {
+        var pagEl = document.getElementById("pagination");
+        pagEl.innerHTML = "";
+
+        if (totalPages <= 1) {
+            return;
+        }
+
+        var prevBtn = document.createElement("button");
+        prevBtn.className = "page-btn";
+        prevBtn.textContent = "<";
+        prevBtn.disabled = (currentPage === 1);
+        prevBtn.onclick = function () {
+            goToPage(currentPage - 1);
+        };
+        pagEl.appendChild(prevBtn);
+
+        var maxButtons = 7;
+        var startPage = Math.max(1, currentPage - 3);
+        var endPage = Math.min(totalPages, startPage + maxButtons - 1);
+        if (endPage - startPage < maxButtons - 1) {
+            startPage = Math.max(1, endPage - maxButtons + 1);
+        }
+
+        var p;
+        for (p = startPage; p <= endPage; p++) {
+            var btn = document.createElement("button");
+            btn.className = "page-btn";
+            if (p === currentPage) {
+                btn.className += " active";
+            }
+            btn.textContent = p;
+            btn.onclick = (function (pageNum) {
+                return function () { goToPage(pageNum); };
+            })(p);
+            pagEl.appendChild(btn);
+        }
+
+        var nextBtn = document.createElement("button");
+        nextBtn.className = "page-btn";
+        nextBtn.textContent = ">";
+        nextBtn.disabled = (currentPage === totalPages);
+        nextBtn.onclick = function () {
+            goToPage(currentPage + 1);
+        };
+        pagEl.appendChild(nextBtn);
+    }
+
+    function goToPage(pageNum) {
+        currentPage = pageNum;
+        openStoreCode = "";
+        renderStoreList();
+        window.scrollTo(0, 0);
+    }
+
+    // ===================== DASHBOARD =====================
+    function renderDashboard() {
+        if (chList.length === 0) { return; }
+        // Apply dashboard filters
+        var dGdv = document.getElementById("dashGdv") ? document.getElementById("dashGdv").value : "";
+        var dQlkv = document.getElementById("dashQlkv") ? document.getElementById("dashQlkv").value : "";
+        var filteredCH = chList;
+        if (dGdv || dQlkv) {
+            filteredCH = chList.filter(function(c) {
+                if (dGdv && c.gdv !== dGdv) return false;
+                if (dQlkv && c.qlkv !== dQlkv) return false;
+                return true;
+            });
+        }
+
+        var totalStores = filteredCH.length;
+        var totalEmp = 0;
+        var i;
+        for (i = 0; i < filteredCH.length; i++) {
+            totalEmp += filteredCH[i].count || 0;
+        }
+
+        var surveyedCount = 0;
+        for (i = 0; i < filteredCH.length; i++) {
+            if (surveyData[filteredCH[i].maCost]) surveyedCount++;
+        }
+
+        var notSurveyed = totalStores - surveyedCount;
+
+        var totalMismatch = 0;
+        for (i = 0; i < filteredCH.length; i++) {
+            totalMismatch += countMismatch(filteredCH[i].maCost);
+        }
+
+        var progressPct = totalStores > 0 ? Math.round((surveyedCount / totalStores) * 100) : 0;
+
+        document.getElementById("kpiTotalStores").textContent = totalStores;
+        document.getElementById("kpiTotalEmp").textContent = totalEmp;
+        document.getElementById("kpiSurveyed").textContent = surveyedCount;
+        document.getElementById("kpiNotSurveyed").textContent = notSurveyed;
+        document.getElementById("kpiMismatch").textContent = totalMismatch;
+        document.getElementById("kpiProgress").textContent = progressPct + "%";
+
+        renderGdvChart();
+        renderMismatchTable();
+    }
+
+    function renderGdvChart() {
+        var gdvMap = {};
+        var i;
+        for (i = 0; i < chList.length; i++) {
+            var store = chList[i];
+            var g = store.gdv || "Khong xac dinh";
+            if (!gdvMap[g]) {
+                gdvMap[g] = { total: 0, done: 0 };
+            }
+            gdvMap[g].total++;
+            if (surveyData[store.maCost]) {
+                gdvMap[g].done++;
+            }
+        }
+
+        var gdvNames = [];
+        for (var key in gdvMap) {
+            if (gdvMap.hasOwnProperty(key)) {
+                gdvNames.push(key);
+            }
+        }
+        gdvNames.sort(function (a, b) {
+            return gdvMap[b].total - gdvMap[a].total;
+        });
+
+        drawBarChart(gdvNames, gdvMap);
+    }
+
+    function drawBarChart(gdvNames, gdvMap) {
+        var canvas = document.getElementById("gdvChart");
+        var dpr = window.devicePixelRatio || 1;
+        var cssWidth = canvas.parentElement.clientWidth - 32;
+        var cssHeight = 320;
+
+        canvas.width = cssWidth * dpr;
+        canvas.height = cssHeight * dpr;
+        canvas.style.width = cssWidth + "px";
+        canvas.style.height = cssHeight + "px";
+
+        var ctx = canvas.getContext("2d");
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+        if (gdvNames.length === 0) {
+            ctx.fillStyle = "#a0aec0";
+            ctx.font = "13px sans-serif";
+            ctx.fillText("Khong co du lieu", 10, 20);
+            return;
+        }
+
+        var leftMargin = 10;
+        var rightMargin = 10;
+        var topMargin = 20;
+        var bottomMargin = 70;
+        var chartWidth = cssWidth - leftMargin - rightMargin;
+        var chartHeight = cssHeight - topMargin - bottomMargin;
+
+        var maxTotal = 0;
+        var i;
+        for (i = 0; i < gdvNames.length; i++) {
+            if (gdvMap[gdvNames[i]].total > maxTotal) {
+                maxTotal = gdvMap[gdvNames[i]].total;
+            }
+        }
+        if (maxTotal === 0) {
+            maxTotal = 1;
+        }
+
+        var barCount = gdvNames.length;
+        var barGroupWidth = chartWidth / barCount;
+        var barWidth = Math.min(28, barGroupWidth * 0.6);
+
+        // draw baseline
+        ctx.strokeStyle = "#e0e6ed";
+        ctx.beginPath();
+        ctx.moveTo(leftMargin, topMargin + chartHeight);
+        ctx.lineTo(leftMargin + chartWidth, topMargin + chartHeight);
+        ctx.stroke();
+
+        for (i = 0; i < barCount; i++) {
+            var name = gdvNames[i];
+            var data = gdvMap[name];
+            var groupX = leftMargin + i * barGroupWidth + (barGroupWidth - barWidth) / 2;
+
+            var totalBarHeight = (data.total / maxTotal) * chartHeight;
+            var doneBarHeight = (data.done / maxTotal) * chartHeight;
+
+            var totalY = topMargin + chartHeight - totalBarHeight;
+            var doneY = topMargin + chartHeight - doneBarHeight;
+
+            // total bar (light gray-blue)
+            ctx.fillStyle = "#d6e4f5";
+            ctx.fillRect(groupX, totalY, barWidth, totalBarHeight);
+
+            // done bar (green) overlay
+            ctx.fillStyle = "#0d8a5f";
+            ctx.fillRect(groupX, doneY, barWidth, doneBarHeight);
+
+            // count label on top
+            ctx.fillStyle = "#1a2a3a";
+            ctx.font = "10px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(data.done + "/" + data.total, groupX + barWidth / 2, totalY - 4);
+
+            // gdv name label (rotated)
+            ctx.save();
+            ctx.translate(groupX + barWidth / 2, topMargin + chartHeight + 10);
+            ctx.rotate(-Math.PI / 4);
+            ctx.textAlign = "right";
+            ctx.font = "10px sans-serif";
+            ctx.fillStyle = "#607085";
+            var shortName = name.length > 16 ? name.substring(0, 15) + "." : name;
+            ctx.fillText(shortName, 0, 0);
+            ctx.restore();
+        }
+
+        ctx.textAlign = "left";
+    }
+
+    function renderMismatchTable() {
+        var wrap = document.getElementById("mismatchTableWrap");
+        var rows = [];
+
+        var i;
+        for (i = 0; i < chList.length; i++) {
+            var store = chList[i];
+            var emps = empData[store.maCost];
+            var surveyEntry = surveyData[store.maCost];
+            if (!emps || !surveyEntry || !surveyEntry.e) {
+                continue;
+            }
+            var j;
+            for (j = 0; j < emps.length; j++) {
+                var emp = emps[j];
+                var savedEmp = surveyEntry.e[emp.m];
+                if (savedEmp && savedEmp.correct === false && savedEmp.s && savedEmp.s !== emp.t) {
+                    rows.push({
+                        maCost: store.maCost,
+                        tenCH: store.tenCH,
+                        mnv: emp.m,
+                        hoTen: emp.n,
+                        sysStatus: emp.t,
+                        surveyStatus: savedEmp.s,
+                        note: savedEmp.note || ""
+                    });
+                }
+            }
+        }
+
+        if (rows.length === 0) {
+            wrap.innerHTML = "<div class='empty-msg'>Chua co du lieu sai lech</div>";
+            return;
+        }
+
+        var table = document.createElement("table");
+        table.className = "mismatch-table";
+
+        var thead = document.createElement("thead");
+        var headRow = document.createElement("tr");
+        var headers = ["Mã CH", "Tên CH", "MNV", "Họ tên", "Trạng thái Hệ thống", "Trạng thái Khảo sát", "Ghi chú"];
+        var h;
+        for (h = 0; h < headers.length; h++) {
+            var th = document.createElement("th");
+            th.textContent = headers[h];
+            headRow.appendChild(th);
+        }
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        var tbody = document.createElement("tbody");
+        for (i = 0; i < rows.length; i++) {
+            var r = rows[i];
+            var tr = document.createElement("tr");
+            var cells = [r.maCost, r.tenCH, r.mnv, r.hoTen, r.sysStatus, r.surveyStatus, r.note];
+            var c;
+            for (c = 0; c < cells.length; c++) {
+                var td = document.createElement("td");
+                td.textContent = cells[c];
+                tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+        }
+        table.appendChild(tbody);
+
+        wrap.innerHTML = "";
+        wrap.appendChild(table);
+    }
+
+    // ===================== HISTORY =====================
+    function renderHistory() {
+        var listEl = document.getElementById("historyList");
+        listEl.innerHTML = "";
+
+        var codes = [];
+        for (var key in surveyData) {
+            if (surveyData.hasOwnProperty(key)) {
+                codes.push(key);
+            }
+        }
+
+        if (codes.length === 0) {
+            listEl.innerHTML = "<div class='empty-msg'>Chua co cua hang nao duoc khao sat</div>";
+            return;
+        }
+
+        codes.sort(function (a, b) {
+            var tsA = surveyData[a].ts || "";
+            var tsB = surveyData[b].ts || "";
+            return tsB.localeCompare(tsA);
+        });
+
+        var storeMap = buildStoreMapByCode();
+
+        var i;
+        for (i = 0; i < codes.length; i++) {
+            var code = codes[i];
+            var entry = surveyData[code];
+            var storeInfo = storeMap[code];
+
+            var item = document.createElement("div");
+            item.className = "history-item";
+
+            var left = document.createElement("div");
+            var titleDiv = document.createElement("div");
+            titleDiv.style.fontWeight = "700";
+            titleDiv.style.fontSize = "13px";
+            titleDiv.textContent = storeInfo ? (storeInfo.tenCH + " (" + code + ")") : code;
+
+            var subDiv = document.createElement("div");
+            subDiv.style.fontSize = "12px";
+            subDiv.style.color = "#607085";
+            subDiv.style.marginTop = "3px";
+            var empCount = entry.e ? Object.keys(entry.e).length : 0;
+            subDiv.textContent = "Khao sat luc: " + formatTimestamp(entry.ts) + " | " + empCount + " nhan vien";
+
+            left.appendChild(titleDiv);
+            left.appendChild(subDiv);
+
+            var right = document.createElement("div");
+            var delBtn = document.createElement("button");
+            delBtn.className = "btn btn-outline";
+            delBtn.textContent = "Xoa";
+            delBtn.onclick = (function (c) {
+                return function () { deleteHistoryItem(c); };
+            })(code);
+            right.appendChild(delBtn);
+
+            item.appendChild(left);
+            item.appendChild(right);
+            listEl.appendChild(item);
+        }
+    }
+
+    function buildStoreMapByCode() {
+        var map = {};
+        var i;
+        for (i = 0; i < chList.length; i++) {
+            map[chList[i].maCost] = chList[i];
+        }
+        return map;
+    }
+
+    function formatTimestamp(isoStr) {
+        if (!isoStr) {
+            return "-";
+        }
+        try {
+            var d = new Date(isoStr);
+            var dd = String(d.getDate()).padStart(2, "0");
+            var mm = String(d.getMonth() + 1).padStart(2, "0");
+            var yyyy = d.getFullYear();
+            var hh = String(d.getHours()).padStart(2, "0");
+            var min = String(d.getMinutes()).padStart(2, "0");
+            return dd + "/" + mm + "/" + yyyy + " " + hh + ":" + min;
+        } catch (e) {
+            return isoStr;
+        }
+    }
+
+    function deleteHistoryItem(code) {
+        if (!confirm("Xoa ket qua khao sat cua cua hang " + code + "?")) {
+            return;
+        }
+        delete surveyData[code];
+        saveSurveyData();
+        renderHistory();
+        renderStoreList();
+        updateSummaryBar();
+    }
+
+    function clearAllHistory() {
+        if (!confirm("Bạn có chắc muốn xoá TAT CA du lieu khao sat? Hanh dong nay khong the hoan tac.")) {
+            return;
+        }
+        surveyData = {};
+        saveSurveyData();
+        renderHistory();
+        renderStoreList();
+        updateSummaryBar();
+        renderDashboard();
+    }
+
+    function exportXLSB() {
+        var codes = [];
+        for (var key in surveyData) {
+            if (surveyData.hasOwnProperty(key)) { codes.push(key); }
+        }
+        if (codes.length === 0) { showToast("Không có dữ liệu để xuất.", "warn"); return; }
+        var storeMap = buildStoreMapByCode();
+        var rows = [["Mã CH","Tên CH","GĐV","QLKV","Tỉnh","MNV","Họ tên","Chức danh","Trạng thái Hệ thống","Xác nhận","Tình trạng KS","Ngày bắt đầu","Ngày kết thúc","Ngày NKV","Ghi chú","Thời gian Khảo sát"]];
+        for (var i = 0; i < codes.length; i++) {
+            var code = codes[i], entry = surveyData[code], storeInfo = storeMap[code], emps = empData[code] || [];
+            if (!entry.e) continue;
+            for (var j = 0; j < emps.length; j++) {
+                var emp = emps[j], savedEmp = entry.e[emp.m];
+                if (!savedEmp) continue;
+                rows.push([code, storeInfo ? storeInfo.tenCH : "", storeInfo ? storeInfo.gdv : "", storeInfo ? storeInfo.qlkv : "", storeInfo ? storeInfo.tinh : "", emp.m, emp.n, emp.c || "", emp.t, savedEmp.correct === false ? "Sai" : "Đúng", savedEmp.s || "", savedEmp.startDate || "", savedEmp.endDate || "", savedEmp.expDate || "", savedEmp.note || "", entry.ts || ""]);
+            }
+        }
+        var ws = XLSX.utils.aoa_to_sheet(rows);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Khảo sát Nhân sự");
+        XLSX.writeFile(wb, "khao-sat-nhan-su-" + Date.now() + ".xlsx", { bookType: "xlsx", type: "binary" });
+    }
+
+    function exportCSV_old() {
+        var codes = [];
+        for (var key in surveyData) {
+            if (surveyData.hasOwnProperty(key)) {
+                codes.push(key);
+            }
+        }
+
+        if (codes.length === 0) {
+            alert("Khong co du lieu de xuat.");
+            return;
+        }
+
+        var storeMap = buildStoreMapByCode();
+
+        var csvRows = [];
+        csvRows.push(["Mã CH", "Tên CH", "GDV", "QLKV", "Tinh", "MNV", "Họ tên", "Trạng thái Hệ thống", "Trạng thái Khảo sát", "Ghi chú", "Thời gian Khảo sát"].join(","));
+
+        var i;
+        for (i = 0; i < codes.length; i++) {
+            var code = codes[i];
+            var entry = surveyData[code];
+            var storeInfo = storeMap[code];
+            var emps = empData[code] || [];
+
+            if (!entry.e) {
+                continue;
+            }
+
+            var j;
+            for (j = 0; j < emps.length; j++) {
+                var emp = emps[j];
+                var savedEmp = entry.e[emp.m];
+                if (!savedEmp) {
+                    continue;
+                }
+                var rowData = [
+                    code,
+                    storeInfo ? storeInfo.tenCH : "",
+                    storeInfo ? storeInfo.gdv : "",
+                    storeInfo ? storeInfo.qlkv : "",
+                    storeInfo ? storeInfo.tinh : "",
+                    emp.m,
+                    emp.n,
+                    emp.t,
+                    savedEmp.s || "",
+                    savedEmp.note || "",
+                    entry.ts || ""
+                ];
+                csvRows.push(csvEscapeRow(rowData));
+            }
+        }
+
+        var csvContent = csvRows.join("\n");
+        var blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = "khao-sat-nhan-su-" + Date.now() + ".csv";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    function csvEscapeRow(arr) {
+        var result = [];
+        var i;
+        for (i = 0; i < arr.length; i++) {
+            var val = String(arr[i] === undefined || arr[i] === null ? "" : arr[i]);
+            if (val.indexOf(",") >= 0 || val.indexOf("\"") >= 0 || val.indexOf("\n") >= 0) {
+                val = "\"" + val.replace(/"/g, "\"\"") + "\"";
+            }
+            result.push(val);
+        }
+        return result.join(",");
+    }
+
+    // ===================== START =====================
+    init();
+</script>
+
+</body>
+</html>
+>
