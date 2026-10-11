@@ -606,8 +606,8 @@
 <body>
 
 <div class="header">
-    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.6</span></h1>
-    <p>Dữ liệu: 10/10/2026 | 7.594 NS | 1.803 CH | ĐLV: 6.809 | NTS: 256 | ĐNV: 524 | NKL: 3 | NỐ: 2</p>
+    <h1>🏪 Khảo sát Tình trạng Nhân sự Cửa hàng <span style="font-size:12px;opacity:0.7;margin-left:8px">v1.11</span></h1>
+    <p>Dữ liệu: 10/10/2026 | 7.594 nhân sự | 1.803 cửa hàng</p>
 </div>
 
 <div class="tabs">
@@ -639,9 +639,9 @@
                     </select>
                 </div>
                 <div class="filter-item">
-                    <label>Tinh / Thanh Pho</label>
-                    <select id="filterTinh" onchange="applyFilters()">
-                        <option value="">-- Tất cả Tỉnh --</option>
+                    <label>Cửa hàng</label>
+                    <select id="filterCH" onchange="applyFilters()">
+                        <option value="">-- Tất cả CH --</option>
                     </select>
                 </div>
                 <div class="filter-item">
@@ -795,7 +795,7 @@
         document.getElementById("surveyContent").style.display = "block";
 
         buildGdvFilter();
-        buildTinhFilter();
+        buildCHFilter();
         applyFilters();
         renderDashboard();
         renderHistory();
@@ -882,27 +882,21 @@
         }
     }
 
-    function buildTinhFilter() {
-        var tinhSet = {};
-        var i;
-        for (i = 0; i < chList.length; i++) {
-            if (chList[i].tinh) {
-                tinhSet[chList[i].tinh] = true;
-            }
+    function buildCHFilter(gdvFilter, qlkvFilter) {
+        var sel = document.getElementById("filterCH");
+        sel.innerHTML = "<option value=''>-- Tất cả CH --</option>";
+        var codes = [];
+        for (var i = 0; i < chList.length; i++) {
+            var c = chList[i];
+            if (gdvFilter && c.gdv !== gdvFilter) continue;
+            if (qlkvFilter && c.qlkv !== qlkvFilter) continue;
+            codes.push(c.maCost);
         }
-        var tinhNames = [];
-        for (var key in tinhSet) {
-            if (tinhSet.hasOwnProperty(key)) {
-                tinhNames.push(key);
-            }
-        }
-        tinhNames.sort();
-
-        var sel = document.getElementById("filterTinh");
-        for (i = 0; i < tinhNames.length; i++) {
+        codes.sort();
+        for (i = 0; i < codes.length; i++) {
             var opt = document.createElement("option");
-            opt.value = tinhNames[i];
-            opt.textContent = tinhNames[i];
+            opt.value = codes[i];
+            opt.textContent = codes[i];
             sel.appendChild(opt);
         }
     }
@@ -935,14 +929,15 @@
                 qlkvSel.appendChild(opt);
             }
         }
-
+        var qlkvVal = document.getElementById("filterQlkv").value;
+        buildCHFilter(gdvVal, qlkvVal);
         applyFilters();
     }
 
     function applyFilters() {
         var gdvVal = document.getElementById("filterGdv").value;
         var qlkvVal = document.getElementById("filterQlkv").value;
-        var tinhVal = document.getElementById("filterTinh").value;
+        var tinhVal = document.getElementById("filterCH").value;
         var statusVal = document.getElementById("filterStatus").value;
 
         filteredList = [];
@@ -1202,7 +1197,7 @@
             var showSaiForm = hasSurvey && !isCorrect;
             // Dung button - checkmark icon
             var btnDung = document.createElement("button");
-            btnDung.className = "cf-btn" + (isCorrect ? " cf-ok" : "");
+            btnDung.className = "cf-btn" + (isCorrect && !showDone ? "" : " cf-ok");
             btnDung.textContent = "Đúng";
             btnDung.title = "Xác nhận đúng";
             btnDung.setAttribute("data-mnv-dung", emp.m);
@@ -1340,7 +1335,7 @@
                     if (ex) ex.style.display = "none";
                     var doneSpan = document.createElement("span");
                     doneSpan.style.color = "#0d8a5f"; doneSpan.style.fontWeight = "600"; doneSpan.style.fontSize = "12px";
-                    doneSpan.textContent = "✅ Đã KS";
+                    doneSpan.textContent = "✅ Đúng thông tin";
                     doneSpan.setAttribute("data-done", mnv);
                     parentTd.appendChild(doneSpan);
                 };
@@ -1357,9 +1352,13 @@
                 btnSai.style.display = "none";
                 var doneSpan2 = document.createElement("span");
                 doneSpan2.style.color = "#0d8a5f"; doneSpan2.style.fontWeight = "600"; doneSpan2.style.fontSize = "12px";
-                doneSpan2.textContent = "✅ Đã KS";
+                doneSpan2.textContent = "✅ Đúng thông tin";
                 doneSpan2.setAttribute("data-done", emp.m);
                 tdSel.appendChild(doneSpan2);
+                var editLink = document.createElement("a");
+                editLink.href = "#"; editLink.textContent = "Sửa"; editLink.style.fontSize = "10px"; editLink.style.marginLeft = "4px"; editLink.style.color = "#2980b9";
+                editLink.onclick = (function(bd, bs, ds) { return function(e) { e.preventDefault(); bd.style.display = ""; bs.style.display = ""; ds.remove(); editLink.remove(); }; })(btnDung, btnSai, doneSpan2);
+                tdSel.appendChild(editLink);
             }
             if (showSaiForm) {
                 btnDung.style.display = "none";
@@ -1374,6 +1373,10 @@
                 updSpan.textContent = "⚠ " + desc;
                 updSpan.setAttribute("data-updated", emp.m);
                 tdSel.appendChild(updSpan);
+                var editLink2 = document.createElement("a");
+                editLink2.href = "#"; editLink2.textContent = "Sửa"; editLink2.style.fontSize = "10px"; editLink2.style.marginLeft = "4px"; editLink2.style.color = "#2980b9";
+                editLink2.onclick = (function(bd, bs, us, ex) { return function(e) { e.preventDefault(); bd.style.display = ""; bs.style.display = ""; us.remove(); editLink2.remove(); ex.style.display = "block"; }; })(btnDung, btnSai, updSpan, extraDiv);
+                tdSel.appendChild(editLink2);
             }
             row.appendChild(tdSel);
 
@@ -1970,3 +1973,4 @@
 
 </body>
 </html>
+>
