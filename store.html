@@ -633,8 +633,6 @@
 
 <div class="tabs">
     <button class="tab-btn active" data-tab="survey" onclick="switchTab('survey')">Khảo sát</button>
-    <button class="tab-btn" data-tab="dashboard" onclick="switchTab('dashboard')">Dashboard</button>
-    <button class="tab-btn" data-tab="history" onclick="switchTab('history')">Lịch sử</button>
 </div>
 
 <div class="container">
@@ -686,66 +684,7 @@
         </div>
     </div>
 
-    <!-- TAB: DASHBOARD -->
-    <div class="tab-content" id="tab-dashboard">
-        <div class="filter-box" style="margin-bottom:16px">
-            <div class="filter-item">
-                <label>GĐV</label>
-                <select id="dashGdv" onchange="onDashGdvChange()"><option value="">-- Tất cả GĐV --</option></select>
-            </div>
-            <div class="filter-item">
-                <label>QLKV</label>
-                <select id="dashQlkv" onchange="renderDashboard()"><option value="">-- Tất cả QLKV --</option></select>
-            </div>
-        </div>
-        <div class="kpi-grid">
-            <div class="kpi-card">
-                <div class="kpi-value" id="kpiTotalStores">0</div>
-                <div class="kpi-label">Tong So Cua Hang</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-value" id="kpiTotalEmp">0</div>
-                <div class="kpi-label">Tong So Nhan Vien</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-value green" id="kpiSurveyed">0</div>
-                <div class="kpi-label">CH Đã Khảo sát</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-value red" id="kpiNotSurveyed">0</div>
-                <div class="kpi-label">CH Chưa Khảo sát</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-value orange" id="kpiMismatch">0</div>
-                <div class="kpi-label">Nhân viên Sai lệch</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-value" id="kpiProgress">0%</div>
-                <div class="kpi-label">Tiến độ Khảo sát</div>
-            </div>
-        </div>
-
-        <div class="section-box">
-            <div class="section-title">Tiến độ Khảo sát Theo GDV</div>
-            <canvas id="gdvChart"></canvas>
-        </div>
-
-        <div class="section-box">
-            <div class="section-title">Chi tiết Sai lệch Trạng thái</div>
-            <div id="mismatchTableWrap">
-                <div class="empty-msg">Chua co du lieu sai lech</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- TAB: LICH SU -->
-    <div class="tab-content" id="tab-history">
-        <div class="history-actions">
-            <button class="btn btn-green" onclick="exportXLSB()">Xuất XLSX</button>
-            <button class="btn btn-danger" onclick="clearAllHistory()">Xoa Tat Ca</button>
-        </div>
-        <div id="historyList"></div>
-    </div>
+    
 
 </div>
 
@@ -842,9 +781,7 @@
         buildGdvFilter();
         buildCHFilter();
         applyFilters();
-        populateDashFilters();
-        renderDashboard();
-        renderHistory();
+        
     }
 
     // ===================== LOCAL STORAGE =====================
