@@ -1180,7 +1180,7 @@
 
         var thead = document.createElement("thead");
         var headRow = document.createElement("tr");
-        var headers = ["MNV", "Họ tên", "Chức danh", "Trạng thái Hệ thống", "Thời gian", "Xác nhận"];
+        var headers = ["MNV - Họ tên", "Chức danh", "Trạng thái Hệ thống", "Thời gian", "Xác nhận"];
         var h;
         for (h = 0; h < headers.length; h++) {
             var th = document.createElement("th");
@@ -1198,14 +1198,9 @@
             var row = document.createElement("tr");
 
             var tdMnv = document.createElement("td");
-            tdMnv.setAttribute("data-label", "MNV");
-            tdMnv.textContent = emp.m;
+            tdMnv.setAttribute("data-label", "MNV - Họ tên");
+            tdMnv.innerHTML = "<b>" + emp.m + "</b> &nbsp; " + emp.n;
             row.appendChild(tdMnv);
-
-            var tdName = document.createElement("td");
-            tdName.setAttribute("data-label", "Họ tên");
-            tdName.textContent = emp.n;
-            row.appendChild(tdName);
 
             var tdTitle = document.createElement("td");
             tdTitle.setAttribute("data-label", "Chức danh");
