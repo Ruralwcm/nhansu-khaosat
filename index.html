@@ -6,6 +6,7 @@
 <title>Khảo sát Tình trạng Nhân sự</title>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=IBM+Plex+Sans+Condensed:wght@400;600;700&display=swap');
     * {
         margin: 0;
         padding: 0;
@@ -15,12 +16,12 @@
     body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         background: #f0f4f8;
-        color: #1a2a3a;
+        color: #0f5f57;
         padding-bottom: 40px;
     }
 
     .header {
-        background: linear-gradient(135deg, #1565c0, #0d8a5f);
+        background: linear-gradient(135deg, #0f5f57, #0d8a5f);
         color: #fff;
         padding: 16px 20px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.15);
@@ -62,8 +63,8 @@
     }
 
     .tab-btn.active {
-        color: #1565c0;
-        border-bottom-color: #1565c0;
+        color: #0f5f57;
+        border-bottom-color: #0f5f57;
         background: #eaf2fb;
     }
 
@@ -114,12 +115,12 @@
         border-radius: 6px;
         font-size: 13px;
         background: #fff;
-        color: #1a2a3a;
+        color: #0f5f57;
     }
 
     select:focus, input:focus {
         outline: none;
-        border-color: #1565c0;
+        border-color: #0f5f57;
     }
 
     .btn {
@@ -137,7 +138,7 @@
     }
 
     .btn-primary {
-        background: #1565c0;
+        background: #0f5f57;
         color: #fff;
     }
 
@@ -148,8 +149,8 @@
 
     .btn-outline {
         background: #fff;
-        color: #1565c0;
-        border: 1px solid #1565c0;
+        color: #0f5f57;
+        border: 1px solid #0f5f57;
     }
 
     .btn-danger {
@@ -170,7 +171,7 @@
     }
 
     .summary-bar b {
-        color: #1a2a3a;
+        color: #0f5f57;
     }
 
     /* Store cards */
@@ -212,7 +213,7 @@
     .store-name {
         font-size: 14px;
         font-weight: 700;
-        color: #1a2a3a;
+        color: #0f5f57;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -414,7 +415,7 @@
         border: 1px solid #d0dae4;
         border-radius: 5px;
         background: #fff;
-        color: #1a2a3a;
+        color: #0f5f57;
     }
 
     /* Pagination */
@@ -434,14 +435,14 @@
         border-radius: 6px;
         font-size: 13px;
         cursor: pointer;
-        color: #1a2a3a;
+        color: #0f5f57;
         min-width: 36px;
     }
 
     .page-btn.active {
-        background: #1565c0;
+        background: #0f5f57;
         color: #fff;
-        border-color: #1565c0;
+        border-color: #0f5f57;
     }
 
     .page-btn:disabled {
@@ -468,7 +469,7 @@
     .kpi-value {
         font-size: 26px;
         font-weight: 800;
-        color: #1565c0;
+        color: #0f5f57;
     }
 
     .kpi-value.green {
@@ -502,7 +503,7 @@
         font-size: 15px;
         font-weight: 700;
         margin-bottom: 12px;
-        color: #1a2a3a;
+        color: #0f5f57;
     }
 
     #gdvChart {
@@ -568,7 +569,7 @@
         width: 36px;
         height: 36px;
         border: 4px solid #e0e6ed;
-        border-top-color: #1565c0;
+        border-top-color: #0f5f57;
         border-radius: 50%;
         margin: 0 auto 14px;
         animation: spin 0.8s linear infinite;
@@ -622,6 +623,16 @@
         .cf-btn { padding: 3px 8px; font-size: 11px; }
         .cf-extra select, .cf-extra input { font-size: 11px; }
     }
+
+@media (prefers-color-scheme: dark) {
+  body{background:#0f1724;color:#e8ecf1}
+  .card,.stat-card,.app-card,.modal,.confirm-box,.login-box{background:#1a2332;border-color:#2a3646}
+  thead th{background:#1a2332;color:#cbd5e1;border-bottom-color:#2a3646}
+  td{border-bottom-color:#2a3646}
+  .sidebar{background:#0a2a24}
+  .topbar{background:#b3121b}
+  input,select,textarea{background:#1a2332;color:#e8ecf1;border-color:#2a3646}
+}
 </style>
 </head>
 <body>
@@ -1829,7 +1840,7 @@
             ctx.fillRect(groupX, doneY, barWidth, doneBarHeight);
 
             // count label on top
-            ctx.fillStyle = "#1a2a3a";
+            ctx.fillStyle = "#0f5f57";
             ctx.font = "10px sans-serif";
             ctx.textAlign = "center";
             ctx.fillText(data.done + "/" + data.total, groupX + barWidth / 2, totalY - 4);
